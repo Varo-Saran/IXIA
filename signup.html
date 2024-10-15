@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - IXIA AI Chat</title>
+    <link rel="stylesheet" href="login_signup.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="page-container">
+        <header>
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                        </style>
+                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
+                        iXiA Ai
+                    </text>
+                </svg>
+            </div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="login.html">Login</a>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <section class="hero">
+                <h1>Join IXIA AI Chat Today</h1>
+                <p>Start your journey with the most advanced AI chat platform.</p>
+            </section>
+
+            <section class="signup-section">
+                <div class="form-container">
+                    <h2>Create Your Account</h2>
+                    <form id="signup-form">
+                        <div class="input-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" name="confirm-password" required>
+                        </div>
+                        <button type="submit">Sign Up</button>
+                    </form>
+                    <p id="error-message" class="error"></p>
+                    <p>Already have an account? <a href="login.html">Log in</a></p>
+                </div>
+            </section>
+
+            <section id="features" class="features">
+                <h2>Why Choose IXIA AI?</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-brain"></i>
+                        <h3>Intelligent Conversations</h3>
+                        <p>Engage in meaningful dialogues with our advanced AI.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Privacy First</h3>
+                        <p>Your data is always protected with state-of-the-art security.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Continuous Learning</h3>
+                        <p>Our AI evolves with each interaction, getting smarter every day.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-language"></i>
+                        <h3>Multilingual Support</h3>
+                        <p>Communicate in multiple languages with ease.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="about">
+                <h2>About IXIA AI</h2>
+                <p>IXIA AI is revolutionizing the way humans interact with artificial intelligence. Our platform combines cutting-edge technology with user-friendly design to create an unparalleled chat experience. Whether you're seeking information, brainstorming ideas, or just looking for engaging conversation, IXIA AI is your perfect digital companion.</p>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#features">Features</a>
+                    <a href="#about">About</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 IXIA AI. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h2>Sign Up Successful!</h2>
+            <p>Please log in with your new account.</p>
+            <button id="modal-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="signup.js"></script>
+</body>
+</html>

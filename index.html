@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ixia AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <h2>Saved Chats</h2>
+            <ul id="saved-chats-list"></ul>
+            <button id="new-chat-button">New Chat</button>
+            <button id="clear-saved-chats-button">Clear Saved Chats</button>
+        </div>
+
+        <div class="main-content" role="main">
+            <div class="chat-header">
+                <div class="logo-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                        <defs>
+                          <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                          </style>
+                          <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                          </linearGradient>
+                        </defs>
+                        <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
+                          iXiA Ai
+                        </text>
+                      </svg>
+                  </div>
+
+                <div class="chat-options">
+                    <button id="clear-chat-button" title="Clear Chat"><i class="fas fa-eraser"></i></button>
+                    <button id="export-chat-button" title="Export Chat"><i class="fas fa-file-export"></i></button>
+                    <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+
+                <div class="profile-menu">
+                    <button id="profile-button" class="profile-icon" title="Profile Menu">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <div id="profile-dropdown" class="profile-dropdown">
+                        <a href="account.html" id="my-account"><i class="fas fa-user"></i> My Account</a>
+                        <a href="#" id="chat-history"><i class="fas fa-history"></i> Chat History</a>
+                        <a href="#" id="settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="help"><i class="fas fa-question-circle"></i> Help & FAQ</a>
+                        <a href="#" id="about-ixia"><i class="fas fa-info-circle"></i> About Ixia AI</a>
+                        <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-window" class="chat-window"></div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title"></h2>
+        </div>
+        <div class="modal-body">
+            <div id="modal-message"></div>
+        </div>
+        <div class="modal-footer">
+            <button id="modal-confirm" class="btn-primary">Confirm</button>
+            <button id="modal-cancel" class="btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+    <div id="typing-indicator" class="typing-indicator">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/compromise"></script>
+    <script src="https://unpkg.com/sentiment"></script>
+    <script src="Ixia.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>

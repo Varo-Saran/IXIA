@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #5cb85c;
+    --text-color: #333333;
+    --bg-color: #f0f4f8;
+    --chat-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #d1d9e6;
+    --input-text: #333333;
+    --input-placeholder: #a0a0a0;
+    --shadow-color: rgba(0,0,0,0.1);
+    --danger-color: #ff4d4d;
+}
+
+.dark-theme {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --text-color: #f0f4f8;
+    --bg-color: #1a1d21;
+    --chat-bg: #2c3e50;
+    --input-bg: #34495e;
+    --input-border: #4a5568;
+    --input-text: #f0f4f8;
+    --input-placeholder: #a0aec0;
+    --shadow-color: rgba(0,0,0,0.3);
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.logo-container {
+    width: 150px;
+}
+
+.logo-container svg {
+    width: 100%;
+    height: auto;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--primary-color);
+}
+
+.account-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.account-page h1 {
+    grid-column: 1 / -1;
+    color: var(--primary-color);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.account-page section {
+    background-color: var(--chat-bg);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.account-page h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.profile-section {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 30px;
+}
+
+.profile-picture {
+    flex-shrink: 0;
+    width: 200px;
+    text-align: center;
+}
+
+.profile-picture-frame {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 10px var(--shadow-color);
+}
+
+.profile-picture-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-picture-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.account-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.account-page .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.account-page .input-group label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.account-page input[type="text"],
+.account-page input[type="email"],
+.account-page input[type="password"],
+.account-page select {
+    padding: 12px;
+    border: 2px solid var(--input-border);
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    transition: border-color 0.3s ease;
+}
+
+.account-page input[type="text"]:focus,
+.account-page input[type="email"]:focus,
+.account-page input[type="password"]:focus,
+.account-page select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.account-page button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.account-page button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.danger-zone {
+    grid-column: 1 / -1;
+    border: 2px solid var(--danger-color);
+    border-radius: 10px;
+    padding: 30px;
+    background-color: rgba(255, 77, 77, 0.1);
+}
+
+.delete-btn {
+    background-color: var(--danger-color) !important;
+}
+
+.delete-btn:hover {
+    background-color: #ff3333 !important;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--chat-bg);
+    color: var(--text-color);
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 80%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#modal-confirm {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#modal-cancel {
+    background-color: var(--input-border);
+    color: var(--text-color);
+}
+
+#modal-confirm:hover,
+#modal-cancel:hover {
+    transform: translateY(-2px);
+}
+
+footer {
+    margin-top: 50px;
+    text-align: center;
+    color: var(--input-placeholder);
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .account-page {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-section {
+        flex-direction: column;
+    }
+
+    .profile-picture {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .profile-picture-frame {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 20px;
+    }
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards;
+}
+
+.notification.success {
+    background-color: var(--secondary-color);
+}
+
+.notification.error {
+    background-color: var(--danger-color);
+}
+
+.notification.info {
+    background-color: var(--primary-color);
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}

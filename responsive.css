@@ -1,0 +1,259 @@
+/* responsive.css */
+
+@media screen and (max-width: 1200px) {
+  .page-container,
+  .container,
+  .admin-page,
+  .footer-content {
+    max-width: 95%;
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .account-page,
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-section {
+    flex-direction: column;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  header,
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav,
+  .footer-links,
+  .social-icons {
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  nav a,
+  .footer-links a {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--input-border);
+  }
+
+  .hero h1 {
+    font-size: 2em;
+  }
+
+  .hero p {
+    font-size: 1em;
+  }
+
+  .form-container {
+    max-width: 100%;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chat-options {
+    margin-top: 10px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  #user-table {
+    font-size: 14px;
+  }
+
+  #user-table th,
+  #user-table td {
+    padding: 10px 5px;
+  }
+
+  .edit-btn,
+  .delete-btn,
+  .reset-pwd-btn,
+  .edit-admin-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  #user-table td:last-child {
+    min-width: 100px;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .chat-header h1 {
+    font-size: 1.8em;
+  }
+
+  .input-area {
+    flex-direction: column;
+  }
+
+  #user-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #send-button {
+    width: 100%;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar input,
+  .search-bar button {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination button {
+    margin: 5px;
+  }
+
+  .profile-picture-frame {
+    width: 150px;
+    height: 150px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .chat-header h1 {
+    font-size: 1.5em;
+  }
+
+  .message {
+    padding: 10px;
+  }
+
+  .form-container h2 {
+    font-size: 1.5em;
+  }
+
+  .input-group input,
+  button[type="submit"] {
+    padding: 10px;
+  }
+
+  .feature-item {
+    padding: 15px;
+  }
+
+  .feature-item i {
+    font-size: 2em;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  nav a,
+  .footer-links a,
+  .social-icons a,
+  button,
+  .edit-btn,
+  .delete-btn,
+  .reset-pwd-btn,
+  .edit-admin-btn {
+    padding: 12px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select {
+    min-height: 44px;
+  }
+}
+
+/* Dark mode adjustments for OLED screens */
+@media screen and (prefers-color-scheme: dark) {
+  .dark-theme {
+    --bg-color: #000000;
+    --chat-bg: #1a1a1a;
+    --input-bg: #2a2a2a;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .no-print,
+  nav,
+  .theme-toggle,
+  .chat-options,
+  .input-area,
+  footer {
+    display: none;
+  }
+
+  .chat-window {
+    height: auto;
+    overflow: visible;
+  }
+
+  .message {
+    page-break-inside: avoid;
+  }
+}
