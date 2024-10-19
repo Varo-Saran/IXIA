@@ -5,8 +5,22 @@ async function getAIResponse(userMessage) {
   // Simulate a delay to mimic AI thinking process
   await new Promise(resolve => setTimeout(resolve, 1000));
 
+  // Check for math operations first
+  const mathResult = solveMathProblem(userMessage);
+  if (mathResult !== null) {
+    return `The result of the calculation is: ${mathResult}`;
+  }
+
   // Sample responses based on user input
-  const responses = [
+    const responses = [
+      {
+        keywords: [["hi", "fuck"], ["hello", "fuck"]],
+        replies: [
+          "I understand you're trying to get my attention, but let's keep things friendly. How can I help you today?",
+          "Hello there! I'm here to help, but I'd appreciate if we could keep our conversation respectful. What can I assist you with?",
+          "Hi! I'm ready to help, but let's try to use more positive language. What's on your mind?"
+        ]
+      },
       {
           keywords: ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"],
           replies: ["Hi there! How can I help you today?", "Hello! What can I assist you with?", "Hey! How's it going?", "Hi! How can I be of service?", "Hello! What's on your mind?", "Hey there! Need any help?", "Greetings! How can I assist you?", "Good morning! How can I help?", "Good afternoon! What can I do for you today?", "Good evening! How may I assist?"]
@@ -72,11 +86,11 @@ async function getAIResponse(userMessage) {
           replies: ["I'd love to tell you something funny, but let's keep it clean, shall we?", "I'm programmed to stay polite, but I can still be cheeky in a fun way!", "Let's keep it light and fun—how about a joke instead?", "I'm all about good vibes, so let's laugh without crossing any lines!", "I could be witty, but I'd rather stay on the optimistic side of humor!"]
       },
       {
-        "keywords": [
+        keywords: [
           "fuck", "shit", "damn", "hell", "bitch", "asshole", "bastard", "pussy", "kundi", "kunji", 
           "punda", "pundayandi", "sunniyandi", "sunni", "suni", "oombu", "umbu", "kotta", "pundamavan", "vesa", "vesaamavan", "vesamavan", "soothu", "pandi", "sinnavan", "motherfucker", "cunt", "naai", "fucker", "dick", "willy", "ass", "gotha", "gomma", "gommala", "ommala", "adangotha", "thevudiya"
         ],
-        "replies": [
+        replies: [
           "Whoa, let's keep things friendly here! I'm still here to help, no hard feelings!", 
           "I get it, emotions can run high sometimes. I'm here if you need me!", 
           "Hey, no worries! We all have those moments. What can I help you with?", 
@@ -147,47 +161,125 @@ async function getAIResponse(userMessage) {
           "Sometimes things can be complex. I'm here to help explain. What would you like me to focus on?"
         ]
       },
+      {
+        keywords: [["calculate"], ["compute"], ["solve"]],
+        replies: [
+          "I'd be happy to help you with some calculations! What would you like to compute?",
+          "Sure, I can assist with math problems. What calculation do you need help with?",
+          "Math is my forte! What would you like me to calculate for you?"
+        ]
+      },
+      {
+        keywords: [["feeling", "sad"], ["feeling", "depressed"], ["feeling", "down"]],
+        replies: [
+          "I'm sorry to hear you're feeling down. Remember, it's okay to feel this way sometimes. Is there anything specific you'd like to talk about?",
+          "Feeling sad can be tough. Remember that you're not alone, and these feelings will pass. Would you like to share what's bothering you?",
+          "I'm here for you. Sadness is a normal emotion, but if it's persistent, it might help to talk to someone. Can you tell me more about what's going on?"
+        ]
+      },
       
   ];
 
-   // Search for a matching response
-   for (let response of responses) {
-    if (response.keywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+// Function to check if all keywords in a set are present in the message
+const checkKeywords = (keywordSet, message) => {
+  return keywordSet.every(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+};
+
+// Search for a matching response
+for (let response of responses) {
+  if (Array.isArray(response.keywords[0])) {
+    // Multi-keyword check
+    if (response.keywords.some(keywordSet => checkKeywords(keywordSet, userMessage))) {
+      return response.replies[Math.floor(Math.random() * response.replies.length)];
+    }
+  } else {
+    // Single keyword check (maintaining backwards compatibility)
+    if (response.keywords.some(keyword => userMessage.toLowerCase().includes(keyword.toLowerCase()))) {
       return response.replies[Math.floor(Math.random() * response.replies.length)];
     }
   }
+}
 
-  // Return a default message if no keyword matches
-  return "I'm not sure how to respond to that, but I'll learn!";
+// Return a default message if no keyword matches
+return "I'm not sure how to respond to that, but I'm here to help if you have any questions or calculations!";
+}
+
+// Function to solve basic math problems
+function solveMathProblem(message) {
+// Regular expression to match basic math operations
+const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)/;
+const match = message.match(mathRegex);
+
+if (match) {
+  const num1 = parseFloat(match[1]);
+  const operator = match[2];
+  const num2 = parseFloat(match[3]);
+
+  switch (operator) {
+    case '+':
+      return num1 + num2;
+    case '-':
+      return num1 - num2;
+    case '*':
+      return num1 * num2;
+    case '/':
+      return num2 !== 0 ? num1 / num2 : "Error: Division by zero";
+    default:
+      return null;
+  }
+}
+
+return null;
 }
 
 // Simple sentiment analysis to categorize response
 function simpleSentimentAnalysis(response) {
-  const sentiments = {
-    positive: ["help", "great", "welcome", "good", "hi", "thanks", "happy", "assist", "cheer", "support"],
-    negative: ["sad", "sorry", "unhappy", "depressed", "upset", "miserable", "gloomy"],
-    neutral: ["okay", "fine", "alright", "maybe", "perhaps", "possibly"]
-  };
+const sentiments = {
+  positive: ["help", "great", "welcome", "good", "hi", "thanks", "happy", "assist", "cheer", "support"],
+  negative: ["sad", "sorry", "unhappy", "depressed", "upset", "miserable", "gloomy"],
+  neutral: ["okay", "fine", "alright", "maybe", "perhaps", "possibly"]
+};
 
-  const lowerResponse = response.toLowerCase();
+const lowerResponse = response.toLowerCase();
 
-  for (const [sentiment, words] of Object.entries(sentiments)) {
-    if (words.some(word => lowerResponse.includes(word))) {
-      return sentiment;
-    }
+for (const [sentiment, words] of Object.entries(sentiments)) {
+  if (words.some(word => lowerResponse.includes(word))) {
+    return sentiment;
   }
+}
 
-  return 'neutral';
+return 'neutral';
 }
 
 // Make functions globally accessible
 window.getAIResponse = getAIResponse;
 window.simpleSentimentAnalysis = simpleSentimentAnalysis;
+window.solveMathProblem = solveMathProblem;
 
 // Example usage (for testing purposes)
 (async () => {
-  const userMessage = "I'm feeling sad";
-  const response = await getAIResponse(userMessage);
-  console.log(response);
+const testMessages = [
+  "hi fuck",
+  "What's 5 + 3?",
+  "Calculate 10 - 7",
+  "Solve 8 * 4",
+  "Compute 15 / 3",
+  "What's the result of 2.5 + 3.7?",
+  "Can you help me with 100 / 0?",
+  "I need to calculate something",
+  "What's 2 + 2 * 2?",
+  "Hello, how are you?",
+  "I'm feeling sad today",
+  "What can you do?",
+  "Tell me a joke",
+  "Goodbye"
+];
+
+for (const message of testMessages) {
+  const response = await getAIResponse(message);
+  console.log(`User: ${message}`);
+  console.log(`iXiA: ${response}`);
   console.log(`Sentiment: ${simpleSentimentAnalysis(response)}`);
+  console.log('---');
+}
 })();
