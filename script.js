@@ -1,30 +1,74 @@
+// New code to add at the top of your script, after the existing DOM element declarations
+const uploadFileBtn = document.getElementById('upload-file-btn');
+const sendMessageBtn = document.getElementById('send-message-btn');
+const fileInput = document.getElementById('file-input');
+const logo = document.querySelector('.top-left-logo');
+const mainContent = document.querySelector('.main-content');
+
+function toggleSidebar() {
+  sidebar.classList.toggle('show');
+  mainContent.classList.toggle('sidebar-open');
+  logo.classList.toggle('sidebar-open');
+  
+  if (sidebar.classList.contains('show')) {
+    toggleSidebarButton.style.left = '250px';
+    toggleSidebarButton.innerHTML = '&times;'; // Change to a close (X) icon
+  } else {
+    toggleSidebarButton.style.left = '0';
+    toggleSidebarButton.innerHTML = '&#9776;'; // Change back to hamburger icon
+  }
+}
+
+function closeSidebar() {
+  sidebar.classList.remove('show');
+  mainContent.classList.remove('sidebar-open');
+  logo.classList.remove('sidebar-open');
+  toggleSidebarButton.style.left = '0';
+  toggleSidebarButton.innerHTML = '&#9776;';
+}
+
 // Chat History Manager
 class ChatHistoryManager {
-    constructor(userId) {
+  constructor(userId) {
       this.userId = userId;
       this.chats = this.loadChats();
-      this.currentChatId = null;
-    }
-  
-    loadChats() {
+      this.currentChatId = this.loadCurrentChatId();
+  }
+
+  loadChats() {
       const savedChats = localStorage.getItem(`chats_${this.userId}`);
       return savedChats ? JSON.parse(savedChats) : {};
-    }
-  
-    saveChats() {
+  }
+
+  saveChats() {
       localStorage.setItem(`chats_${this.userId}`, JSON.stringify(this.chats));
-    }
-  
-    createNewChat() {
+  }
+
+  loadCurrentChatId() {
+      return localStorage.getItem(`currentChatId_${this.userId}`) || null;
+  }
+
+  saveCurrentChatId() {
+      localStorage.setItem(`currentChatId_${this.userId}`, this.currentChatId);
+  }
+
+  createNewChat() {
       const chatId = Date.now().toString();
       this.chats[chatId] = {
-        title: `Chat ${Object.keys(this.chats).length + 1}`,
-        messages: []
+          title: `Chat ${Object.keys(this.chats).length + 1}`,
+          messages: []
       };
-      this.currentChatId = chatId;
+      this.setCurrentChat(chatId);
       this.saveChats();
       return chatId;
-    }
+  }
+
+  setCurrentChat(chatId) {
+      if (this.chats[chatId]) {
+          this.currentChatId = chatId;
+          this.saveCurrentChatId();
+      }
+  }
   
     addMessage(message, isUser) {
       if (!this.currentChatId) {
@@ -81,22 +125,25 @@ class ChatHistoryManager {
     }
   }
   
- // Main script
-const chatWindow = document.getElementById('chat-window');
+ // Main script, DOM Elements
+ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 const typingIndicator = document.getElementById('typing-indicator');
 const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = themeToggle.querySelector('i');
 const savedChatsList = document.getElementById('saved-chats-list');
 const newChatButton = document.getElementById('new-chat-button');
 const clearChatButton = document.getElementById('clear-chat-button');
 const exportChatButton = document.getElementById('export-chat-button');
 const clearSavedChatsButton = document.getElementById('clear-saved-chats-button');
-
-let chatManager;
-let lastMessageId = null;
-let isWaitingForResponse = false;
+const toggleSidebarButton = document.getElementById('toggle-sidebar-btn');
+const sidebar = document.getElementById('sidebar');
+const profileButton = document.getElementById('profile-button');
+const profileDropdown = document.getElementById('profile-dropdown');
+ 
+ let chatManager;
+ let lastMessageId = null;
+ let isWaitingForResponse = false;
 
 // Function to show modal
 function showModal(title, message, onConfirm, onCancel, showInput = false, inputType = 'text', initialValue = '') {
@@ -221,43 +268,47 @@ function hideModal() {
     }
 }
 
-function addMessage(message, isUser = false, save = true, sentiment = 'neutral') {
-    let newMessage;
-    if (save) {
+// New function to handle automatic scrolling
+function scrollToBottom(force = false) {
+  const chatContainer = document.querySelector('.messages-container');
+  const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
+  
+  if (force || isScrolledToBottom) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+}
+
+// AddMessage function
+function addMessage(message, isUser = false, save = true) {
+  let newMessage;
+  if (save) {
       newMessage = chatManager.addMessage(message, isUser);
-    } else {
+  } else {
       newMessage = { id: Date.now().toString(), text: message, isUser, timestamp: new Date().toISOString() };
-    }
-    
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message', isUser ? 'user-message' : 'ai-message');
-    if (!isUser) {
-      messageElement.classList.add(sentiment); // Add sentiment class for AI messages
-    }
-    messageElement.dataset.messageId = newMessage.id;
-    chatWindow.appendChild(messageElement);
-  
-    if (!isUser) {
-      hideTypingIndicator();
-    }
-  
-    new Typed(messageElement, {
-      strings: [message],
-      typeSpeed: 20,
-      showCursor: false,
-      onBegin: () => {
-        messageElement.classList.add('visible');
-      },
-      onComplete: () => {
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-      }
-    });
-  
-    lastMessageId = newMessage.id;
-    
-    console.log('Message added:', newMessage);
   }
   
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', isUser ? 'user-message' : 'ai-message');
+  messageElement.dataset.messageId = newMessage.id;
+
+  const messageContent = document.createElement('div');
+  messageContent.classList.add('message-content');
+  messageContent.textContent = message;
+  messageElement.appendChild(messageContent);
+
+  chatWindow.appendChild(messageElement);
+
+  if (!isUser) {
+      hideTypingIndicator();
+  }
+
+  // Scroll to the new message
+  scrollToBottom(!isUser);  // Force scroll for AI messages
+
+  lastMessageId = newMessage.id;
+}
+
+
 function showTypingIndicator() {
     if (!typingIndicator.classList.contains('visible')) {
         chatWindow.appendChild(typingIndicator);
@@ -277,40 +328,107 @@ function clearUserInput() {
     userInput.value = '';
 }
 
-function disableSendButton() {
-    sendButton.disabled = true;
-    sendButton.classList.add('disabled');
-}
-
-function enableSendButton() {
-    sendButton.disabled = false;
-    sendButton.classList.remove('disabled');
-}
 
 async function handleUserInput() {
-    const message = userInput.value.trim();
-    if (message && !isWaitingForResponse) {
+  const message = userInput.value.trim();
+  if (message && !isWaitingForResponse) {
       isWaitingForResponse = true;
-      disableSendButton();
+      sendMessageBtn.disabled = true;
       addMessage(message, true);
       clearUserInput();
-  
+
       showTypingIndicator();
+      scrollToBottom(true);  // Force scroll after user input
       try {
-        // Use the getAIResponse function from Ixia.js
-        const aiResponse = await window.getAIResponse(message);
-        const sentiment = simpleSentimentAnalysis(aiResponse); // You'll need to import this function from Ixia.js
-        addMessage(aiResponse, false, true, sentiment);
+          const aiResponse = await window.getAIResponse(message);
+          addMessage(aiResponse, false, true);
       } catch (error) {
-        console.error('Error getting AI response:', error);
-        hideTypingIndicator();
-        addMessage("I'm sorry, I encountered an error. Please try again.");
+          console.error('Error getting AI response:', error);
+          hideTypingIndicator();
+          addMessage("I'm sorry, I encountered an error. Please try again.");
       } finally {
-        isWaitingForResponse = false;
-        enableSendButton();
+          isWaitingForResponse = false;
+          sendMessageBtn.disabled = false;
+          scrollToBottom(true);  // Force scroll after AI response
       }
+  }
+}
+
+// New function to add for handling file uploads
+function handleFileUpload(file) {
+  // Check file size (e.g., limit to 5MB)
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSize) {
+      alert('File is too large. Please upload a file smaller than 5MB.');
+      return;
+  }
+
+  // Check file type (you can adjust the allowed types)
+  const allowedTypes = ['text/plain', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Please upload a TXT, PDF, DOC, or DOCX file.');
+      return;
+  }
+
+  // Here you would typically upload the file to your server
+  // For this example, we'll just add a message about the file
+  const fileName = file.name;
+  userInput.value += `[File attached: ${fileName}] `;
+}
+
+
+
+// Function to toggle sidebar
+function toggleSidebar() {
+  sidebar.classList.toggle('show');
+  mainContent.classList.toggle('sidebar-open');
+  
+  if (sidebar.classList.contains('show')) {
+    toggleSidebarButton.style.left = '250px';
+    toggleSidebarButton.innerHTML = '&times;'; // Change to a close (X) icon
+  } else {
+    toggleSidebarButton.style.left = '0';
+    toggleSidebarButton.innerHTML = '&#9776;'; // Change back to hamburger icon
+  }
+}
+
+function closeSidebar() {
+  sidebar.classList.remove('show');
+  mainContent.classList.remove('sidebar-open');
+  toggleSidebarButton.style.left = '0';
+  toggleSidebarButton.innerHTML = '&#9776;';
+}
+
+
+// Toggle event listeners
+toggleSidebarButton.addEventListener('click', toggleSidebar);
+
+// Close sidebar when clicking outside of it on mobile
+document.addEventListener('click', (event) => {
+  if (window.innerWidth <= 767 && 
+      !sidebar.contains(event.target) && 
+      !toggleSidebarButton.contains(event.target) && 
+      sidebar.classList.contains('show')) {
+    closeSidebar();
+  }
+});
+
+// Adjust layout on window resize
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 767) {
+    sidebar.classList.remove('show');
+    mainContent.classList.remove('sidebar-open');
+    toggleSidebarButton.style.display = 'none';
+  } else {
+    toggleSidebarButton.style.display = 'flex';
+    if (!sidebar.classList.contains('show')) {
+      toggleSidebarButton.style.left = '0';
     }
   }
+});
+
+// Initialize button state
+toggleSidebarButton.innerHTML = '&#9776;'; // Hamburger icon
   
   function updateSavedChatsList() {
     savedChatsList.innerHTML = '';
@@ -319,7 +437,13 @@ async function handleUserInput() {
         const span = document.createElement('span');
         span.textContent = chat.title;
         li.appendChild(span);
-        li.onclick = () => loadChat(chat.id);
+        li.onclick = (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            loadChat(chat.id);
+            if (window.innerWidth <= 767) {
+                closeSidebar();
+            }
+        };
         
         if (chat.id === chatManager.currentChatId) {
             li.classList.add('selected');
@@ -347,6 +471,17 @@ async function handleUserInput() {
         li.appendChild(actionsDiv);
         savedChatsList.appendChild(li);
     });
+
+    // Add event listener to close sidebar when clicking outside on mobile
+    if (window.innerWidth <= 767) {
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && 
+                !toggleSidebarButton.contains(event.target) && 
+                sidebar.classList.contains('show')) {
+                closeSidebar();
+            }
+        });
+    }
 }
   
   function loadChat(chatId) {
@@ -373,15 +508,20 @@ async function handleUserInput() {
 
     updateSavedChatsList(); // Update the list to reflect the new selection
     console.log('Chat loaded:', chat);
+    // After loading messages, scroll to bottom
+    scrollToBottom(true);
 }
   
-  function createNewChat() {
-      const chatId = chatManager.createNewChat();
-      chatWindow.innerHTML = '';
-      lastMessageId = null;
-      updateSavedChatsList();
-      loadChat(chatId);
+function createNewChat() {
+  const chatId = chatManager.createNewChat();
+  chatWindow.innerHTML = '';
+  lastMessageId = null;
+  updateSavedChatsList();
+  loadChat(chatId);
+  if (window.innerWidth <= 767) {
+      closeSidebar();
   }
+}
   
   function renameChat(chatId) {
     const chat = chatManager.chats[chatId];
@@ -400,36 +540,73 @@ async function handleUserInput() {
         chat.title
     );
 }
+
+// Function to set theme
+function setTheme(isDark) {
+  if (isDark) {
+      document.body.classList.add('dark-theme');
+      themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+      themeToggle.title = "Switch to Light Mode";
+  } else {
+      document.body.classList.remove('dark-theme');
+      themeToggle.querySelector('i').classList.replace('fa-sun', 'fa-moon');
+      themeToggle.title = "Switch to Dark Mode";
+  }
+  localStorage.setItem('darkTheme', isDark);
+}
+
+// Function to load saved theme
+function loadSavedTheme() {
+  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+  setTheme(isDarkTheme);
+}
   
   // Event listeners
-sendButton.addEventListener('click', handleUserInput);
+  sendMessageBtn.addEventListener('click', handleUserInput);
 userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !isWaitingForResponse) handleUserInput();
+    if (e.key === 'Enter' && !e.shiftKey && !isWaitingForResponse) {
+        e.preventDefault();
+        handleUserInput();
+    }
 });
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    themeIcon.classList.toggle('fa-moon');
-    themeIcon.classList.toggle('fa-sun');
+uploadFileBtn.addEventListener('click', () => {
+    fileInput.click();
 });
 
-newChatButton.addEventListener('click', createNewChat);
-clearChatButton.addEventListener('click', clearChat);
-exportChatButton.addEventListener('click', exportChat);
-clearSavedChatsButton.addEventListener('click', clearSavedChats);
+fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        handleFileUpload(file);
+    }
+});
+  
+  themeToggle.addEventListener('click', () => {
+    const isDarkTheme = document.body.classList.toggle('dark-theme');
+    setTheme(isDarkTheme);
+      themeToggle.querySelector('i').classList.toggle('fa-moon');
+      themeToggle.querySelector('i').classList.toggle('fa-sun');
+  });
+  
+  newChatButton.addEventListener('click', createNewChat);
+  clearChatButton.addEventListener('click', clearChat);
+  exportChatButton.addEventListener('click', exportChat);
+  clearSavedChatsButton.addEventListener('click', clearSavedChats);
+  toggleSidebarButton.addEventListener('click', toggleSidebar);
 
-// Profile menu functionality
-const profileButton = document.getElementById('profile-button');
-const profileDropdown = document.getElementById('profile-dropdown');
-
+  
+console.log('Profile button:', profileButton);
+console.log('Profile dropdown:', profileDropdown);
+  
 profileButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+  e.stopPropagation();
+  profileDropdown.classList.toggle('show');
 });
 
-window.addEventListener('click', (event) => {
-    if (!event.target.closest('.profile-menu')) {
-        profileDropdown.style.display = 'none';
+  // Close profile dropdown when clicking outside
+  document.addEventListener('click', (event) => {
+    if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+        profileDropdown.classList.remove('show');
     }
 });
 
@@ -472,21 +649,27 @@ function isUserAuthenticated() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    if (!isUserAuthenticated()) {
-        window.location.href = 'login.html';
-        return;
-    }
+  loadSavedTheme();
+  if (!isUserAuthenticated()) {
+      window.location.href = 'login.html';
+      return;
+  }
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    chatManager = new ChatHistoryManager(currentUser.email);
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  chatManager = new ChatHistoryManager(currentUser.email);
 
-    updateSavedChatsList();
-    const chats = chatManager.getAllChats();
-    if (chats.length === 0) {
-        createNewChat();
-    } else {
-        loadChat(chats[0].id);
-    }
+  updateSavedChatsList();
+  const chats = chatManager.getAllChats();
+  if (chats.length === 0) {
+      createNewChat();
+  } else {
+      loadChat(chats[0].id);
+  }
 
-    console.log('Initial chats:', chatManager.chats);
+  scrollToBottom(true);  // Ensure initial scroll is at the bottom
+
+  // Set initial sidebar state based on screen size
+  if (window.innerWidth <= 767) {
+      closeSidebar();
+  }
 });
