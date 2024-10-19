@@ -72,8 +72,17 @@ async function getAIResponse(userMessage) {
           replies: ["I'd love to tell you something funny, but let's keep it clean, shall we?", "I'm programmed to stay polite, but I can still be cheeky in a fun way!", "Let's keep it light and fun—how about a joke instead?", "I'm all about good vibes, so let's laugh without crossing any lines!", "I could be witty, but I'd rather stay on the optimistic side of humor!"]
       },
       {
-          keywords: ["fuck", "shit", "damn", "hell", "bitch", "asshole", "bastard"],
-          replies: ["Whoa, let's keep things friendly here! I'm still here to help, no hard feelings!", "I get it, emotions can run high sometimes. I'm here if you need me!", "Hey, no worries! We all have those moments. What can I help you with?", "It's all good! Let's just take a deep breath and move forward together.", "I know things can be frustrating, but I'm here to make it better if I can!"]
+        "keywords": [
+          "fuck", "shit", "damn", "hell", "bitch", "asshole", "bastard", "pussy", "kundi", "kunji", 
+          "punda", "pundayandi", "sunniyandi", "sunni", "suni", "oombu", "umbu", "kotta", "pundamavan", "vesa", "vesaamavan", "vesamavan", "soothu", "pandi", "sinnavan", "motherfucker", "cunt", "naai", "fucker", "dick", "willy", "ass", "gotha", "gomma", "gommala", "ommala", "adangotha", "thevudiya"
+        ],
+        "replies": [
+          "Whoa, let's keep things friendly here! I'm still here to help, no hard feelings!", 
+          "I get it, emotions can run high sometimes. I'm here if you need me!", 
+          "Hey, no worries! We all have those moments. What can I help you with?", 
+          "It's all good! Let's just take a deep breath and move forward together.", 
+          "I know things can be frustrating, but I'm here to make it better if I can!"
+        ]
       },
       {
           keywords: ["movie", "film", "recommend a movie", "what should I watch"],
