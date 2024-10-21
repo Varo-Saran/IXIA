@@ -59,16 +59,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPassword = document.getElementById('current-password').value;
         const newPassword = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-
+    
         if (newPassword !== confirmPassword) {
             showNotification('New passwords do not match!', 'error');
             return;
         }
-
-        // Simulate API call to change password
-        showNotification('Password changed successfully!');
+    
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            showNotification('No user found.', 'error');
+            return;
+        }
+    
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = users.findIndex(user => user.email === currentUser.email);
+    
+        if (userIndex === -1 || users[userIndex].password !== btoa(currentPassword)) {
+            showNotification('Current password is incorrect!', 'error');
+            return;
+        }
+    
+        // Update the user's password
+        users[userIndex].password = btoa(newPassword);
+        localStorage.setItem('users', JSON.stringify(users));
+    
+        // Also update the currentUser's password in localStorage
+        currentUser.password = btoa(newPassword);
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    
+        showNotification('Password changed successfully!', 'success');
         passwordForm.reset();
     }
+    
 
     function savePreferences(e) {
         e.preventDefault();
@@ -88,14 +110,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteAccount() {
-        // Simulate API call to delete account
+        // Get the current user's email
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (!currentUser) {
+            showNotification('No user found to delete.', 'error');
+            return;
+        }
+    
+        // Retrieve the users list from localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+    
+        // Filter out the current user from the users list
+        users = users.filter(user => user.email !== currentUser.email);
+    
+        // Save the updated users list back to localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+    
+        // Remove the currentUser and userToken from localStorage
         localStorage.removeItem('currentUser');
         localStorage.removeItem('userToken');
+    
+        // Show a success notification
         showNotification('Your account has been deleted. Redirecting to home page...', 'info');
+    
+        // Redirect to home page after a short delay
         setTimeout(() => {
             window.location.href = 'index.html';
         }, 3000);
     }
+    
 
     function changePicture(e) {
         const file = e.target.files[0];
