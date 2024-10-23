@@ -70,18 +70,45 @@
                 </div>
                 
                 <div class="input-area">
-                    <textarea id="user-input" placeholder="Talk to iXiA..."></textarea>
-                    <button id="upload-file-btn" title="Upload file">
-                        <i class="fas fa-paperclip"></i>
-                    </button>
-                    <button id="send-message-btn" title="Send message">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                    <input type="file" id="file-input" accept=".txt,.pdf,.doc,.docx" style="display: none;">
+                    <!-- Attachments preview area -->
+                    <div class="attachments-preview" style="display: none;">
+                        <!-- Attachment previews will be added here -->
+                    </div>
+
+                    <div class="input-container">
+                        <textarea id="user-input" placeholder="Talk to iXiA..." rows="1"></textarea>
+                        <div class="input-buttons">
+                            <button id="upload-file-btn" class="icon-button" title="Upload file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="file-input" multiple 
+                                   accept="image/*,.txt,.pdf,.doc,.docx" 
+                                   style="display: none;">
+                            <button id="send-message-btn" class="icon-button" title="Send message" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Message template for editing (hidden by default) -->
+        <div class="edit-message-template" style="display: none;">
+            <div class="edit-container">
+                <textarea class="edit-textarea"></textarea>
+                <div class="edit-buttons">
+                    <button class="save-edit-btn" title="Save changes">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="cancel-edit-btn" title="Cancel editing">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
         <div id="custom-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,6 +124,7 @@
             </div>
         </div>
 
+        <!-- Typing indicator -->
         <div id="typing-indicator" class="typing-indicator">
             <span></span>
             <span></span>
@@ -104,6 +132,7 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <script src="https://unpkg.com/compromise"></script>
     <script src="https://unpkg.com/sentiment"></script>
