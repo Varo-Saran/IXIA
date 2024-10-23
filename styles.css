@@ -578,6 +578,7 @@ body, html {
     padding: 12px 16px;
     border-radius: 8px;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .message:hover {
@@ -612,8 +613,99 @@ body, html {
 }
 
 .message-content {
-    max-width: 80%;
-    line-height: 1.5;
+  max-width: 80%;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/*.message-text {
+  flex: 1;
+  min-width: 0;
+} */
+
+.edit-message-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.message:hover .edit-message-btn {
+  opacity: 0.7;
+}
+
+.edit-message-btn:hover {
+  opacity: 1;
+}
+
+.edit-container {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  resize: vertical;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.edit-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.save-edit-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.cancel-edit-btn {
+  background: var(--input-border);
+  color: var(--text-color);
+}
+
+/* Dark theme adjustments */
+.dark-theme .edit-textarea {
+  background: var(--input-bg);
+  color: var(--text-color);
+  border-color: var(--input-border);
+}
+
+.edited-indicator {
+  font-size: 0.8em;
+  opacity: 0.6;
+  margin-left: 8px;
+  color: var(--input-placeholder); /* Using the placeholder color which is typically more subtle */
+  font-style: italic;
+}
+
+/* For dark theme */
+.dark-theme .edited-indicator {
+  opacity: 1; /* Even more subtle in dark mode */
 }
 
 /* Add smooth scroll behavior */
@@ -651,25 +743,32 @@ html {
 .input-area {
   display: flex;
   align-items: center;
-  background: var(--input-bg);
+  background: var(--input-bg); /* Use theme variable instead of hard-coded color */
   border: 1px solid var(--input-border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 10px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 20px;
+  width: calc(100% - 40px); /* Full width minus margins */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .input-area textarea {
   flex-grow: 1;
+  width: 100%;  /* Take full width */
   border: none;
   background: transparent;
-  color: var(--input-text);
+  color: var(--input-text);  /* Use theme variable */
   resize: none;
   min-height: 24px;
   max-height: 150px;
   font-size: 16px;
-  padding: 6px 0;
-  margin-right: 12px;
+  padding: 8px;
   line-height: 1.5;
+  margin-right: 12px;
+}
+
+.input-area textarea::placeholder {
+  color: var(--input-placeholder);
 }
 
 .input-area input {
@@ -683,23 +782,42 @@ html {
 .input-area button {
   background: transparent;
   border: none;
-  color: var(--text-color);
+  color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white */
   cursor: pointer;
-  font-size: 20px;
-  padding: 6px;
+  font-size: 18px;
+  padding: 8px;
+  margin: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
 }
 
 .input-area button:hover {
-  color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.1);  /* Subtle hover effect */
+  color: #fff;
 }
 
+/* Dark theme specific adjustments */
 .dark-theme .input-area {
-    background-color: var(--input-bg);
-    border: 1px solid var(--input-border);
+  background: var(--sidebar-item-bg);
+  border-color: rgba(86, 88, 105, 1);
+}
+
+.dark-theme .input-area textarea {
+  color: #fff;
+}
+
+.dark-theme .input-area button {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-theme .input-area button:hover {
+  color: #fff;
 }
 
 .dark-theme #user-input {
@@ -713,20 +831,97 @@ html {
 /* File handling */
 #upload-file-btn {
   margin-right: 5px;
+  font-size: 20px;
 }
 
 #send-message-btn {
   color: var(--send-button-bg);
+  font-size: 20px;
 }
 
 #send-message-btn:hover {
   color: var(--send-button-hover);
 }
 
-/* Add focus styles for better visibility */
+/* Disabled state */
+.input-area button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+#send-message-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Attachment styles */
+.attachments-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--input-border);
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.attachment-preview {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  background: var(--input-bg);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.attachment-preview .remove-attachment {
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.7;
+}
+
+.attachment-preview .remove-attachment:hover {
+  opacity: 1;
+}
+
+.dark-theme .attachment-preview {
+  background: var(--input-bg);
+}
+
+/* Focus styles */
 .input-area:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);  /* Subtle highlight */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+#user-input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  resize: none;
+  min-height: 20px;
+  max-height: 150px;
+}
+
+.input-buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 #user-input:focus {
@@ -743,37 +938,46 @@ html {
 }
 
 .typing-indicator {
-    display: none;
-    align-items: center;
-    background-color: var(--ai-message-bg);
-    border-radius: 20px;
-    border-bottom-left-radius: 5px;
-    padding: 12px 20px;
-    margin-bottom: 15px;
-    align-self: flex-start;
+  display: none;
+  padding: 12px 20px;
+  background: var(--ai-message-bg);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  align-self: flex-start;
 }
 
 .typing-indicator.visible {
-    display: flex;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .typing-indicator span {
-    height: 8px;
-    width: 8px;
-    background-color: var(--ai-message-text);
-    border-radius: 50%;
-    display: inline-block;
-    margin: 0 3px;
-    animation: typing 1s infinite;
+  width: 8px;
+  height: 8px;
+  background: var(--text-color);
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: -0.32s;
 }
 
 .typing-indicator span:nth-child(2) {
-    animation-delay: 0.2s;
+  animation-delay: -0.16s;
 }
 
-.typing-indicator span:nth-child(3) {
-    animation-delay: 0.4s;
+@keyframes bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+  }
+  40% { 
+    transform: scale(1.0);
+  }
 }
+
 
 .modal {
     display: none;
@@ -845,14 +1049,7 @@ html {
     }
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    .chat-header h1 {
-        font-size: 2em;
-    }
-}
+
 
 /* Modal styles */
 .modal {
@@ -957,17 +1154,6 @@ html {
 .dark-theme #modal-cancel {
     background-color: var(--input-bg);
     color: var(--text-color);
-}
-
-/* Ensure proper spacing on smaller screens */
-@media (max-width: 480px) {
-    .modal-footer {
-        flex-direction: column;
-    }
-    
-    .modal-footer button {
-        margin: 5px 0;
-    }
 }
 
 
