@@ -371,10 +371,10 @@
     width: 100%;
     max-width: 100%;
     padding: 10px;
-    margin-bottom: 30px; /* Added margin to ensure content stops above input */
+    margin-bottom: 20px; /* Addred margin to ensure content stops above input */
     box-sizing: border-box;
     overflow-y: auto;
-    height: calc(100% - 60px); /* Subtract space for input area */
+    height: calc(100% - 30px); /* Subtract space for input area */
   }
 
   /* Message styling */
