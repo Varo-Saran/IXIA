@@ -360,7 +360,7 @@
     height: calc(100vh - 180px); /* Increased space for input area */
     margin: 0;
     padding: 10px;
-    padding-top: 15px; /* Reduced from 20px */
+    padding-top: 10px; /* Reduced from 20px */
     padding-bottom: 70px; /* Added padding at bottom to prevent content going under input */
     box-sizing: border-box;
     position: relative;
@@ -371,7 +371,7 @@
     width: 100%;
     max-width: 100%;
     padding: 10px;
-    margin-bottom: 60px; /* Added margin to ensure content stops above input */
+    margin-bottom: 30px; /* Added margin to ensure content stops above input */
     box-sizing: border-box;
     overflow-y: auto;
     height: calc(100% - 60px); /* Subtract space for input area */
