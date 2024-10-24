@@ -357,11 +357,13 @@
   /* Chat interface adjustments */
   .chat-container {
     width: 100%;
-    height: calc(100vh - 140px); /* Adjusted to account for increased top padding */
+    height: calc(100vh - 180px); /* Increased space for input area */
     margin: 0;
     padding: 10px;
-    padding-top: 20px; /* Add extra padding at top of chat */
+    padding-top: 15px; /* Reduced from 20px */
+    padding-bottom: 70px; /* Added padding at bottom to prevent content going under input */
     box-sizing: border-box;
+    position: relative;
   }
 
   /* Messages container */
@@ -369,9 +371,10 @@
     width: 100%;
     max-width: 100%;
     padding: 10px;
-    padding-top: 10px; /* Add space at top of messages */
-    padding-bottom: 15px;
+    margin-bottom: 60px; /* Added margin to ensure content stops above input */
     box-sizing: border-box;
+    overflow-y: auto;
+    height: calc(100% - 60px); /* Subtract space for input area */
   }
 
   /* Message styling */
@@ -655,7 +658,12 @@
 /* Handle shorter screens */
 @media (max-height: 600px) and (max-width: 767.98px) {
   .chat-container {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 160px);
+    padding-bottom: 60px;
+  }
+
+  .messages-container {
+    margin-bottom: 50px;
   }
 
   .input-area {
