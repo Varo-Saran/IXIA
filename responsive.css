@@ -369,7 +369,8 @@
   /* Chat interface adjustments */
   .chat-container {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 140px); /* Increased to account for bottom nav */
+    padding-bottom: 70px; /* Add padding for input area */
     margin: 0;
     padding: 10px;
     border-radius: 0;
@@ -399,7 +400,7 @@
   /* Input area adjustments */
   .input-area {
     position: fixed;
-    bottom: 0;
+    bottom: 60px; /* Raised up to clear the bottom nav */
     left: 0;
     right: 0;
     margin: 10px;
@@ -408,10 +409,12 @@
     background: var(--input-bg);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it stays above other content */
   }
 
   .input-container {
     gap: 6px;
+    padding-bottom: 80px; /* Extra padding to prevent messages being hidden */
   }
 
   #user-input {
@@ -445,7 +448,7 @@
 
   .sidebar.show + .main-content .toggle-sidebar-btn {
     left: calc(85% + 10px);
-    max-left: 310px;
+    max-width: 310px; /* Fixed: changed from max-left to max-width */
   }
 
   /* Profile menu adjustments */
@@ -507,16 +510,27 @@
     width: 6px;
     height: 6px;
   }
+
+  /* Handle bottom navigation presence */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .input-area {
+      bottom: calc(60px + env(safe-area-inset-bottom)); /* Account for iOS home indicator */
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+  }
 }
+
+
 
 /* Handle shorter screens */
 @media (max-height: 600px) and (max-width: 767.98px) {
   .chat-container {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 120px);
   }
 
   .input-area {
     padding: 6px 10px;
+    bottom: 50px; /* Slightly reduced for shorter screens */
   }
 
   #user-input {
@@ -526,6 +540,21 @@
   .message {
     margin-bottom: 8px;
     padding: 8px 10px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-width: 767.98px) {
+  .chat-container {
+    height: calc(100vh - 100px);
+  }
+
+  .input-area {
+    bottom: 40px; /* Reduced bottom spacing in landscape */
+  }
+
+  .messages-container {
+    padding-bottom: 60px;
   }
 }
 
