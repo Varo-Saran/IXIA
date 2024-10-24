@@ -465,7 +465,6 @@
     top: 8px;
     z-index: 1001;
     background: var(--primary-color);
-    color: white !important; /* Force white color */
     border: none;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
@@ -490,6 +489,28 @@
   .sidebar.show + .main-content .toggle-sidebar-btn {
     left: calc(85% + 10px);
     max-width: 310px; /* Fixed: changed from max-left to max-width */
+  }
+
+  /* Style for hamburger icon lines */
+  .toggle-sidebar-btn .hamburger-lines {
+    width: 20px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .toggle-sidebar-btn .hamburger-lines span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: #ffffff; /* Changed to white */
+    border-radius: 2px;
+  }
+
+  /* Ensure the lines stay white in both themes */
+  .dark-theme .toggle-sidebar-btn .hamburger-lines span {
+    background-color: #ffffff;
   }
 
   /* Container for sidebar content */
