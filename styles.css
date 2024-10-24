@@ -9,7 +9,7 @@
     --input-bg: #f9fafb;          /* Very light gray input background */
     --input-border: #d1d5db;      /* Light gray border for input */
     --input-text: #1f2937;        /* Dark gray for input text */
-    --input-placeholder: #9ca3af; /* Medium gray for placeholder text */
+    --input-placeholder: #7a8fb4; /* Medium gray for placeholder text */
     --shadow-color: rgba(0,0,0,0.1);
     --sidebar-bg: #f3f4f6;        /* Light gray background to match main bg */
     --sidebar-text: #4b5563;      /* Medium gray for sidebar text */
@@ -21,7 +21,7 @@
     --sidebar-item-border: #e5e7eb; /* Light border for unselected items */
     --new-chat-btn: #3b82f6;      /* Primary color for New Chat button */
     --clear-chats-btn: #ef4444;   /* Red color for Clear Saved Chats button */
-    --user-message-bg: #f0f9ff;   /* Very light blue for user messages */
+    --user-message-bg: #d1ebfd;   /* Very light blue for user messages */
     --ai-message-bg: #ffffff;     /* White for AI messages */
     --user-message-text: #1e40af; /* Dark blue for user message text */
     --ai-message-text: #1f2937;   /* Dark gray for AI message text */
@@ -38,12 +38,12 @@
     --primary-color: #3b82f6;     /* Bright blue */
     --secondary-color: #10b981;   /* Emerald green */
     --text-color: #f3f4f6;        /* Light gray for text */
-    --bg-color: #111827;          /* Very dark blue-gray background */
+    --bg-color: #1a1d21;          /* Very dark blue-gray background */
     --chat-bg: #1f2937;           /* Dark blue-gray for chat background */
     --input-bg: #374151;          /* Darker blue-gray for input */
     --input-border: #4b5563;      /* Medium gray for input border */
     --input-text: #f3f4f6;        /* Light gray for input text */
-    --input-placeholder: #9ca3af; /* Medium gray for placeholder text */
+    --input-placeholder: #c0cadb; /* Medium gray for placeholder text */
     --shadow-color: rgba(0,0,0,0.3);
     --sidebar-bg: #1f2937;        /* Dark blue-gray for sidebar */
     --sidebar-text: #e5e7eb;      /* Light gray for sidebar text */
@@ -55,7 +55,7 @@
     --sidebar-item-border: #4b5563; /* Medium gray for item borders */
     --new-chat-btn: #3b82f6;      /* Primary color for New Chat button */
     --clear-chats-btn: #ef4444;   /* Red color for Clear Saved Chats button */
-    --user-message-bg: #3b82f6;   /* Primary color for user messages */
+    --user-message-bg: #5697ff;   /* Primary color for user messages */
     --ai-message-bg: #2c3244;     /* Slightly lighter bg for AI messages */
     --user-message-text: #ffffff; /* White text for user messages */
     --ai-message-text: #f3f4f6;   /* Light gray for AI message text */
