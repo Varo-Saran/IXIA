@@ -369,8 +369,7 @@
   /* Chat interface adjustments */
   .chat-container {
     width: 100%;
-    height: calc(100vh - 140px); /* Increased to account for bottom nav */
-    padding-bottom: 70px; /* Add padding for input area */
+    height: calc(100vh - 100px);
     margin: 0;
     padding: 10px;
     border-radius: 0;
@@ -400,31 +399,37 @@
   /* Input area adjustments */
   .input-area {
     position: fixed;
-    bottom: 60px; /* Raised up to clear the bottom nav */
+    bottom: 60px;
     left: 0;
     right: 0;
-    margin: 10px;
-    width: calc(100% - 20px);
-    padding: 8px 12px;
+    margin: 10px 15px; /* Increased side margins */
+    width: calc(100% - 30px); /* Adjusted width calculation to match margins */
+    padding: 8px 10px; /* Reduced horizontal padding */
     background: var(--input-bg);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Ensure it stays above other content */
+    z-index: 1000;
   }
 
   .input-container {
     gap: 6px;
-    padding-bottom: 80px; /* Extra padding to prevent messages being hidden */
+    width: 100%; /* Ensure container takes full width */
+    padding-right: 5px; /* Add small padding to prevent text touching edge */
   }
 
   #user-input {
-    font-size: 16px; /* Prevent zoom on iOS */
+    width: calc(100% - 80px); /* Account for button widths */
+    font-size: 16px;
     padding: 8px;
     min-height: 24px;
   }
 
   .input-buttons {
-    gap: 6px;
+    gap: 4px; /* Reduced gap between buttons */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 70px; /* Minimum width for buttons */
   }
 
   .input-buttons button {
@@ -510,27 +515,16 @@
     width: 6px;
     height: 6px;
   }
-
-  /* Handle bottom navigation presence */
-  @supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .input-area {
-      bottom: calc(60px + env(safe-area-inset-bottom)); /* Account for iOS home indicator */
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
-    }
-  }
 }
-
-
 
 /* Handle shorter screens */
 @media (max-height: 600px) and (max-width: 767.98px) {
   .chat-container {
-    height: calc(100vh - 120px);
+    height: calc(100vh - 80px);
   }
 
   .input-area {
     padding: 6px 10px;
-    bottom: 50px; /* Slightly reduced for shorter screens */
   }
 
   #user-input {
@@ -543,23 +537,22 @@
   }
 }
 
-/* Landscape mode adjustments */
-@media (orientation: landscape) and (max-width: 767.98px) {
-  .chat-container {
-    height: calc(100vh - 100px);
-  }
-
-  .input-area {
-    bottom: 40px; /* Reduced bottom spacing in landscape */
-  }
-
-  .messages-container {
-    padding-bottom: 60px;
-  }
-}
-
 /* Handle very small screens */
 @media (max-width: 359.98px) {
+  .input-area {
+    margin: 10px 12px; /* Slightly reduced margins */
+    width: calc(100% - 24px);
+    padding: 6px 8px;
+  }
+
+  .input-buttons button {
+    padding: 4px;
+  }
+
+  #user-input {
+    width: calc(100% - 70px); /* Adjusted for smaller screens */
+  }
+  
   .top-left-logo {
     transform: scale(0.7);
   }
