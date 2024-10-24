@@ -35,7 +35,7 @@
   nav a {
     width: 100%;
     padding: 8px 0;
-    border-bottom: 1px solid var(--input-border);
+    border-bottom: 1px solid;
   }
 
   /* Main content adjustments */
@@ -212,7 +212,6 @@
   }
 
   body {
-    background: white;
     font-size: 12pt;
   }
 
@@ -228,15 +227,6 @@
   }
 }
 
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  :root {
-    --primary-color: #0000FF;
-    --text-color: #000000;
-    --bg-color: #FFFFFF;
-  }
-}
-
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -245,29 +235,10 @@
   }
 }
 
-/* Dark mode preferences */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #1a1d21;
-    --text-color: #f0f4f8;
-    --input-bg: #34495e;
-  }
-}
-
 /* Orientation specific styles */
 @media (orientation: portrait) {
   .sidebar {
     height: 30vh;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 500px) {
-  .chat-container {
-    height: calc(100vh - 60px);
-  }
-
-  .input-area {
-    padding: 5px;
   }
 }
 
@@ -367,6 +338,7 @@
 
   /* Main content adjustments */
   .main-content {
+    padding-top: 70px;
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
@@ -385,9 +357,10 @@
   /* Chat interface adjustments */
   .chat-container {
     width: 100%;
-    max-width: 100%;
-    padding: 10px;
+    height: calc(100vh - 140px); /* Adjusted to account for increased top padding */
     margin: 0;
+    padding: 10px;
+    padding-top: 20px; /* Add extra padding at top of chat */
     box-sizing: border-box;
   }
 
@@ -396,6 +369,7 @@
     width: 100%;
     max-width: 100%;
     padding: 10px;
+    padding-top: 15px; /* Add space at top of messages */
     box-sizing: border-box;
   }
 
@@ -476,16 +450,36 @@
   }
 
   /* Top right buttons */
+  .top-left-logo {
+    left: 50px;
+    transform: scale(0.8);
+    top: 12px; /* Adjusted position */
+    z-index: 1001; /* Ensure logo stays above chat */
+  }
+
   .top-right-buttons {
+    top: 12px; /* Aligned with logo */
     right: 10px;
     display: flex;
     gap: 8px;
     position: fixed;
+    z-index: 1001; /* Ensure buttons stay above chat */
   }
 
   .icon-button {
     width: 35px;
     height: 35px;
+  }
+
+  /* Add a subtle header background to ensure visibility */
+  .app-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px; /* Height of header area */
+    z-index: 1000;
   }
 
   /* Modal adjustments */
@@ -552,6 +546,10 @@
     min-width: 320px; /* Prevent shrinking below minimum usable width */
   }
 
+  .main-content {
+    padding-top: 65px; /* Slightly reduced for very small screens */
+  }
+
   .input-area {
     width: calc(100% - 16px);
     margin: 8px;
@@ -560,6 +558,11 @@
 
   .top-left-logo {
     transform: scale(0.7);
+    top: 10px;
+  }
+
+  .top-right-buttons {
+    top: 10px;
   }
 
   .input-buttons button {
@@ -579,17 +582,26 @@
 /* Ensure proper behavior on landscape orientation */
 @media (orientation: landscape) and (max-height: 500px) {
   .chat-container {
-    height: calc(100vh - 70px);
+    height: calc(100vh - 60px);
   }
 
   .input-area {
     position: fixed;
     bottom: 0;
+    padding: 5px;
   }
 
   .sidebar {
     height: 100vh;
     padding-bottom: 20px;
+  }
+
+  .main-content {
+    padding-top: 60px; /* Adjusted for landscape */
+  }
+
+  .chat-container {
+    height: calc(100vh - 120px); /* Adjusted for landscape */
   }
 }
 
