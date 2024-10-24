@@ -383,6 +383,9 @@
   .message-content {
     max-width: 100%;
     font-size: 0.95em;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 25px; /* Space for edit button */
   }
 
   .edit-message-btn {
@@ -515,6 +518,47 @@
   .typing-indicator span {
     width: 6px;
     height: 6px;
+  }
+
+  /* Message editing container */
+  .edit-container {
+    width: calc(100% - 8px);
+    margin: 4px;
+    box-sizing: border-box;
+  }
+
+  /* Edit textarea */
+  .edit-textarea {
+    width: 100%;
+    min-height: 40px;
+    padding: 6px;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+
+  /* Edit buttons container */
+  .edit-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    justify-content: flex-end;
+    padding-right: 2px;
+  }
+
+  /* Individual edit buttons */
+  .edit-buttons button {
+    padding: 4px 6px;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 4px;
+  }
+
+  /* Message being edited */
+  .message.editing {
+    padding-right: 8px;
+    padding-bottom: 8px;
   }
 }
 
