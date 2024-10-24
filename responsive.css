@@ -396,7 +396,7 @@
   /* Input area adjustments */
   .input-area {
     position: fixed;
-    bottom: 60px;
+    bottom: 15px;
     left: 0;
     right: 0;
     margin: 10px 15px; /* Equal margins on both sides */
@@ -615,6 +615,7 @@
   }
 
   .input-area {
+    bottom: 10px;
     margin: 8px 12px;
     padding: 8px 12px;
     width: calc(100% - 24px);
