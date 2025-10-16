@@ -722,22 +722,44 @@ function hideModal() {
 }
 
 // Theme handling
-function setTheme(isDark) {
-  if (isDark) {
-      document.body.classList.add('dark-theme');
-      themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
-      themeToggle.title = "Switch to Light Mode";
-  } else {
-      document.body.classList.remove('dark-theme');
-      themeToggle.querySelector('i').classList.replace('fa-sun', 'fa-moon');
-      themeToggle.title = "Switch to Dark Mode";
+function setTheme(preferredTheme) {
+  const normalizedTheme = preferredTheme === 'dark' || preferredTheme === 'light'
+      ? preferredTheme
+      : preferredTheme
+          ? 'dark'
+          : 'light';
+  const isDark = normalizedTheme === 'dark';
+
+  document.body.classList.toggle('dark-theme', isDark);
+
+  const icon = themeToggle?.querySelector('i');
+  if (icon) {
+      icon.classList.toggle('fa-sun', isDark);
+      icon.classList.toggle('fa-moon', !isDark);
   }
-  localStorage.setItem('darkTheme', isDark);
+
+  if (themeToggle) {
+      themeToggle.title = isDark ? "Switch to Light Mode" : "Switch to Dark Mode";
+  }
+
+  localStorage.setItem('theme', normalizedTheme);
+  localStorage.removeItem('darkTheme');
 }
 
 function loadSavedTheme() {
-  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
-  setTheme(isDarkTheme);
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark' || savedTheme === 'light') {
+      setTheme(savedTheme);
+      return;
+  }
+
+  const legacyDarkTheme = localStorage.getItem('darkTheme');
+  if (legacyDarkTheme !== null) {
+      setTheme(legacyDarkTheme === 'true' ? 'dark' : 'light');
+      return;
+  }
+
+  setTheme('light');
 }
 
 // Sidebar handling
@@ -1055,10 +1077,13 @@ fileInput.addEventListener('change', (e) => {
 });
 
 // Theme toggle
-themeToggle.addEventListener('click', () => {
-  const isDarkTheme = document.body.classList.toggle('dark-theme');
-  setTheme(isDarkTheme);
-});
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme);
+  });
+}
 
 // Sidebar handling
 toggleSidebarButton.addEventListener('click', toggleSidebar);
