@@ -2,82 +2,128 @@
 @import url('styles/modal.css');
 
 :root {
-    --primary-color: #3b82f6;     /* Bright blue */
-    --secondary-color: #10b981;   /* Emerald green */
-    --text-color: #1f2937;        /* Dark gray for text */
-    --bg-color: #f3f4f6;          /* Light gray background */
-    --chat-bg: #ffffff;           /* White chat background */
-    --input-bg: #f9fafb;          /* Very light gray input background */
-    --input-border: #d1d5db;      /* Light gray border for input */
-    --input-text: #1f2937;        /* Dark gray for input text */
-    --input-placeholder: #7a8fb4; /* Medium gray for placeholder text */
-    --shadow-color: rgba(0,0,0,0.1);
-    --sidebar-bg: #f3f4f6;        /* Light gray background to match main bg */
-    --sidebar-text: #4b5563;      /* Medium gray for sidebar text */
-    --sidebar-hover: #e5e7eb;     /* Slightly darker shade for hover effects */
-    --sidebar-selected: #3b82f6;  /* Use primary color for selected items */
-    --sidebar-selected-text: #ffffff;  /* White text for selected items */
-    --sidebar-item-bg: #ffffff;   /* White background for unselected items */
-    --sidebar-item-text: #4b5563; /* Medium gray text for unselected items */
-    --sidebar-item-border: #e5e7eb; /* Light border for unselected items */
-    --new-chat-btn: #3b82f6;      /* Primary color for New Chat button */
-    --clear-chats-btn: #ef4444;   /* Red color for Clear Saved Chats button */
-    --user-message-bg: #d1ebfd;   /* Very light blue for user messages */
-    --ai-message-bg: #ffffff;     /* White for AI messages */
-    --user-message-text: #1e40af; /* Dark blue for user message text */
-    --ai-message-text: #1f2937;   /* Dark gray for AI message text */
-    --send-button-bg: #3b82f6;
-    --send-button-hover: #2563eb;
-    --header-bg: #ffffff;         /* White background for header */
-    --header-border: #e5e7eb;     /* Light gray border for header */
-    --message-hover: #f9fafb;     /* Very light gray for message hover */
-    --scrollbar-thumb: #d1d5db;   /* Light gray for scrollbar thumb */
-    --scrollbar-track: #f3f4f6;   /* Lighter gray for scrollbar track */
+    --bg-gradient: linear-gradient(160deg, #f8fafc 0%, #e0f2fe 45%, #ede9fe 100%);
+    --glass-bg: rgba(255, 255, 255, 0.82);
+    --panel-bg: rgba(255, 255, 255, 0.88);
+    --card-bg: rgba(148, 163, 184, 0.16);
+    --surface-muted: rgba(148, 163, 184, 0.12);
+    --border-glass: rgba(15, 23, 42, 0.12);
+    --blur-amount: 22px;
+    --shadow-elevated: 0 24px 60px rgba(15, 23, 42, 0.18);
+    --shadow-floating: 0 12px 30px rgba(15, 23, 42, 0.12);
+    --focus-ring: rgba(37, 99, 235, 0.22);
+    --primary-color: #2563eb;
+    --secondary-color: #7c3aed;
+    --text-color: #0f172a;
+    --muted-text: #475569;
+    --bg-color: rgba(248, 250, 252, 0.35);
+    --chat-bg: var(--panel-bg);
+    --input-bg: rgba(255, 255, 255, 0.9);
+    --input-border: var(--border-glass);
+    --input-text: var(--text-color);
+    --input-placeholder: rgba(15, 23, 42, 0.55);
+    --shadow-color: rgba(15, 23, 42, 0.14);
+    --sidebar-bg: rgba(255, 255, 255, 0.78);
+    --sidebar-text: var(--text-color);
+    --sidebar-hover: rgba(148, 163, 184, 0.2);
+    --sidebar-selected: rgba(37, 99, 235, 0.26);
+    --sidebar-selected-text: #0f172a;
+    --sidebar-item-bg: rgba(255, 255, 255, 0.75);
+    --sidebar-item-text: var(--text-color);
+    --sidebar-item-border: var(--border-glass);
+    --new-chat-btn: var(--primary-color);
+    --clear-chats-btn: #ef4444;
+    --user-message-bg: rgba(37, 99, 235, 0.2);
+    --ai-message-bg: rgba(255, 255, 255, 0.8);
+    --user-message-text: #1e40af;
+    --ai-message-text: var(--text-color);
+    --send-button-bg: var(--primary-color);
+    --send-button-hover: #1d4ed8;
+    --header-bg: var(--glass-bg);
+    --header-border: var(--border-glass);
+    --message-hover: rgba(148, 163, 184, 0.14);
+    --scrollbar-thumb: rgba(148, 163, 184, 0.6);
+    --scrollbar-track: rgba(255, 255, 255, 0.25);
+    --message-shadow: rgba(15, 23, 42, 0.12);
 }
 
-.dark-theme {
-    --primary-color: #3b82f6;     /* Bright blue */
-    --secondary-color: #10b981;   /* Emerald green */
-    --text-color: #f3f4f6;        /* Light gray for text */
-    --bg-color: #1a1d21;          /* Very dark blue-gray background */
-    --chat-bg: #1f2937;           /* Dark blue-gray for chat background */
-    --input-bg: #374151;          /* Darker blue-gray for input */
-    --input-border: #4b5563;      /* Medium gray for input border */
-    --input-text: #f3f4f6;        /* Light gray for input text */
-    --input-placeholder: #c0cadb; /* Medium gray for placeholder text */
-    --shadow-color: rgba(0,0,0,0.3);
-    --sidebar-bg: #1f2937;        /* Dark blue-gray for sidebar */
-    --sidebar-text: #e5e7eb;      /* Light gray for sidebar text */
-    --sidebar-hover: #374151;     /* Slightly lighter for hover effects */
-    --sidebar-selected: #3b82f6;  /* Primary color for selected items */
-    --sidebar-selected-text: #ffffff; /* White text for selected items */
-    --sidebar-item-bg: #2c3244;   /* Slightly lighter bg for unselected items */
-    --sidebar-item-text: #e5e7eb; /* Light gray for unselected item text */
-    --sidebar-item-border: #4b5563; /* Medium gray for item borders */
-    --new-chat-btn: #3b82f6;      /* Primary color for New Chat button */
-    --clear-chats-btn: #ef4444;   /* Red color for Clear Saved Chats button */
-    --user-message-bg: #5697ff;   /* Primary color for user messages */
-    --ai-message-bg: #2c3244;     /* Slightly lighter bg for AI messages */
-    --user-message-text: #ffffff; /* White text for user messages */
-    --ai-message-text: #f3f4f6;   /* Light gray for AI message text */
-    --send-button-bg: #3b82f6;
-    --send-button-hover: #2563eb;
-    --header-bg: #1f2937;         /* Dark blue-gray for header */
-    --header-border: #4b5563;     /* Medium gray border for header */
-    --message-hover: #374151;     /* Slightly lighter for message hover */
-    --scrollbar-thumb: #4b5563;   /* Medium gray for scrollbar thumb */
-    --scrollbar-track: #1f2937;   /* Dark blue-gray for scrollbar track */
+body.dark-theme {
+    --bg-gradient: radial-gradient(circle at 10% 10%, rgba(191, 219, 254, 0.45) 0%, rgba(191, 219, 254, 0) 45%),
+        radial-gradient(circle at 90% 20%, rgba(221, 214, 254, 0.4) 0%, rgba(221, 214, 254, 0) 40%),
+        radial-gradient(circle at 95% 95%, rgba(253, 230, 138, 0.35) 0%, rgba(253, 230, 138, 0) 45%),
+        #020617;
+    --glass-bg: rgba(2, 6, 23, 0.72);
+    --panel-bg: rgba(2, 6, 23, 0.78);
+    --card-bg: rgba(15, 23, 42, 0.58);
+    --surface-muted: rgba(51, 65, 85, 0.4);
+    --border-glass: rgba(148, 163, 184, 0.25);
+    --blur-amount: 24px;
+    --shadow-elevated: 0 28px 60px rgba(2, 6, 23, 0.7);
+    --shadow-floating: 0 18px 40px rgba(15, 23, 42, 0.55);
+    --focus-ring: rgba(96, 165, 250, 0.28);
+    --primary-color: #93c5fd;
+    --secondary-color: #a5b4fc;
+    --text-color: #e2e8f0;
+    --muted-text: #cbd5f5;
+    --bg-color: rgba(2, 6, 23, 0.55);
+    --chat-bg: var(--panel-bg);
+    --input-bg: rgba(15, 23, 42, 0.78);
+    --input-border: var(--border-glass);
+    --input-text: var(--text-color);
+    --input-placeholder: rgba(148, 163, 184, 0.7);
+    --shadow-color: rgba(2, 6, 23, 0.65);
+    --sidebar-bg: rgba(15, 23, 42, 0.72);
+    --sidebar-text: var(--text-color);
+    --sidebar-hover: rgba(148, 163, 184, 0.2);
+    --sidebar-selected: rgba(96, 165, 250, 0.28);
+    --sidebar-selected-text: #f8fafc;
+    --sidebar-item-bg: rgba(15, 23, 42, 0.74);
+    --sidebar-item-text: var(--text-color);
+    --sidebar-item-border: var(--border-glass);
+    --new-chat-btn: var(--primary-color);
+    --clear-chats-btn: #f87171;
+    --user-message-bg: rgba(96, 165, 250, 0.3);
+    --ai-message-bg: rgba(15, 23, 42, 0.72);
+    --user-message-text: #f8fafc;
+    --ai-message-text: var(--text-color);
+    --send-button-bg: var(--primary-color);
+    --send-button-hover: #60a5fa;
+    --header-bg: var(--glass-bg);
+    --header-border: var(--border-glass);
+    --message-hover: rgba(51, 65, 85, 0.48);
+    --scrollbar-thumb: rgba(148, 163, 184, 0.35);
+    --scrollbar-track: rgba(15, 23, 42, 0.5);
+    --message-shadow: rgba(2, 6, 23, 0.7);
 }
 
 body, html {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
-    background-color: var(--bg-color);
+    background: var(--bg-gradient);
     color: var(--text-color);
-    height: 100%;
-    transition: all 0.3s ease;
+    min-height: 100%;
+    transition: background 0.6s ease, color 0.3s ease;
     overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--bg-gradient);
+    z-index: -2;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(var(--blur-amount));
+    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 55%),
+        radial-gradient(circle at 80% 0%, rgba(125, 211, 252, 0.16) 0%, rgba(125, 211, 252, 0) 45%);
+    z-index: -1;
 }
 
 .top-left-logo {
@@ -104,10 +150,10 @@ body, html {
     width: 100%;
 }
 
-.dark-theme body,
-.dark-theme html {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+body.dark-theme::after {
+    background: radial-gradient(circle at 25% 15%, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0) 45%),
+        radial-gradient(circle at 80% 10%, rgba(168, 85, 247, 0.16) 0%, rgba(168, 85, 247, 0) 42%),
+        radial-gradient(circle at 90% 85%, rgba(14, 165, 233, 0.12) 0%, rgba(14, 165, 233, 0) 48%);
 }
 
 .container {
@@ -127,7 +173,11 @@ body, html {
     overflow-x: hidden;
     justify-content: center;
     overflow: hidden;
-    background-color: var(--bg-color);
+    background: var(--glass-bg);
+    border: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(var(--blur-amount));
+    border-radius: 32px;
 }
 
 .profile-menu {
@@ -174,12 +224,14 @@ body, html {
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: var(--chat-bg);
-    min-width: 200px;
-    box-shadow: 0 8px 16px var(--shadow-color);
-    border-radius: 5px;
+    background: var(--panel-bg);
+    min-width: 220px;
+    box-shadow: var(--shadow-floating);
+    border-radius: 18px;
     overflow: hidden;
     margin-top: 10px;
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(calc(var(--blur-amount) - 6px));
 }
 
 .profile-dropdown a {
@@ -207,7 +259,10 @@ body, html {
 
 /* Dark theme adjustments */
 .dark-theme .icon-button {
-    background: var(--sidebar-bg);
+    background: var(--card-bg);
+    border-color: var(--border-glass);
+    box-shadow: 0 14px 32px rgba(2, 6, 23, 0.6);
+    color: var(--text-color);
 }
 
 .dark-theme .profile-icon {
@@ -219,11 +274,7 @@ body, html {
 }
 
 .dark-theme .profile-dropdown {
-    background-color: var(--sidebar-bg);
-}
-
-.dark-theme .profile-dropdown {
-    background-color: var(--sidebar-bg);
+    background: var(--panel-bg);
 }
 
 .dark-theme .profile-dropdown a:hover {
@@ -232,20 +283,22 @@ body, html {
 
 .sidebar {
     width: 250px;
-    background-color: var(--sidebar-bg);
+    background: var(--sidebar-bg);
     color: var(--sidebar-text);
     padding: 20px;
-    box-shadow: 2px 0 10px var(--shadow-color);
+    box-shadow: var(--shadow-floating);
     overflow-y: auto;
     height: 100vh;
     box-sizing: border-box;
-    border-right: 1px solid var(--input-border);
+    border-right: 1px solid var(--border-glass);
     position: fixed;
     left: -250px;
     top: 0;
     bottom: 0;
     transition: left 0.3s ease-in-out;
     z-index: 1000;
+    backdrop-filter: blur(var(--blur-amount));
+    border-radius: 0 24px 24px 0;
 }
 
 .sidebar.show {
@@ -277,9 +330,10 @@ body, html {
   }
 
 .dark-theme .sidebar {
-    background-color: var(--sidebar-bg);
+    background: var(--sidebar-bg);
     color: var(--sidebar-text);
-    border-right: 1px solid var(--input-border);
+    border-right: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-floating);
 }
 
 .sidebar h2 {
@@ -403,8 +457,11 @@ body, html {
     height: calc(100vh - 120px);
     margin: 0 auto;
     padding: 20px;
-    background: transparent; /* Make the container background transparent */
-    border-radius: 12px;
+    background: var(--chat-bg);
+    border: 1px solid var(--border-glass);
+    border-radius: 28px;
+    box-shadow: var(--shadow-floating);
+    backdrop-filter: blur(calc(var(--blur-amount) - 4px));
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -422,8 +479,10 @@ body, html {
     width: 100%;
     overflow-y: auto;
     padding: 20px;
-    border-radius: 8px;
-    background: transparent; /* Make the messages container background transparent */
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--surface-muted);
+    backdrop-filter: blur(calc(var(--blur-amount) - 6px));
     margin-bottom: 20px;
 }
 
@@ -433,16 +492,17 @@ body, html {
 }
 
 .messages-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.messages-container::-webkit-scrollbar-thumb {
-  background: rgba(100, 149, 237, 0.6);
+  background: var(--scrollbar-track);
   border-radius: 3px;
 }
 
-.dark-theme .messages-container:-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
+.messages-container::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.dark-theme .messages-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
 }
 
 #new-chat-button {
@@ -497,8 +557,10 @@ body, html {
     justify-content: flex-start; /* Changed from space-between to flex-start */
     align-items: center;
     padding: 10px 20px;
-    background-color: var(--bg-color);
-    border-bottom: 1px solid var(--input-border);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    backdrop-filter: blur(calc(var(--blur-amount) - 6px));
+    box-shadow: var(--shadow-floating);
     padding-left: 160px;
 }
 
@@ -512,8 +574,8 @@ body, html {
     gap: 10px; /* This adds space between the buttons */
 }
 .icon-button {
-    background: var(--bg-color);
-    border: none;
+    background: var(--card-bg);
+    border: 1px solid var(--border-glass);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -521,19 +583,21 @@ body, html {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+    backdrop-filter: blur(calc(var(--blur-amount) - 10px));
+    color: var(--text-color);
 }
 
 .icon-button i {
     font-size: 1.2em;
-    color: var(--text-color);
+    color: currentColor;
 }
 
 .icon-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow-color);
-    /*background: var(--primary-color);*/
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+    background-color: var(--sidebar-hover);
 }
 
 .icon-button:hover i {
@@ -746,11 +810,12 @@ html {
   align-items: center;
   background: var(--input-bg); /* Use theme variable instead of hard-coded color */
   border: 1px solid var(--input-border);
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 10px 14px;
   margin: 20px;
   width: calc(100% - 40px); /* Full width minus margins */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-floating);
+  backdrop-filter: blur(calc(var(--blur-amount) - 6px));
 }
 
 .input-area textarea {
@@ -781,9 +846,9 @@ html {
 }
   
 .input-area button {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white */
+  background: var(--card-bg);
+  border: 1px solid var(--border-glass);
+  color: var(--muted-text);
   cursor: pointer;
   font-size: 18px;
   padding: 8px;
@@ -791,34 +856,40 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(calc(var(--blur-amount) - 8px));
 }
 
 .input-area button:hover {
-  background: rgba(255, 255, 255, 0.1);  /* Subtle hover effect */
-  color: #fff;
+  background: var(--surface-muted);  /* Subtle hover effect */
+  color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 /* Dark theme specific adjustments */
 .dark-theme .input-area {
-  background: var(--sidebar-item-bg);
-  border-color: rgba(86, 88, 105, 1);
+  background: var(--input-bg);
+  border-color: var(--border-glass);
 }
 
 .dark-theme .input-area textarea {
-  color: #fff;
+  color: var(--input-text);
 }
 
 .dark-theme .input-area button {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--muted-text);
+  background: var(--card-bg);
+  border-color: var(--border-glass);
+  box-shadow: 0 12px 26px rgba(2, 6, 23, 0.6);
 }
 
 .dark-theme .input-area button:hover {
-  color: #fff;
+  color: var(--primary-color);
 }
 
 .dark-theme #user-input {
@@ -896,8 +967,8 @@ html {
 
 /* Focus styles */
 .input-area:focus-within {
-  border-color: rgba(255, 255, 255, 0.2);  /* Subtle highlight */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-color: var(--focus-ring);  /* Subtle highlight */
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .input-container {
