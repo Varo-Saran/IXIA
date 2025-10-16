@@ -332,11 +332,34 @@ main {
 
 .auth-illustration img,
 .auth-illustration svg,
-.auth-hero-illustration img,
-.auth-hero-illustration svg {
+.auth-hero-illustration .hero-illustration {
     width: clamp(220px, 50%, 320px);
     max-width: 100%;
     filter: drop-shadow(0 30px 60px rgba(99, 102, 241, 0.25));
+}
+
+.auth-hero-illustration .hero-illustration--light {
+    display: block;
+}
+
+.auth-hero-illustration .hero-illustration--dark {
+    display: none;
+}
+
+.light-theme .auth-hero-illustration .hero-illustration--light {
+    display: block;
+}
+
+.light-theme .auth-hero-illustration .hero-illustration--dark {
+    display: none;
+}
+
+.dark-theme .auth-hero-illustration .hero-illustration--light {
+    display: none;
+}
+
+.dark-theme .auth-hero-illustration .hero-illustration--dark {
+    display: block;
 }
 
 .dark-theme .auth-illustration {

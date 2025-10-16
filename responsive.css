@@ -67,7 +67,7 @@
     font-size: clamp(2.1rem, 8vw, 2.6rem);
   }
 
-  .auth-hero-illustration img {
+  .auth-hero-illustration .hero-illustration {
     width: min(320px, 80vw);
     max-width: 100%;
   }
@@ -136,7 +136,7 @@
     font-size: clamp(2.3rem, 4.6vw, 2.9rem);
   }
 
-  .auth-hero-illustration img {
+  .auth-hero-illustration .hero-illustration {
     width: min(360px, 70vw);
   }
 
