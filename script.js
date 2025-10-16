@@ -1070,7 +1070,11 @@ function updateSavedChatsList() {
       actionsDiv.className = 'chat-actions';
 
       const renameButton = document.createElement('button');
+      const chatTitle = chat.title || 'chat';
       renameButton.innerHTML = '<i class="fas fa-edit"></i>';
+      const renameLabel = `Rename ${chatTitle}`;
+      renameButton.setAttribute('aria-label', renameLabel);
+      renameButton.setAttribute('title', renameLabel);
       renameButton.onclick = (e) => {
           e.stopPropagation();
           renameChat(chat.id);
@@ -1078,6 +1082,9 @@ function updateSavedChatsList() {
 
       const deleteButton = document.createElement('button');
       deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      const deleteLabel = `Delete ${chatTitle}`;
+      deleteButton.setAttribute('aria-label', deleteLabel);
+      deleteButton.setAttribute('title', deleteLabel);
       deleteButton.onclick = (e) => {
           e.stopPropagation();
           deleteChat(chat.id);
