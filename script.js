@@ -174,12 +174,18 @@ class ChatHistoryManager {
   }
 
   getAllChats() {
-    return Object.entries(this.chats).map(([id, chat]) => ({
-      id,
-      title: chat.title,
-      lastMessage: chat.messages[chat.messages.length - 1]?.text || '',
-      timestamp: chat.messages[chat.messages.length - 1]?.timestamp || ''
-    }));
+    return Object.entries(this.chats)
+      .map(([id, chat]) => ({
+        id,
+        title: chat.title,
+        lastMessage: chat.messages[chat.messages.length - 1]?.text || '',
+        timestamp: chat.messages[chat.messages.length - 1]?.timestamp || ''
+      }))
+      .sort((a, b) => {
+        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+        return timeB - timeA;
+      });
   }
 
   setCurrentChat(chatId) {
