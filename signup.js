@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const strengthText = document.getElementById('password-strength-text');
     const passwordHelperText = document.getElementById('password-helper-text');
     const confirmHelperText = document.getElementById('confirm-password-helper');
+    const heroIllustrationContainer = document.querySelector('.auth-hero-illustration');
 
     if (customModal) {
         signupModalController = ModalController.create(customModal, {
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme toggle functionality (unchanged)
     const currentTheme = localStorage.getItem('theme') || 'light';
     body.classList.add(currentTheme === 'dark' ? 'dark-theme' : 'light-theme');
+    updateHeroIllustration(currentTheme);
 
     if (themeToggle) {
         updateThemeToggle(currentTheme);
@@ -51,10 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body.classList.replace('dark-theme', 'light-theme');
                 localStorage.setItem('theme', 'light');
                 updateThemeToggle('light');
+                updateHeroIllustration('light');
             } else {
                 body.classList.replace('light-theme', 'dark-theme');
                 localStorage.setItem('theme', 'dark');
                 updateThemeToggle('dark');
+                updateHeroIllustration('dark');
             }
         });
     }
@@ -133,6 +137,35 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.classList.replace('fa-moon', 'fa-sun');
         } else {
             icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
+
+    function updateHeroIllustration(theme) {
+        if (!heroIllustrationContainer) {
+            return;
+        }
+
+        const lightImage = heroIllustrationContainer.querySelector('.hero-illustration--light');
+        const darkImage = heroIllustrationContainer.querySelector('.hero-illustration--dark');
+
+        if (lightImage) {
+            const lightSource = lightImage.getAttribute('data-src');
+            if (theme === 'dark') {
+                lightImage.removeAttribute('src');
+            } else if (lightSource && lightImage.getAttribute('src') !== lightSource) {
+                lightImage.setAttribute('src', lightSource);
+            }
+        }
+
+        if (darkImage) {
+            const darkSource = darkImage.getAttribute('data-src');
+            if (theme === 'dark') {
+                if (darkSource && darkImage.getAttribute('src') !== darkSource) {
+                    darkImage.setAttribute('src', darkSource);
+                }
+            } else {
+                darkImage.removeAttribute('src');
+            }
         }
     }
 
