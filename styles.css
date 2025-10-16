@@ -156,7 +156,7 @@ body, html {
 .profile-icon {
     padding: 0;
     background-color: var(--chat-bg);
-    border: 2px solid transparent;
+    border: 2px solid var(--input-border);
     overflow: hidden;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -224,7 +224,7 @@ body, html {
 
 .dark-theme .profile-icon {
     background-color: var(--sidebar-bg);
-    border-color: transparent;
+    border-color: var(--sidebar-item-border);
 }
 
 .dark-theme .profile-icon:hover,
