@@ -43,6 +43,10 @@ class ChatHistoryManager {
     this.userId = userId;
     this.chats = this.loadChats();
     this.currentChatId = this.loadCurrentChatId();
+    this.nextChatNumber = this.loadNextChatNumber();
+
+    // Ensure the counter is stored for future sessions
+    this.saveChatCounter();
     
     // If no currentChatId but chats exist, set to first chat
     if (!this.currentChatId && Object.keys(this.chats).length > 0) {
@@ -58,6 +62,30 @@ class ChatHistoryManager {
 
   saveChats() {
     localStorage.setItem(`chats_${this.userId}`, JSON.stringify(this.chats));
+  }
+
+  loadNextChatNumber() {
+    const storedCounter = parseInt(localStorage.getItem(`chatCounter_${this.userId}`), 10);
+    if (!Number.isNaN(storedCounter) && storedCounter > 0) {
+      return storedCounter;
+    }
+
+    const highestSuffix = Object.values(this.chats).reduce((max, chat) => {
+      const match = chat.title?.match(/(\d+)\s*$/);
+      if (match) {
+        const number = parseInt(match[1], 10);
+        if (!Number.isNaN(number)) {
+          return Math.max(max, number);
+        }
+      }
+      return max;
+    }, 0);
+
+    return highestSuffix + 1;
+  }
+
+  saveChatCounter() {
+    localStorage.setItem(`chatCounter_${this.userId}`, String(this.nextChatNumber));
   }
 
   loadCurrentChatId() {
@@ -77,11 +105,13 @@ class ChatHistoryManager {
   createNewChat() {
     const chatId = Date.now().toString();
     this.chats[chatId] = {
-      title: `Chat ${Object.keys(this.chats).length + 1}`,
+      title: `Chat ${this.nextChatNumber}`,
       messages: []
     };
+    this.nextChatNumber += 1;
     this.setCurrentChat(chatId);
     this.saveChats();
+    this.saveChatCounter();
     return chatId;
   }
 
