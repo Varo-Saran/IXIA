@@ -4,6 +4,7 @@ let lastMessageId = null;
 let isWaitingForResponse = false;
 let attachments = [];
 let editingMessageId = null;
+let currentUser = null;
 
 // DOM Elements
 const chatWindow = document.getElementById('chat-window');
@@ -22,8 +23,14 @@ const toggleSidebarButton = document.getElementById('toggle-sidebar-btn');
 const sidebar = document.getElementById('sidebar');
 const profileButton = document.getElementById('profile-button');
 const profileDropdown = document.getElementById('profile-dropdown');
+const profilePicture = document.getElementById('profile-picture');
 const logo = document.querySelector('.top-left-logo');
 const mainContent = document.querySelector('.main-content');
+
+const DEFAULT_PROFILE_IMAGES = {
+  light: 'assets/images/default-profile-icon-light.png',
+  dark: 'assets/images/default-profile-icon-dark.png'
+};
 
 // Message Class
 class Message {
@@ -751,13 +758,42 @@ function hideModal() {
   }
 }
 
-// Theme handling
-function setTheme(preferredTheme) {
-  const normalizedTheme = preferredTheme === 'dark' || preferredTheme === 'light'
-      ? preferredTheme
-      : preferredTheme
+function resolveThemeValue(value) {
+  return value === 'dark' || value === 'light'
+      ? value
+      : value
           ? 'dark'
           : 'light';
+}
+
+function getActiveTheme() {
+  return document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+}
+
+function getProfileImageSource(theme = getActiveTheme()) {
+  const normalizedTheme = resolveThemeValue(theme);
+  if (currentUser?.profilePicture) {
+      return currentUser.profilePicture;
+  }
+  return normalizedTheme === 'dark'
+      ? DEFAULT_PROFILE_IMAGES.dark
+      : DEFAULT_PROFILE_IMAGES.light;
+}
+
+function updateProfilePicture(theme = getActiveTheme()) {
+  if (!profilePicture) {
+      return;
+  }
+  const normalizedTheme = resolveThemeValue(theme);
+  const source = getProfileImageSource(normalizedTheme);
+  if (profilePicture.getAttribute('src') !== source) {
+      profilePicture.setAttribute('src', source);
+  }
+}
+
+// Theme handling
+function setTheme(preferredTheme) {
+  const normalizedTheme = resolveThemeValue(preferredTheme);
   const isDark = normalizedTheme === 'dark';
 
   document.body.classList.toggle('dark-theme', isDark);
@@ -774,6 +810,8 @@ function setTheme(preferredTheme) {
 
   localStorage.setItem('theme', normalizedTheme);
   localStorage.removeItem('darkTheme');
+
+  updateProfilePicture(normalizedTheme);
 }
 
 function loadSavedTheme() {
@@ -1044,16 +1082,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
   if (currentUser?.isAdmin) {
     if (currentUser.forcePasswordReset) {
       const updatedAdminUser = { ...currentUser, forcePasswordReset: false };
       localStorage.setItem('currentUser', JSON.stringify(updatedAdminUser));
+      currentUser = updatedAdminUser;
     }
     window.location.href = 'admin.html';
     return;
   }
+
+  updateProfilePicture();
 
   const chatUserId = currentUser.normalizedEmail || currentUser.email;
   chatManager = new ChatHistoryManager(chatUserId);
@@ -1161,12 +1202,14 @@ clearSavedChatsButton.addEventListener('click', clearSavedChats);
 // Profile menu
 profileButton.addEventListener('click', (e) => {
   e.stopPropagation();
-  profileDropdown.classList.toggle('show');
+  const isExpanded = profileDropdown.classList.toggle('show');
+  profileButton.setAttribute('aria-expanded', String(isExpanded));
 });
 
 document.addEventListener('click', (event) => {
   if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
       profileDropdown.classList.remove('show');
+      profileButton.setAttribute('aria-expanded', 'false');
   }
 });
 
