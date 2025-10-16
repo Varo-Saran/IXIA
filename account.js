@@ -81,6 +81,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalMessage = document.getElementById('modal-message');
     const modalConfirm = document.getElementById('modal-confirm');
     const modalCancel = document.getElementById('modal-cancel');
+    const DEFAULT_PROFILE_ICON_LIGHT = 'assets/images/default-profile-icon-light.png';
+    const DEFAULT_PROFILE_ICON_DARK = 'assets/images/default-profile-icon-dark.png';
+
+    function getDefaultProfileIcon(theme) {
+        return theme === 'dark' ? DEFAULT_PROFILE_ICON_DARK : DEFAULT_PROFILE_ICON_LIGHT;
+    }
+
+    function getCurrentTheme() {
+        return document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    }
+
+    let cropState = null;
+    let isDragging = false;
+    let lastPointerPosition = null;
+    let activePointerId = null;
+
+    function setAvatarSources(profilePicture, defaultIcon) {
+        const source = profilePicture || defaultIcon;
+
+        if (profileImage) {
+            profileImage.src = source;
+        }
+
+        if (cropPreview && !cropState) {
+            cropPreview.src = source;
+        }
+    }
+
+    function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark-theme', isDark);
+
+        const icon = themeToggle?.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-sun', isDark);
+            icon.classList.toggle('fa-moon', !isDark);
+        }
+
+        const defaultIcon = getDefaultProfileIcon(theme);
+        const currentUserData = JSON.parse(localStorage.getItem('currentUser')) || {};
+        setAvatarSources(currentUserData.profilePicture, defaultIcon);
+    }
+
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        applyTheme(savedTheme);
+    }
+
     let cropModalController = null;
     let confirmationModalController = null;
 
@@ -148,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    initializeTheme();
+
     // Load user data
     loadUserData();
 
@@ -191,11 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    let cropState = null;
-    let isDragging = false;
-    let lastPointerPosition = null;
-    let activePointerId = null;
-
     function loadUserData() {
         // Simulate loading user data from server
         const userData = JSON.parse(localStorage.getItem('currentUser')) || {};
@@ -208,15 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('For security, please update your password to complete the recent upgrade.', 'info');
         }
         
-        if (userData.profilePicture) {
-            profileImage.src = userData.profilePicture;
-        } else {
-            profileImage.src = 'assets/default-profile-icon.svg';
-        }
-
-        if (cropPreview) {
-            cropPreview.src = profileImage.src;
-        }
+        const defaultIcon = getDefaultProfileIcon(getCurrentTheme());
+        setAvatarSources(userData.profilePicture, defaultIcon);
     }
 
     function updateProfile(e) {
@@ -709,16 +747,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function removePicture() {
-        profileImage.src = 'assets/default-profile-icon.svg';
-        // Simulate removing the profile picture
+        const defaultIcon = getDefaultProfileIcon(getCurrentTheme());
+        setAvatarSources(null, defaultIcon);
+
         const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
         const persistedUser = updateStoredUser(currentUser.normalizedEmail || currentUser.email, {}, { removeFields: ['profilePicture'] });
 
         if (!persistedUser) {
-            profileImage.src = currentUser.profilePicture || 'assets/default-profile-icon.svg';
-            if (cropPreview) {
-                cropPreview.src = profileImage.src;
-            }
+            setAvatarSources(currentUser.profilePicture, defaultIcon);
             showNotification('Unable to remove profile picture. Please try again.', 'error');
             return;
         }
@@ -726,19 +762,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const updatedCurrentUser = { ...currentUser };
         delete updatedCurrentUser.profilePicture;
         localStorage.setItem('currentUser', JSON.stringify(updatedCurrentUser));
-        if (cropPreview) {
-            cropPreview.src = profileImage.src;
-        }
         showNotification('Profile picture removed successfully!');
     }
 
     function toggleTheme() {
-        document.body.classList.toggle('dark-theme');
-        const icon = themeToggle.querySelector('i');
-        icon.classList.toggle('fa-moon');
-        icon.classList.toggle('fa-sun');
-        // Save theme preference
-        localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        const newTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
     }
 
     function showModal(message, onConfirm) {
@@ -940,10 +970,4 @@ document.addEventListener('DOMContentLoaded', () => {
         return users[userIndex];
     }
 
-    // Initialize theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
-    }
 });
