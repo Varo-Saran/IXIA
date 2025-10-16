@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - IXIA AI Chat</title>
+    <link rel="stylesheet" href="login_signup.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="page-container">
+        <header class="auth-header">
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                        </style>
+                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
+                        iXiA Ai
+                    </text>
+                </svg>
+            </div>
+            <nav class="auth-nav">
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a class="auth-secondary-link" href="signup.html">Need an account?</a>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <section class="auth-layout">
+                <div class="auth-hero">
+                    <div class="auth-hero-content">
+                        <h1>Welcome back to IXIA AI Chat</h1>
+                        <p>Sign in to continue your conversations and collaborate with your team in real time.</p>
+                        <p class="auth-hero-support">Trusted, secure, and always ready to assist your next breakthrough.</p>
+                    </div>
+                    <div class="auth-hero-illustration" aria-hidden="true">
+                        <img src="assets/ai-hero-illustration.svg" alt="" loading="lazy">
+                    </div>
+                </div>
+                <div class="auth-card">
+                    <h2>Login to your account</h2>
+                    <form id="login-form">
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="input-group password-group">
+                            <label for="password">Password</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" id="password" name="password" aria-describedby="login-password-strength-text login-password-helper" required>
+                                <button type="button" class="password-toggle" data-target="password" aria-label="Show password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" role="status" aria-live="polite">
+                                <div class="strength-bar" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+                                    <span class="strength-indicator"></span>
+                                </div>
+                                <p id="login-password-strength-text" class="password-strength-text">Passwords are case-sensitive. Make sure you're entering the correct one.</p>
+                            </div>
+                            <p id="login-password-helper" class="password-helper">Use at least 10 characters when creating or resetting your password.</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Log In</button>
+                    </form>
+                    <button type="button" class="link-button" id="forgot-password-link">Forgot your password?</button>
+                    <p id="error-message" class="error"></p>
+                    <p class="auth-card-switch">Don't have an account? <a href="signup.html">Sign up</a></p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="auth-footer">
+            <div class="auth-footer__content">
+                <nav class="auth-footer__links" aria-label="Footer">
+                    <a href="index.html">Home</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </nav>
+                <div class="auth-footer__social" role="group" aria-label="Social media">
+                    <a href="#" aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 IXIA AI. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div id="password-recovery-modal" class="modal recovery-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="recovery-title" aria-describedby="recovery-description recovery-body">
+        <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
+        <div class="modal-content" role="document" data-modal-tone="info">
+            <button type="button" class="modal-close" id="recovery-close-btn" data-close-modal aria-label="Close password recovery dialog">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-header">
+                <span class="modal-eyebrow">Account Recovery</span>
+                <div class="modal-header-text">
+                    <h2 id="recovery-title">Reset your password</h2>
+                    <p id="recovery-description" class="modal-subtitle">Enter the email associated with your account and we’ll help you get back in.</p>
+                </div>
+            </div>
+            <div class="modal-body" id="recovery-body">
+                <form id="password-recovery-form" class="recovery-step" aria-describedby="recovery-description">
+                    <div class="input-group">
+                        <label for="recovery-email">Email address</label>
+                        <input type="email" id="recovery-email" name="recovery-email" autocomplete="email" required>
+                    </div>
+                    <footer class="modal-footer modal-actions">
+                        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                        <button type="submit" class="btn btn-primary">Continue</button>
+                    </footer>
+                </form>
+                <form id="password-reset-form" class="recovery-step" hidden aria-describedby="recovery-description">
+                    <div class="input-group password-group">
+                        <label for="new-password">New password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="new-password" name="new-password" autocomplete="new-password" aria-describedby="reset-password-helper" required>
+                            <button type="button" class="password-toggle" data-target="new-password" aria-label="Show password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p id="reset-password-helper" class="password-helper">Use at least 10 characters with a mix of letters, numbers, and symbols.</p>
+                    </div>
+                    <div class="input-group password-group">
+                        <label for="confirm-password">Confirm new password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="confirm-password" name="confirm-password" autocomplete="new-password" aria-describedby="reset-confirm-helper" required>
+                            <button type="button" class="password-toggle" data-target="confirm-password" aria-label="Show password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p id="reset-confirm-helper" class="password-helper" aria-live="polite"></p>
+                    </div>
+                    <footer class="modal-footer modal-actions">
+                        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save new password</button>
+                    </footer>
+                </form>
+                <p id="recovery-message" class="recovery-message" role="status" aria-live="polite"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle modal-message">
+        <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
+        <div class="modal-content" role="document" data-modal-tone="info">
+            <button type="button" class="modal-close" data-close-modal aria-label="Close message dialog">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-header">
+                <span class="modal-eyebrow">System Message</span>
+                <div class="modal-header-text">
+                    <h2 id="modal-title">Title</h2>
+                    <p id="modal-subtitle" class="modal-subtitle">System notification</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Message</p>
+            </div>
+            <footer class="modal-footer modal-buttons">
+                <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+                <button id="modal-ok-btn" class="btn btn-primary" type="button">OK</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="modal.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>

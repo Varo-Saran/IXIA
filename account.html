@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - IXIA AI Chat</title>
+    <link rel="stylesheet" href="account.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="page-container">
+        <header class="account-header">
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                        </style>
+                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
+                        iXiA Ai
+                    </text>
+                </svg>
+            </div>
+            <nav class="account-header__nav">
+                <a class="account-header__link" href="index.html">Home</a>
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </header>
+
+        <main class="account-page">
+            <h1>My Account</h1>
+            
+            <section class="profile-section">
+                <div class="profile-picture">
+                    <div class="profile-picture-frame">
+                        <img id="profile-image" src="assets/default-profile-icon.svg" alt="Profile Picture">
+                    </div>
+                    <div class="profile-picture-actions">
+                        <button id="change-picture" class="btn btn-secondary">Change Picture</button>
+                        <button id="remove-picture" class="btn btn-ghost">Remove Picture</button>
+                    </div>
+                    <input type="file" id="picture-upload" accept="image/*" style="display: none;">
+                    <div id="picture-crop-modal" class="modal crop-modal" role="dialog" aria-modal="true" aria-labelledby="crop-modal-title" aria-describedby="crop-modal-description" hidden aria-hidden="true">
+                        <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
+                        <div class="modal-content crop-modal-content" role="document" data-modal-tone="info">
+                            <button type="button" class="modal-close" id="crop-close-btn" data-close-modal aria-label="Close profile picture crop dialog">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="modal-header">
+                                <span class="modal-eyebrow">Profile Photo</span>
+                                <div class="modal-header-text">
+                                    <h2 id="crop-modal-title">Adjust Profile Picture</h2>
+                                    <p id="crop-modal-description" class="modal-subtitle">Drag the image to reposition and use the slider to zoom in or out.</p>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="cropper-view">
+                                    <canvas id="crop-canvas" width="260" height="260" aria-label="Profile picture cropping area"></canvas>
+                                    <div class="crop-preview" aria-live="polite">
+                                        <span>Preview</span>
+                                        <div class="crop-preview-frame">
+                                            <img id="crop-preview" src="assets/default-profile-icon.svg" alt="Cropped preview">
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="crop-zoom-control" for="crop-zoom">
+                                    Zoom
+                                    <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
+                                </label>
+                            </div>
+                            <footer class="modal-footer crop-actions">
+                                <button type="button" id="crop-cancel" class="btn btn-secondary" data-close-modal>Cancel</button>
+                                <button type="button" id="crop-confirm" class="btn btn-primary">Save</button>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h2>Profile Information</h2>
+                    <form id="profile-form">
+                        <div class="input-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="password-section">
+                <h2>Change Password</h2>
+                <form id="password-form">
+                    <div class="input-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="current-password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new-password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+            </section>
+
+            <section class="preferences-section">
+                <h2>Preferences</h2>
+                <form id="preferences-form">
+                    <div class="input-group">
+                        <label for="language">Preferred Language</label>
+                        <select id="language" name="language">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <!-- Add more language options as needed -->
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="notifications">
+                            <input type="checkbox" id="notifications" name="notifications">
+                            Receive Email Notifications
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                </form>
+            </section>
+
+            <section class="danger-zone">
+                <h2>Danger Zone</h2>
+                <p>Once you delete your account, there is no going back. Please be certain.</p>
+                <button id="delete-account" class="btn btn-secondary delete-btn">Delete Account</button>
+            </section>
+        </main>
+
+        <footer class="account-footer">
+            <p>&copy; 2024 IXIA AI. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div id="confirmation-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="confirmation-modal-title" aria-describedby="confirmation-modal-description modal-message">
+        <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
+        <div class="modal-content" role="document" data-modal-tone="warning">
+            <button type="button" class="modal-close" id="confirmation-close-btn" data-close-modal aria-label="Close confirmation dialog">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-header">
+                <span class="modal-eyebrow">Please Confirm</span>
+                <div class="modal-header-text">
+                    <h2 id="confirmation-modal-title">Confirm Action</h2>
+                    <p id="confirmation-modal-description" class="modal-subtitle">Please review and confirm to continue.</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+            <footer class="modal-footer modal-buttons">
+                <button id="modal-cancel" class="btn btn-secondary" type="button" data-close-modal>Cancel</button>
+                <button id="modal-confirm" class="btn btn-primary" type="button">Confirm</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="modal.js"></script>
+    <script src="account.js"></script>
+</body>
+</html>

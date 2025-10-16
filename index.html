@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ixia AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <button id="toggle-sidebar-btn" class="toggle-sidebar-btn">☰</button>
+      
+        <div class="top-left-logo">
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                    <defs>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                        </style>
+                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
+                        iXiA Ai
+                    </text>
+                </svg>
+            </div>
+        </div>
+      
+        <div id="sidebar" class="sidebar">
+            <h2>Saved Chats</h2>
+            <ul id="saved-chats-list"></ul>
+            <button id="new-chat-button">New Chat</button>
+            <button id="clear-saved-chats-button">Clear Saved Chats</button>
+        </div>
+
+        <div class="main-content">
+            <div class="top-right-buttons">
+                <div class="profile-menu">
+                    <button id="profile-button" class="icon-button profile-icon">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div id="profile-dropdown" class="profile-dropdown">
+                        <a href="account.html" id="my-account"><i class="fas fa-user"></i> My Account</a>
+                        <a href="#" id="chat-history"><i class="fas fa-history"></i> Chat History</a>
+                        <a href="#" id="settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="help"><i class="fas fa-question-circle"></i> Help & FAQ</a>
+                        <a href="#" id="about-ixia"><i class="fas fa-info-circle"></i> About Ixia AI</a>
+                        <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                    </div>
+                </div>
+                <button class="icon-button" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="icon-button" id="clear-chat-button">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="icon-button" id="export-chat-button">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-window" class="messages-container">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+                
+                <div class="input-area">
+                    <!-- Attachments preview area -->
+                    <div class="attachments-preview" style="display: none;">
+                        <!-- Attachment previews will be added here -->
+                    </div>
+
+                    <div class="input-container">
+                        <textarea id="user-input" placeholder="Talk to iXiA..." rows="1"></textarea>
+                        <div class="input-buttons">
+                            <button id="upload-file-btn" class="icon-button" title="Upload file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="file-input" multiple 
+                                   accept="image/*,.txt,.pdf,.doc,.docx" 
+                                   style="display: none;">
+                            <button id="send-message-btn" class="icon-button" title="Send message" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message template for editing (hidden by default) -->
+        <div class="edit-message-template" style="display: none;">
+            <div class="edit-container">
+                <textarea class="edit-textarea"></textarea>
+                <div class="edit-buttons">
+                    <button class="save-edit-btn" title="Save changes">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="cancel-edit-btn" title="Cancel editing">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle modal-message">
+            <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
+            <div class="modal-content" role="document" data-modal-tone="warning">
+                <button type="button" class="modal-close" id="modal-close" data-close-modal aria-label="Close dialog">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-header">
+                    <span class="modal-eyebrow">Action Required</span>
+                    <div class="modal-header-text">
+                        <h2 id="modal-title"></h2>
+                        <p id="modal-subtitle" class="modal-subtitle">Confirm this action to continue the conversation.</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-message"></div>
+                </div>
+                <footer class="modal-footer modal-buttons">
+                    <button id="modal-cancel" class="btn btn-secondary" type="button" data-close-modal>Cancel</button>
+                    <button id="modal-confirm" class="btn btn-primary" type="button">Confirm</button>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div id="typing-indicator" class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/compromise"></script>
+    <script src="https://unpkg.com/sentiment"></script>
+    <script src="modal.js"></script>
+    <script src="Ixia.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
