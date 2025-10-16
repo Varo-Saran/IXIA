@@ -1034,20 +1034,36 @@ function updateSavedChatsList() {
   savedChatsList.innerHTML = '';
   chatManager.getAllChats().forEach(chat => {
       const li = document.createElement('li');
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
       const span = document.createElement('span');
       span.textContent = chat.title;
       li.appendChild(span);
-      
-      li.onclick = (e) => {
-          e.stopPropagation();
+
+      const handleSelection = () => {
           loadChat(chat.id);
           if (window.innerWidth <= 767) {
               closeSidebar();
           }
       };
-      
+
+      li.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleSelection();
+      });
+
+      li.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleSelection();
+          }
+      });
+
       if (chat.id === chatManager.currentChatId) {
           li.classList.add('selected');
+          li.setAttribute('aria-current', 'true');
+      } else {
+          li.removeAttribute('aria-current');
       }
 
       const actionsDiv = document.createElement('div');
