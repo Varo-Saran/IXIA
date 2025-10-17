@@ -34,6 +34,7 @@
     --scrollbar-thumb: #d1d5db;   /* Light gray for scrollbar thumb */
     --scrollbar-track: #f3f4f6;   /* Lighter gray for scrollbar track */
     --sidebar-toggle-icon: url('https://img.icons8.com/?size=100&id=NL42pdpDO7xP&format=png&color=000000');
+    --chat-input-icon-size: 18px;
 }
 
 .dark-theme {
@@ -69,6 +70,7 @@
     --scrollbar-thumb: #4b5563;   /* Medium gray for scrollbar thumb */
     --scrollbar-track: #1f2937;   /* Dark blue-gray for scrollbar track */
     --sidebar-toggle-icon-color: var(--sidebar-selected-text);
+    --chat-input-icon-size: 18px;
 }
 
 body, html {
@@ -917,6 +919,7 @@ html {
 
 .input-area button i {
   transition: color 0.2s ease, opacity 0.2s ease;
+  font-size: var(--chat-input-icon-size);
 }
 
 .input-area button:hover i,
@@ -978,8 +981,8 @@ html {
 
 #send-message-btn::before {
   content: "";
-  width: 18px;
-  height: 18px;
+  width: var(--chat-input-icon-size);
+  height: var(--chat-input-icon-size);
   background-color: var(--send-button-bg);
   mask-image: url('https://img.icons8.com/?size=100&id=vZwPIiaetLtz&format=png&color=000000');
   mask-repeat: no-repeat;
