@@ -561,20 +561,29 @@ function handleFileUpload(files) {
 
 function updateAttachmentsPreview() {
   const previewContainer = document.querySelector('.attachments-preview');
-  previewContainer.innerHTML = '';
+  if (!previewContainer) return;
+
+  const track = previewContainer.querySelector('.attachments-track');
+  if (!track) return;
+
+  track.innerHTML = '';
 
   attachments.forEach((attachment, index) => {
-    const preview = document.createElement('div');
-    preview.className = 'attachment-preview';
-    preview.innerHTML = `
-      <i class="fas ${getFileTypeIcon(attachment.type)}"></i>
-      <span>${attachment.name}</span>
-      <button class="remove-attachment" data-index="${index}">
+    const card = document.createElement('div');
+    card.className = 'attachment-card';
+    card.innerHTML = `
+      <button class="remove-attachment" data-index="${index}" aria-label="Remove attachment">
         <i class="fas fa-times"></i>
       </button>
+      <div class="attachment-card__icon">
+        <i class="fas ${getFileTypeIcon(attachment.type)}"></i>
+      </div>
+      <span class="attachment-card__name" title="${attachment.name}">${attachment.name}</span>
     `;
-    previewContainer.appendChild(preview);
+    track.appendChild(card);
   });
+
+  previewContainer.classList.toggle('is-visible', attachments.length > 0);
 
   // Add remove attachment handlers
   document.querySelectorAll('.remove-attachment').forEach(btn => {
@@ -585,8 +594,6 @@ function updateAttachmentsPreview() {
       updateSendButtonState();
     });
   });
-
-  previewContainer.style.display = attachments.length ? 'flex' : 'none';
 }
 
 function getFileTypeIcon(type) {
