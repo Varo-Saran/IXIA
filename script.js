@@ -95,6 +95,12 @@ class ChatHistoryManager {
     localStorage.setItem(`chatCounter_${this.userId}`, String(this.nextChatNumber));
   }
 
+  resetChatCounter() {
+    this.nextChatNumber = 1;
+    localStorage.removeItem(`chatCounter_${this.userId}`);
+    this.saveChatCounter();
+  }
+
   loadCurrentChatId() {
     const savedId = localStorage.getItem(`currentChatId_${this.userId}`);
     // Verify the ID exists in chats
@@ -867,6 +873,7 @@ function clearSavedChats() {
       () => {
           chatManager.chats = {};
           chatManager.currentChatId = null;
+          chatManager.resetChatCounter();
           chatManager.saveChats();
           chatWindow.innerHTML = '';
           updateSavedChatsList();
