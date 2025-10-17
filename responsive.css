@@ -693,7 +693,9 @@
   /* Attachments preview */
   .attachments-preview {
     padding: 8px;
-    margin-bottom: 8px;
+    margin: 0 15px 8px;
+    width: calc(100% - 30px);
+    box-sizing: border-box;
   }
 
   .attachments-track {
@@ -813,6 +815,11 @@
     bottom: 10px;
     margin: 8px 12px;
     padding: 8px 12px;
+    width: calc(100% - 24px);
+  }
+
+  .attachments-preview {
+    margin: 0 12px 8px;
     width: calc(100% - 24px);
   }
 

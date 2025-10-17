@@ -1015,9 +1015,11 @@ html {
   border: 1px solid var(--input-border);
   border-radius: 12px;
   padding: 12px;
-  margin-bottom: 12px;
+  margin: 0 20px 12px;
+  width: calc(100% - 40px);
   background: var(--input-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
 .attachments-preview.is-visible {
