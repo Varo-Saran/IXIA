@@ -314,6 +314,12 @@ body, html {
     mask: var(--sidebar-toggle-icon) center/contain no-repeat;
     -webkit-mask: var(--sidebar-toggle-icon) center/contain no-repeat;
     flex-shrink: 0;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.toggle-sidebar-btn.is-open .toggle-sidebar-icon {
+    transform: rotate(90deg);
+    background-color: var(--sidebar-text);
 }
 
 .sidebar.show + .main-content .toggle-sidebar-btn {
