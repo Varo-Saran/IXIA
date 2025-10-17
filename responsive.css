@@ -595,7 +595,7 @@
 
   .sidebar.show + .main-content .toggle-sidebar-btn {
     left: calc(85% + 10px);
-    max-width: 310px; /* Fixed: changed from max-left to max-width */
+    max-width: 340px; /* Fixed: changed from max-left to max-width */
   }
 
   /* Style for hamburger icon lines */
