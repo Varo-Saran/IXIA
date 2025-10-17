@@ -585,15 +585,9 @@
   .toggle-sidebar-btn .toggle-sidebar-icon {
     width: 20px;
     height: 20px;
-    background-color: var(--sidebar-toggle-icon-color);
-    mask-image: var(--sidebar-toggle-icon);
-    -webkit-mask-image: var(--sidebar-toggle-icon);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
-    mask-size: contain;
-    -webkit-mask-size: contain;
+    background-color: var(--sidebar-selected-text);
+    mask: var(--sidebar-toggle-icon) center/contain no-repeat;
+    -webkit-mask: var(--sidebar-toggle-icon) center/contain no-repeat;
   }
 
   /* Prevent content scrolling when sidebar is open */
