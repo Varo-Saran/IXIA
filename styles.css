@@ -255,7 +255,6 @@ body, html {
     color: var(--sidebar-text);
     padding: 20px;
     box-shadow: 2px 0 10px var(--shadow-color);
-    overflow-y: auto;
     height: 100vh;
     box-sizing: border-box;
     border-right: 1px solid var(--input-border);
@@ -265,6 +264,9 @@ body, html {
     bottom: 0;
     transition: left 0.3s ease-in-out;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .sidebar.show {
@@ -310,6 +312,16 @@ body, html {
 #saved-chats-list {
     list-style-type: none;
     padding: 0;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.sidebar-actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #saved-chats-list li {
