@@ -68,6 +68,7 @@
     --message-hover: #374151;     /* Slightly lighter for message hover */
     --scrollbar-thumb: #4b5563;   /* Medium gray for scrollbar thumb */
     --scrollbar-track: #1f2937;   /* Dark blue-gray for scrollbar track */
+    --sidebar-toggle-icon-color: var(--sidebar-selected-text);
 }
 
 body, html {
