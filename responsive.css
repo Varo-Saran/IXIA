@@ -47,6 +47,9 @@
     grid-auto-rows: auto;
     padding: clamp(24px, 8vw, 40px);
     gap: clamp(24px, 7vw, 40px);
+    align-items: stretch;
+    align-content: center;
+    justify-items: center;
   }
 
   .auth-hero {
@@ -114,7 +117,8 @@
 
   .auth-layout {
     grid-template-columns: 1fr;
-    align-items: center;
+    align-items: stretch;
+    align-content: center;
     justify-items: center;
     padding: clamp(32px, 7vw, 56px);
     gap: clamp(28px, 6vw, 48px);
@@ -172,7 +176,8 @@
 
   .auth-layout {
     grid-template-columns: minmax(320px, 0.95fr) minmax(320px, 0.95fr);
-    align-items: center;
+    align-items: stretch;
+    align-content: center;
     justify-items: center;
     padding: clamp(40px, 6vw, 72px);
     gap: clamp(32px, 6vw, 64px);
