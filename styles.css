@@ -905,6 +905,16 @@ html {
   flex-shrink: 0;
 }
 
+.input-area .icon-button,
+.input-area .icon-button:hover,
+.input-area .icon-button:active,
+.input-area .icon-button:focus,
+.input-area .icon-button:focus-visible {
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 8px;
+}
+
 .input-area button i {
   transition: color 0.2s ease, opacity 0.2s ease;
 }
