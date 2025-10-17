@@ -44,6 +44,21 @@ class Message {
   }
 }
 
+const DEFAULT_CHAT_PLACEHOLDER = 'New Chat';
+
+function generateChatTitle(text, timestamp = new Date()) {
+  const normalizedText = (text || '').replace(/\s+/g, ' ').trim();
+  if (normalizedText) {
+    const snippet = normalizedText.slice(0, 40);
+    return normalizedText.length > 40
+      ? `${snippet.trimEnd()}…`
+      : snippet;
+  }
+
+  const dateString = new Date(timestamp).toISOString().split('T')[0];
+  return `Chat on ${dateString}`;
+}
+
 // Chat History Manager Class
 class ChatHistoryManager {
   constructor(userId) {
@@ -140,7 +155,14 @@ class ChatHistoryManager {
       newMessage = new Message(message.text, isUser, message.attachments);
     }
 
-    this.chats[this.currentChatId].messages.push(newMessage);
+    const currentChat = this.chats[this.currentChatId];
+    currentChat.messages.push(newMessage);
+
+    const isDefaultTitle = /^Chat \d+$/.test(currentChat.title) || currentChat.title === DEFAULT_CHAT_PLACEHOLDER;
+    if (isUser && isDefaultTitle) {
+      currentChat.title = generateChatTitle(newMessage.text, newMessage.timestamp);
+    }
+
     this.saveChats();
     return newMessage;
   }
