@@ -227,6 +227,11 @@ body, html {
     border-color: var(--sidebar-item-border);
 }
 
+.dark-theme .icon-button.profile-icon {
+    border-color: var(--sidebar-item-border);
+    background-color: var(--sidebar-bg);
+}
+
 .dark-theme .profile-icon:hover,
 .dark-theme .profile-icon:focus-visible {
     border-color: var(--primary-color);
@@ -547,6 +552,12 @@ body, html {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.icon-button.profile-icon {
+    border: 2px solid var(--input-border);
+    background-color: var(--chat-bg);
+    padding: 0;
 }
 
 .icon-button i {
