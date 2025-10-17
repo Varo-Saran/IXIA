@@ -322,7 +322,7 @@ body, html {
 }
 
 .toggle-sidebar-btn.is-open .toggle-sidebar-icon {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
     background-color: var(--sidebar-text);
 }
 
