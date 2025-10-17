@@ -548,6 +548,16 @@
     flex-shrink: 0;
   }
 
+  .input-area .icon-button,
+  .input-area .icon-button:hover,
+  .input-area .icon-button:active,
+  .input-area .icon-button:focus,
+  .input-area .icon-button:focus-visible {
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 8px;
+  }
+
   /* Sidebar adjustments */
   .sidebar {
     width: 85%;
@@ -799,6 +809,16 @@
 
   .input-buttons button {
     padding: 4px;
+  }
+
+  .input-area .icon-button,
+  .input-area .icon-button:hover,
+  .input-area .icon-button:active,
+  .input-area .icon-button:focus,
+  .input-area .icon-button:focus-visible {
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 8px;
   }
 
   .message-content {
