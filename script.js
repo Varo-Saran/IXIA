@@ -21,6 +21,7 @@ const exportChatButton = document.getElementById('export-chat-button');
 const clearSavedChatsButton = document.getElementById('clear-saved-chats-button');
 const toggleSidebarButton = document.getElementById('toggle-sidebar-btn');
 const sidebar = document.getElementById('sidebar');
+const rootElement = document.documentElement;
 const profileButton = document.getElementById('profile-button');
 const profileDropdown = document.getElementById('profile-dropdown');
 const profilePicture = document.getElementById('profile-picture');
@@ -865,13 +866,33 @@ function loadSavedTheme() {
 }
 
 // Sidebar handling
+function calculateSidebarToggleOffset() {
+  if (!sidebar) {
+      return '0px';
+  }
+
+  const offset = `${sidebar.offsetWidth}px`;
+
+  if (rootElement) {
+      rootElement.style.setProperty('--sidebar-toggle-offset', offset);
+  }
+
+  return offset;
+}
+
 function updateSidebarToggleState(isOpen) {
   if (!toggleSidebarButton) {
       return;
   }
 
+  calculateSidebarToggleOffset();
+
   toggleSidebarButton.classList.toggle('is-open', isOpen);
-  toggleSidebarButton.style.left = isOpen ? '250px' : '0';
+  if (isOpen) {
+      toggleSidebarButton.style.removeProperty('left');
+  } else {
+      toggleSidebarButton.style.left = '0px';
+  }
   toggleSidebarButton.setAttribute('aria-label', isOpen ? 'Close sidebar' : 'Open sidebar');
   toggleSidebarButton.setAttribute('aria-pressed', String(isOpen));
   toggleSidebarButton.setAttribute('aria-expanded', String(isOpen));
@@ -1236,6 +1257,8 @@ document.addEventListener('click', (event) => {
 });
 
 window.addEventListener('resize', () => {
+  calculateSidebarToggleOffset();
+
   if (window.innerWidth > 767) {
       sidebar.classList.remove('show');
       mainContent.classList.remove('sidebar-open');

@@ -307,6 +307,10 @@ body, html {
     box-sizing: border-box;
 }
 
+.toggle-sidebar-btn.is-open {
+    left: var(--sidebar-toggle-offset, 0px);
+}
+
 .toggle-sidebar-btn .toggle-sidebar-icon {
     width: 22px;
     height: 22px;
