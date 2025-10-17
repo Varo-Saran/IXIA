@@ -1028,7 +1028,7 @@ html {
 
 .attachments-track {
   display: flex;
-  gap: 12px;
+  gap: 11px;
   overflow-x: auto;
   padding-bottom: 6px;
   margin-bottom: -6px;
@@ -1051,8 +1051,8 @@ html {
 
 .attachment-card {
   position: relative;
-  flex: 0 0 140px;
-  min-height: 110px;
+  flex: 0 0 100px;
+  min-height: 100px;
   border: 1px solid var(--input-border);
   border-radius: 10px;
   background: var(--chat-bg);
@@ -1060,19 +1060,19 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 16px 12px;
+  gap: 8px;
+  padding: 12px 10px;
   text-align: center;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .attachment-card__icon {
-  font-size: 28px;
+  font-size: 24px;
   color: var(--primary-color);
 }
 
 .attachment-card__name {
-  font-size: 0.9em;
+  font-size: 0.85em;
   line-height: 1.2;
   color: var(--text-color);
   max-width: 100%;

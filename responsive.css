@@ -699,7 +699,7 @@
   }
 
   .attachments-track {
-    gap: 8px;
+    gap: 7px;
   }
 
   .attachments-track::-webkit-scrollbar {
@@ -707,14 +707,18 @@
   }
 
   .attachment-card {
-    flex: 0 0 110px;
-    min-height: 100px;
-    padding: 12px 8px;
-    gap: 10px;
+    flex: 0 0 88px;
+    min-height: 88px;
+    padding: 10px 6px;
+    gap: 6px;
   }
 
   .attachment-card__icon {
-    font-size: 24px;
+    font-size: 20px;
+  }
+
+  .attachment-card__name {
+    font-size: 0.8em;
   }
 
   .attachment-card .remove-attachment {
