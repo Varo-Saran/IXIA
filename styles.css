@@ -318,7 +318,7 @@ body, html {
 }
 
 .toggle-sidebar-btn.is-open .toggle-sidebar-icon {
-    transform: scaleX(-1);
+    transform: rotate(90deg);
     background-color: var(--sidebar-text);
 }
 
