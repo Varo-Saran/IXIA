@@ -588,6 +588,12 @@
     background-color: var(--sidebar-selected-text);
     mask: var(--sidebar-toggle-icon) center/contain no-repeat;
     -webkit-mask: var(--sidebar-toggle-icon) center/contain no-repeat;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .toggle-sidebar-btn.is-open .toggle-sidebar-icon {
+    transform: scaleX(-1);
+    background-color: var(--sidebar-text);
   }
 
   /* Prevent content scrolling when sidebar is open */
