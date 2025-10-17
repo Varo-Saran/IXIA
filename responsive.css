@@ -692,13 +692,31 @@
 
   /* Attachments preview */
   .attachments-preview {
-    max-height: 80px;
-    padding: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
   }
 
-  .attachment-preview {
-    font-size: 0.85em;
-    padding: 4px 6px;
+  .attachments-track {
+    gap: 8px;
+  }
+
+  .attachments-track::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .attachment-card {
+    flex: 0 0 110px;
+    min-height: 100px;
+    padding: 12px 8px;
+    gap: 10px;
+  }
+
+  .attachment-card__icon {
+    font-size: 24px;
+  }
+
+  .attachment-card .remove-attachment {
+    padding: 3px;
   }
 
   /* Typing indicator */
