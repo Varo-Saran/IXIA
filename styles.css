@@ -61,8 +61,8 @@
     --ai-message-bg: #2c3244;     /* Slightly lighter bg for AI messages */
     --user-message-text: #ffffff; /* White text for user messages */
     --ai-message-text: #f3f4f6;   /* Light gray for AI message text */
-    --send-button-bg: #3b82f6;
-    --send-button-hover: #2563eb;
+    --send-button-bg: #ffffff;
+    --send-button-hover: rgba(255, 255, 255, 0.85);
     --header-bg: #1f2937;         /* Dark blue-gray for header */
     --header-border: #4b5563;     /* Medium gray border for header */
     --message-hover: #374151;     /* Slightly lighter for message hover */
@@ -890,7 +890,7 @@ html {
 .input-area button {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white */
+  color: var(--primary-color);
   cursor: pointer;
   font-size: 18px;
   padding: 8px;
@@ -931,7 +931,7 @@ html {
 }
 
 .dark-theme .input-area button {
-  color: rgba(255, 255, 255, 0.7);
+  color: #ffffff;
 }
 
 .dark-theme .input-area button:hover i,
