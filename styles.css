@@ -82,6 +82,18 @@ body, html {
     overflow: hidden;
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .top-left-logo {
     position: absolute;
     top: 10px;
@@ -914,6 +926,14 @@ html {
     color: var(--input-placeholder);
 }
 
+.dark-theme #send-message-btn::before {
+  background-color: var(--send-button-bg);
+}
+
+.dark-theme #send-message-btn:hover::before {
+  background-color: var(--send-button-hover);
+}
+
 /* File handling */
 #upload-file-btn {
   margin-right: 5px;
@@ -921,12 +941,29 @@ html {
 }
 
 #send-message-btn {
-  color: var(--send-button-bg);
-  font-size: 20px;
+  position: relative;
 }
 
-#send-message-btn:hover {
-  color: var(--send-button-hover);
+#send-message-btn::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: var(--send-button-bg);
+  mask-image: url('https://img.icons8.com/?size=100&id=vZwPIiaetLtz&format=png&color=000000');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url('https://img.icons8.com/?size=100&id=vZwPIiaetLtz&format=png&color=000000');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  display: block;
+  margin: auto;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+#send-message-btn:hover::before {
+  background-color: var(--send-button-hover);
 }
 
 /* Disabled state */
@@ -934,11 +971,6 @@ html {
   opacity: 0.4;
   cursor: not-allowed;
   pointer-events: none;
-}
-
-#send-message-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Attachment styles */
