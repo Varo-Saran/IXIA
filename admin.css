@@ -498,9 +498,21 @@ body::after {
 .delta.neutral { color: var(--muted-color); }
 
 .page-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.page-grid > .insights-panel {
+    order: -1;
+    flex: 0 0 min(320px, 100%);
+    align-self: flex-start;
+}
+
+.page-grid > #account-list {
+    flex: 1 1 100%;
 }
 
 .toolbar {
@@ -884,7 +896,9 @@ body::after {
     }
 
     .page-grid {
-        grid-template-columns: 1fr;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: stretch;
     }
 }
 
