@@ -1136,10 +1136,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </button>
                     ` : `
                         <button class="edit-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Edit profile details, role, or status">
-                            <i class="fa-solid fa-edit"></i>
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <button class="delete-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Delete User">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash-can"></i>
                         </button>
                         <button class="reset-pwd-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Reset Password">
                             <i class="fa-solid fa-key"></i>
