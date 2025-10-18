@@ -736,8 +736,8 @@
   }
 
   .icon-button {
-    width: 35px;
-    height: 35px;
+    width: clamp(40px, 12vw, 48px);
+    height: clamp(40px, 12vw, 48px);
   }
 
   /* Add a subtle header background to ensure visibility */
@@ -943,8 +943,8 @@
   }
 
   .icon-button {
-    width: 32px;
-    height: 32px;
+    width: clamp(40px, 14vw, 48px);
+    height: clamp(40px, 14vw, 48px);
   }
 
   .sidebar {
