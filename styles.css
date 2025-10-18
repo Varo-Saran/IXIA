@@ -693,8 +693,29 @@ body::after {
     right: 20px;
     z-index: 1000;
     display: flex;
-    flex-direction: row-reverse; /* This will reverse the order of the buttons */
-    gap: 10px; /* This adds space between the buttons */
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.top-right-buttons > #export-chat-button {
+    order: 1;
+}
+
+.top-right-buttons > .model-selector {
+    order: 2;
+}
+
+.top-right-buttons > #clear-chat-button {
+    order: 3;
+}
+
+.top-right-buttons > #theme-toggle {
+    order: 4;
+}
+
+.top-right-buttons > .profile-menu {
+    order: 5;
 }
 .model-selector {
     position: relative;
@@ -752,8 +773,9 @@ body::after {
 .model-selector__list-wrapper {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
-    width: max(100%, 220px);
+    right: -20px;
+    left: auto;
+    width: min(calc(100vw - 60px), max(100%, 200px));
     transform: translateY(-6px);
     opacity: 0;
     pointer-events: none;

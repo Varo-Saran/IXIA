@@ -694,9 +694,31 @@
     top: 12px; /* Aligned with logo */
     right: 10px;
     display: flex;
-    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
     position: fixed;
     z-index: 1001; /* Ensure buttons stay above chat */
+  }
+
+  .top-right-buttons > #export-chat-button {
+    order: 1;
+  }
+
+  .top-right-buttons > .model-selector {
+    order: 2;
+  }
+
+  .top-right-buttons > #clear-chat-button {
+    order: 3;
+  }
+
+  .top-right-buttons > #theme-toggle {
+    order: 4;
+  }
+
+  .top-right-buttons > .profile-menu {
+    order: 5;
   }
 
   .model-selector {
@@ -709,7 +731,8 @@
   }
 
   .model-selector__list-wrapper {
-    width: max(180px, 100%);
+    right: -16px;
+    width: min(calc(100vw - 52px), max(100%, 190px));
   }
 
   .icon-button {
