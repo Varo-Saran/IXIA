@@ -21,10 +21,8 @@
     --sidebar-item-bg: var(--card-bg);
     --sidebar-item-text: #4b5563; /* Medium gray text for unselected items */
     --sidebar-item-border: var(--border-color);
-    --new-chat-btn: #2563eb;
-    --new-chat-btn-hover: #1d4ed8;
-    --clear-chats-btn: #dc2626;
-    --clear-chats-btn-hover: #b91c1c;
+    --new-chat-btn: color-mix(in srgb, var(--icon-button-bg) 85%, var(--panel-bg) 15%);
+    --clear-chats-btn: color-mix(in srgb, var(--panel-bg) 45%, rgba(239, 68, 68, 0.65) 55%);
     --user-message-bg: #d1ebfd;   /* Very light blue for user messages */
     --ai-message-bg: #ffffff;     /* White for AI messages */
     --user-message-text: #1e40af; /* Dark blue for user message text */
@@ -73,10 +71,8 @@
     --sidebar-item-bg: var(--card-bg);
     --sidebar-item-text: #e5e7eb; /* Light gray for unselected item text */
     --sidebar-item-border: var(--border-color);
-    --new-chat-btn: #2563eb;
-    --new-chat-btn-hover: #1d4ed8;
-    --clear-chats-btn: #dc2626;
-    --clear-chats-btn-hover: #b91c1c;
+    --new-chat-btn: color-mix(in srgb, var(--icon-button-bg) 80%, var(--panel-bg) 20%);
+    --clear-chats-btn: color-mix(in srgb, var(--panel-bg) 35%, rgba(239, 68, 68, 0.7) 65%);
     --user-message-bg: #5697ff;   /* Primary color for user messages */
     --ai-message-bg: #2c3244;     /* Slightly lighter bg for AI messages */
     --user-message-text: #ffffff; /* White text for user messages */
@@ -624,54 +620,38 @@ body::after {
     width: 100%;
     padding: 0.75rem 1rem;
     background-color: var(--new-chat-btn);
-    color: var(--sidebar-selected-text);
+    color: white;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    transition: background-color 0.3s ease;
     margin-bottom: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-#new-chat-button:hover,
-#new-chat-button:focus-visible {
-    background-color: var(--new-chat-btn-hover);
-    color: var(--sidebar-selected-text);
-}
-
-#new-chat-button:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--focus-ring);
+#new-chat-button:hover {
+    background-color: color-mix(in srgb, var(--new-chat-btn) 70%, var(--focus-ring) 30%);
 }
 
 #clear-saved-chats-button {
     width: 100%;
     padding: 0.75rem 1rem;
     background-color: var(--clear-chats-btn);
-    color: var(--sidebar-selected-text);
+    color: white;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    transition: background-color 0.3s ease;
     margin-bottom: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-#clear-saved-chats-button:hover,
-#clear-saved-chats-button:focus-visible {
-    background-color: var(--clear-chats-btn-hover);
-    color: var(--sidebar-selected-text);
-}
-
-#clear-saved-chats-button:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--focus-ring);
+#clear-saved-chats-button:hover {
+    background-color: color-mix(in srgb, var(--clear-chats-btn) 60%, rgba(239, 68, 68, 0.85) 40%);
 }
 
 .main-content {
