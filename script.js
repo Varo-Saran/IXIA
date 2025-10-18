@@ -1295,12 +1295,6 @@ userInput.addEventListener('keypress', (e) => {
   }
 });
 
-userInput.addEventListener('input', () => {
-  userInput.style.height = 'auto';
-  userInput.style.height = userInput.scrollHeight + 'px';
-  updateSendButtonState();
-});
-
 // File handling
 uploadFileBtn.addEventListener('click', () => {
   fileInput.click();
