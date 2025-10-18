@@ -31,6 +31,19 @@ const mainContent = document.querySelector('.main-content');
 let textareaBaselineHeight = null;
 let textareaLineHeight = null;
 
+function debounce(fn, wait = 150) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      timeoutId = null;
+      fn.apply(null, args);
+    }, wait);
+  };
+}
+
 function captureTextareaMetrics() {
   if (!userInput) return;
 
@@ -88,6 +101,15 @@ function updateTextareaSize() {
     userInput.classList.add('is-scrollable');
   }
 }
+
+function recalculateTextareaMetrics() {
+  if (!userInput) return;
+
+  captureTextareaMetrics();
+  updateTextareaSize();
+}
+
+const debouncedTextareaMetrics = debounce(recalculateTextareaMetrics);
 
 if (userInput) {
   const initializeTextarea = () => {
@@ -1311,6 +1333,7 @@ if (themeToggle) {
       const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
       setTheme(nextTheme);
+      recalculateTextareaMetrics();
   });
 }
 
@@ -1346,6 +1369,8 @@ window.addEventListener('resize', () => {
           updateSidebarToggleState(sidebar.classList.contains('show'));
       }
   }
+
+  debouncedTextareaMetrics();
 });
 
 // Message editing
