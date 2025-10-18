@@ -509,7 +509,7 @@ body::after {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
 }
