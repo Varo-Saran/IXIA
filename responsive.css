@@ -332,6 +332,12 @@
 @media (orientation: portrait) {
   .sidebar {
     height: 30vh;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(var(--blur-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount));
+    color: var(--sidebar-text);
   }
 }
 
@@ -577,6 +583,12 @@
     flex-direction: column;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(var(--blur-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount));
+    color: var(--sidebar-text);
   }
 
   .toggle-sidebar-btn {
@@ -866,6 +878,12 @@
 
   .sidebar {
     width: 100%; /* Full width for very small screens */
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(var(--blur-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount));
+    color: var(--sidebar-text);
   }
 }
 
@@ -884,6 +902,12 @@
   .sidebar {
     height: 100vh;
     padding-bottom: 20px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(var(--blur-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount));
+    color: var(--sidebar-text);
   }
 
   .main-content {
