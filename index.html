@@ -44,6 +44,28 @@
 
         <div class="main-content">
             <div class="top-right-buttons">
+                <div class="model-selector" data-active-model="chat">
+                    <button id="model-selector-toggle" class="model-selector__toggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="model-selector-list">
+                        <span class="model-selector__label">Chat</span>
+                        <i class="fas fa-chevron-down model-selector__icon" aria-hidden="true"></i>
+                    </button>
+                    <div class="model-selector__list-wrapper">
+                        <div id="model-selector-list" class="model-selector__list" role="listbox" aria-label="Choose response style" aria-hidden="true">
+                            <button type="button" role="option" class="model-selector__option is-selected" data-model="chat" aria-selected="true">
+                                <span>Chat</span>
+                                <small>Conversational assistant</small>
+                            </button>
+                            <button type="button" role="option" class="model-selector__option" data-model="math" aria-selected="false">
+                                <span>Math</span>
+                                <small>Focused calculations</small>
+                            </button>
+                            <button type="button" role="option" class="model-selector__option" data-model="creative" aria-selected="false">
+                                <span>Creative/Other</span>
+                                <small>Ideas & inspiration</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="profile-menu">
                     <button id="profile-button" class="icon-button profile-icon" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open profile menu">
                         <img id="profile-picture" src="assets/images/default-profile-icon-light.png" alt="Open profile menu">

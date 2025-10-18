@@ -1,14 +1,63 @@
 // Ixia.js - Chatbot Logic and AI Integration
 
 // Simulating an AI response for the chat function
-async function getAIResponse(userMessage) {
+async function getAIResponse(userMessage, model = 'chat') {
+  const safeMessage = typeof userMessage === 'string' ? userMessage : String(userMessage ?? '');
+
   // Simulate a delay to mimic AI thinking process
   await new Promise(resolve => setTimeout(resolve, 1000));
 
-  // Check for math operations first
+  const normalizedModel = typeof model === 'string' ? model.toLowerCase() : 'chat';
+
+  switch (normalizedModel) {
+    case 'math':
+      return getMathResponse(safeMessage);
+    case 'creative':
+    case 'other':
+    case 'creative/other':
+      return getCreativeResponse(safeMessage);
+    case 'chat':
+    default:
+      return getChatResponse(safeMessage);
+  }
+}
+
+function formatMathValue(value) {
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) {
+      return value;
+    }
+    if (Number.isInteger(value)) {
+      return value.toString();
+    }
+    const fixed = Number.parseFloat(value.toFixed(6));
+    return fixed.toString();
+  }
+  return value;
+}
+
+function getMathResponse(userMessage) {
+  const mathResult = solveMathProblem(userMessage);
+  if (mathResult === null) {
+    return 'I\'m tuned for calculations right now—drop in an equation like "42 / 6" and I\'ll crunch it instantly.';
+  }
+
+  const formatted = formatMathValue(mathResult);
+  if (typeof formatted === 'string' && formatted.startsWith('Error')) {
+    return formatted;
+  }
+
+  return `The result of the calculation is: ${formatted}`;
+}
+
+function getChatResponse(userMessage) {
   const mathResult = solveMathProblem(userMessage);
   if (mathResult !== null) {
-    return `The result of the calculation is: ${mathResult}`;
+    const formatted = formatMathValue(mathResult);
+    if (typeof formatted === 'string' && formatted.startsWith('Error')) {
+      return formatted;
+    }
+    return `The result of the calculation is: ${formatted}`;
   }
 
   // Sample responses based on user input
@@ -202,6 +251,65 @@ for (let response of responses) {
 
 // Return a default message if no keyword matches
 return "I'm not sure how to respond to that, but I'm here to help if you have any questions or calculations!";
+}
+
+function getCreativeResponse(userMessage = '') {
+  const rawSeed = typeof userMessage === 'string' ? userMessage.trim() : '';
+  const seed = rawSeed || 'your idea';
+  const formattedSeed = capitalizeFirstLetter(seed);
+  const lowerSeed = formattedSeed.toLowerCase();
+
+  const creativeKits = [
+    {
+      heading: '🌌 Story Seed Matrix',
+      rows: [
+        ['Protagonist', 'A restless cartographer mapping emotions'],
+        ['Setting', 'A floating bazaar lit by aurora tides'],
+        ['Conflict', `The map misbehaves whenever ${lowerSeed} is whispered`],
+        ['Wildcard', `${formattedSeed} collides with an impossible rule`]
+      ],
+      outro: 'Combine any two cells and riff on them, or ask me for another matrix.'
+    },
+    {
+      heading: '🎭 Prompt Remix Lab',
+      lines: [
+        `Anchor ➜ ${formattedSeed}.`,
+        'Genre Flip ➜ Noir documentary told as journal entries.',
+        'Sensory Hook ➜ The air smells like thunderstorms and vinyl records.'
+      ],
+      outro: 'Tweak any line to fit your vibe, and I can expand whichever spark you like next.'
+    },
+    {
+      heading: '✨ Creative Stretch Circuit',
+      lines: [
+        '1. Draft a 20-second micro-scene using only questions.',
+        '2. Swap in a surprising ally halfway through.',
+        '3. End on a color that never appears in nature.'
+      ],
+      outro: `Try running the circuit with ${formattedSeed} as your muse, or ask for a fresh set.`
+    }
+  ];
+
+  const kit = creativeKits[Math.floor(Math.random() * creativeKits.length)];
+  let detailBlock = '';
+
+  if (kit.rows) {
+    const header = 'Focus | Spark';
+    const separator = '-----|------';
+    const tableRows = kit.rows.map(row => `${row[0]} | ${row[1]}`);
+    detailBlock = [header, separator, ...tableRows].join('\n');
+  } else if (kit.lines) {
+    detailBlock = kit.lines.join('\n');
+  }
+
+  return `${kit.heading}\n${detailBlock}\n\n${kit.outro}`;
+}
+
+function capitalizeFirstLetter(value) {
+  if (!value) {
+    return '';
+  }
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 // Function to solve basic math problems
