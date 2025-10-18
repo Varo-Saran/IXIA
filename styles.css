@@ -394,9 +394,10 @@ body, html {
 }
 
 #saved-chats-list li {
-    padding: 10px;
+    padding: 0.6rem 1rem;
     margin-bottom: 10px;
-    border-radius: 5px;
+    border-radius: 999px;
+    line-height: 1.4;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -569,14 +570,17 @@ body, html {
 
 #new-chat-button {
     width: 100%;
-    padding: 10px;
+    padding: 0.75rem 1rem;
     background-color: var(--new-chat-btn);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 999px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #new-chat-button:hover {
@@ -585,14 +589,17 @@ body, html {
 
 #clear-saved-chats-button {
     width: 100%;
-    padding: 10px;
+    padding: 0.75rem 1rem;
     background-color: var(--clear-chats-btn);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 999px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #clear-saved-chats-button:hover {
