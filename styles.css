@@ -960,6 +960,18 @@ html {
     color: var(--input-placeholder);
 }
 
+.dark-theme #user-input.is-scrollable {
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme #user-input.is-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme #user-input.is-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .dark-theme #send-message-btn::before {
   background-color: var(--send-button-bg);
 }
@@ -1131,6 +1143,25 @@ html {
   resize: none;
   min-height: 20px;
   max-height: 150px;
+  overflow-y: hidden;
+}
+
+#user-input.is-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 149, 237, 0.6) rgba(255, 255, 255, 0.1);
+}
+
+#user-input.is-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+#user-input.is-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#user-input.is-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(100, 149, 237, 0.6);
+  border-radius: 3px;
 }
 
 .input-buttons {
