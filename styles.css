@@ -698,11 +698,11 @@ body::after {
     gap: 12px;
 }
 
-.top-right-buttons > #export-chat-button {
+.top-right-buttons > .model-selector {
     order: 1;
 }
 
-.top-right-buttons > .model-selector {
+.top-right-buttons > #export-chat-button {
     order: 2;
 }
 

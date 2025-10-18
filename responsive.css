@@ -701,11 +701,11 @@
     z-index: 1001; /* Ensure buttons stay above chat */
   }
 
-  .top-right-buttons > #export-chat-button {
+  .top-right-buttons > .model-selector {
     order: 1;
   }
 
-  .top-right-buttons > .model-selector {
+  .top-right-buttons > #export-chat-button {
     order: 2;
   }
 
