@@ -332,9 +332,10 @@
 @media (orientation: portrait) {
   .sidebar {
     height: 30vh;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    background: var(--sidebar-surface-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+      0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
     backdrop-filter: blur(var(--blur-amount));
     -webkit-backdrop-filter: blur(var(--blur-amount));
     color: var(--sidebar-text);
@@ -583,9 +584,10 @@
     flex-direction: column;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    background: var(--sidebar-surface-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+      0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
     backdrop-filter: blur(var(--blur-amount));
     -webkit-backdrop-filter: blur(var(--blur-amount));
     color: var(--sidebar-text);
@@ -598,8 +600,8 @@
     left: 0;
     top: 8px;
     z-index: 1001;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
+    background: var(--sidebar-interactive-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-interactive-border) 65%, transparent 35%);
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
     display: flex;
@@ -608,10 +610,10 @@
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 20px 44px color-mix(in srgb, var(--sidebar-interactive-shadow) 75%, transparent 25%);
     backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
     -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
-    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
   }
 
   .toggle-sidebar-btn .toggle-sidebar-icon {
@@ -630,12 +632,13 @@
 
   .toggle-sidebar-btn:hover,
   .toggle-sidebar-btn:focus-visible {
-    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.18);
-    border-color: var(--primary-color);
+    background: var(--sidebar-interactive-hover-gradient);
+    box-shadow: 0 24px 58px color-mix(in srgb, var(--sidebar-interactive-shadow) 82%, transparent 18%);
+    border-color: var(--sidebar-interactive-border);
   }
 
   .toggle-sidebar-btn:focus-visible {
-    outline: 2px solid var(--focus-ring);
+    outline: 2px solid color-mix(in srgb, var(--sidebar-interactive-border) 60%, var(--focus-ring) 40%);
     outline-offset: 2px;
   }
 
@@ -949,9 +952,10 @@
 
   .sidebar {
     width: 100%; /* Full width for very small screens */
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    background: var(--sidebar-surface-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+      0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
     backdrop-filter: blur(var(--blur-amount));
     -webkit-backdrop-filter: blur(var(--blur-amount));
     color: var(--sidebar-text);
@@ -973,9 +977,10 @@
   .sidebar {
     height: 100vh;
     padding-bottom: 20px;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    background: var(--sidebar-surface-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+      0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
     backdrop-filter: blur(var(--blur-amount));
     -webkit-backdrop-filter: blur(var(--blur-amount));
     color: var(--sidebar-text);
