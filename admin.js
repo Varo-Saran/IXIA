@@ -356,6 +356,101 @@ function showCustomModal(title, message, callback, showCancel = false, showInput
         adminModalElement.style.display = 'flex';
         adminModalElement.classList.add('is-open');
         adminModalElement.setAttribute('aria-hidden', 'false');
+
+        const detachManualHandlers = () => {
+            if (adminModalConfirmButton && adminModalConfirmButton.__manualHandler) {
+                adminModalConfirmButton.removeEventListener('click', adminModalConfirmButton.__manualHandler);
+                delete adminModalConfirmButton.__manualHandler;
+            }
+            if (adminModalCancelButton && adminModalCancelButton.__manualHandler) {
+                adminModalCancelButton.removeEventListener('click', adminModalCancelButton.__manualHandler);
+                delete adminModalCancelButton.__manualHandler;
+            }
+        };
+
+        const closeManually = (reason) => {
+            adminModalElement.classList.remove('is-open');
+            adminModalElement.setAttribute('aria-hidden', 'true');
+            adminModalElement.style.display = 'none';
+
+            detachManualHandlers();
+
+            if (reason === 'confirm') {
+                if (typeof context.safeCallback === 'function') {
+                    context.safeCallback(context.confirmPayload);
+                }
+            } else if (typeof context.onCancel === 'function') {
+                context.onCancel(reason);
+            }
+
+            context.confirmPayload = undefined;
+        };
+
+        const gatherPayload = () => {
+            if (hasForm) {
+                const form = adminModalElement ? adminModalElement.querySelector('#modal-form') : null;
+                if (!form) {
+                    return {};
+                }
+                const formData = new FormData(form);
+                const values = {};
+                for (const [key, value] of formData.entries()) {
+                    values[key] = typeof value === 'string' ? value.trim() : value;
+                }
+                return values;
+            }
+
+            if (showInput) {
+                const input = adminModalElement ? adminModalElement.querySelector('#modal-input') : null;
+                if (!input) {
+                    return '';
+                }
+                const value = input.value;
+                return typeof value === 'string' ? value.trim() : value;
+            }
+
+            return undefined;
+        };
+
+        const handleManualConfirm = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            let payload = gatherPayload();
+            if (dynamicHooks.validate) {
+                const validationResult = dynamicHooks.validate({ reason: 'confirm', data: payload });
+                if (validationResult === false) {
+                    return;
+                }
+                if (validationResult !== undefined && validationResult !== true) {
+                    context.confirmPayload = validationResult;
+                } else if (payload !== undefined) {
+                    context.confirmPayload = payload;
+                }
+            } else if (payload !== undefined) {
+                context.confirmPayload = payload;
+            }
+
+            closeManually('confirm');
+        };
+
+        const handleManualCancel = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            closeManually('cancel');
+        };
+
+        detachManualHandlers();
+
+        if (adminModalConfirmButton) {
+            adminModalConfirmButton.__manualHandler = handleManualConfirm;
+            adminModalConfirmButton.addEventListener('click', handleManualConfirm);
+        }
+
+        if (adminModalCancelButton) {
+            adminModalCancelButton.__manualHandler = handleManualCancel;
+            adminModalCancelButton.addEventListener('click', handleManualCancel);
+        }
     }
 }
 
@@ -419,10 +514,22 @@ function createNestedModalMessage({ modal, title, message, type = 'info', durati
 function checkAdminAuth() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser || !currentUser.isAdmin) {
-        showCustomModal('Access Denied', "You don't have permission to access this page. Redirecting to login page.", () => {
-            window.location.href = "login.html";
-        });
+        if (!adminModalController) {
+            window.location.replace('login.html');
+            return false;
+        }
+
+        showCustomModal(
+            'Access Denied',
+            "You don't have permission to access this page. Redirecting to login page.",
+            () => {
+                window.location.replace('login.html');
+            }
+        );
+        return false;
     }
+
+    return true;
 }
 
 checkAdminAuth();
