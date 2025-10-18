@@ -366,7 +366,8 @@ body::after {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: visible;
+    overflow-y: hidden;
     backdrop-filter: blur(var(--blur-amount));
     -webkit-backdrop-filter: blur(var(--blur-amount));
 }

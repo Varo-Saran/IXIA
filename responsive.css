@@ -583,6 +583,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-x: visible;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     background: var(--sidebar-surface-gradient);
     border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
