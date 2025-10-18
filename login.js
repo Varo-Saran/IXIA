@@ -84,6 +84,7 @@ async function initializeAdminUser() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeAdminUser().catch(error => console.error('Admin initialization error:', error));
     const loginForm = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
     const errorMessage = document.getElementById('error-message');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -487,7 +488,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const emailInput = loginForm.querySelector('input[type="email"]');
-        const passwordInput = loginForm.querySelector('input[type="password"]');
         const email = emailInput ? emailInput.value.trim() : '';
         const password = passwordInput ? passwordInput.value : '';
 
