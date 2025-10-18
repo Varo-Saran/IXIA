@@ -35,6 +35,15 @@
     --scrollbar-track: #f3f4f6;   /* Lighter gray for scrollbar track */
     --sidebar-toggle-icon: url('https://img.icons8.com/?size=100&id=NL42pdpDO7xP&format=png&color=000000');
     --chat-input-icon-size: 18px;
+    --glass-bg: rgba(255, 255, 255, 0.82);
+    --panel-bg: rgba(255, 255, 255, 0.88);
+    --card-bg: rgba(148, 163, 184, 0.14);
+    --border-color: rgba(15, 23, 42, 0.12);
+    --blur-amount: 18px;
+    --focus-ring: rgba(59, 130, 246, 0.25);
+    --input-surface: rgba(255, 255, 255, 0.42);
+    --icon-button-bg: rgba(59, 130, 246, 0.12);
+    --icon-button-hover-bg: rgba(59, 130, 246, 0.22);
 }
 
 .dark-theme {
@@ -71,6 +80,15 @@
     --scrollbar-track: #1f2937;   /* Dark blue-gray for scrollbar track */
     --sidebar-toggle-icon-color: var(--sidebar-selected-text);
     --chat-input-icon-size: 18px;
+    --glass-bg: rgba(2, 6, 23, 0.72);
+    --panel-bg: rgba(15, 23, 42, 0.78);
+    --card-bg: rgba(15, 23, 42, 0.5);
+    --border-color: rgba(148, 163, 184, 0.28);
+    --blur-amount: 18px;
+    --focus-ring: rgba(147, 197, 253, 0.45);
+    --input-surface: rgba(15, 23, 42, 0.58);
+    --icon-button-bg: rgba(59, 130, 246, 0.22);
+    --icon-button-hover-bg: rgba(59, 130, 246, 0.32);
 }
 
 body, html {
@@ -850,16 +868,21 @@ html {
     color: var(--ai-message-text);
 }
 
+
 .input-area {
   display: flex;
   align-items: center;
-  background: var(--input-bg); /* Use theme variable instead of hard-coded color */
-  border: 1px solid var(--input-border);
-  border-radius: 12px;
-  padding: 10px 14px;
+  gap: 12px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px 18px;
   margin: 20px;
-  width: calc(100% - 40px); /* Full width minus margins */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 40px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
 }
 
 .input-area textarea {
@@ -874,7 +897,7 @@ html {
   font-size: 16px;
   padding: 8px;
   line-height: 1.5;
-  margin-right: 12px;
+  margin-right: 0;
 }
 
 .input-area textarea::placeholder {
@@ -889,32 +912,40 @@ html {
     color: #333;
 }
   
+
 .input-area button {
-  background: none;
-  border: none;
+  background: var(--icon-button-bg);
+  border: 1px solid var(--border-color);
   color: var(--primary-color);
   cursor: pointer;
   font-size: 18px;
-  padding: 8px;
-  margin: 0 4px;
+  padding: 10px;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, opacity 0.2s ease;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
+  backdrop-filter: blur(calc(var(--blur-amount) / 1.8));
+  -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 1.8));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-.input-area .icon-button,
-.input-area .icon-button:hover,
-.input-area .icon-button:active,
-.input-area .icon-button:focus,
-.input-area .icon-button:focus-visible {
-  background: none !important;
-  box-shadow: none !important;
-  border-radius: 8px;
+.input-area .icon-button {
+  border-radius: 10px;
+}
+
+.input-area button:hover,
+.input-area button:focus-visible {
+  background: var(--icon-button-hover-bg);
+  box-shadow: 0 12px 28px rgba(59, 130, 246, 0.2);
+}
+
+.input-area button:active {
+  transform: translateY(1px);
 }
 
 .input-area button i {
@@ -924,36 +955,42 @@ html {
 
 .input-area button:hover i,
 .input-area button:active i {
-  color: #fff;
+  color: var(--primary-color);
   opacity: 1;
 }
 
 .input-area button:focus-visible {
-  outline: 2px solid var(--send-button-bg);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 /* Dark theme specific adjustments */
+
 .dark-theme .input-area {
-  background: var(--sidebar-item-bg);
-  border-color: rgba(86, 88, 105, 1);
+  background: var(--glass-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 22px 48px rgba(2, 6, 23, 0.55);
 }
 
 .dark-theme .input-area textarea {
-  color: #fff;
+  color: var(--input-text);
 }
 
 .dark-theme .input-area button {
-  color: #ffffff;
+  color: var(--primary-color);
+  box-shadow: inset 0 1px 0 rgba(147, 197, 253, 0.18);
 }
 
-.dark-theme .input-area button:hover i,
-.dark-theme .input-area button:active i {
-  color: #fff;
+.dark-theme .input-area button:hover,
+.dark-theme .input-area button:focus-visible {
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.35);
 }
 
 .dark-theme #user-input {
     color: var(--input-text);
+    background: var(--input-surface);
+    border-color: var(--border-color);
+    box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.12);
 }
 
 .dark-theme #user-input::placeholder {
@@ -961,15 +998,15 @@ html {
 }
 
 .dark-theme #user-input.is-scrollable {
-  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  scrollbar-color: var(--primary-color) transparent;
 }
 
 .dark-theme #user-input.is-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
 }
 
 .dark-theme #user-input.is-scrollable::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--primary-color);
 }
 
 .dark-theme #send-message-btn::before {
@@ -1024,14 +1061,17 @@ html {
 /* Attachment styles */
 .attachments-preview {
   display: none;
-  border: 1px solid var(--input-border);
-  border-radius: 12px;
-  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 14px 16px;
   margin: 0 20px 12px;
   width: calc(100% - 40px);
-  background: var(--input-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background: var(--panel-bg);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
   box-sizing: border-box;
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
 }
 
 .attachments-preview.is-visible {
@@ -1045,7 +1085,7 @@ html {
   padding-bottom: 6px;
   margin-bottom: -6px;
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-color: var(--primary-color) transparent;
 }
 
 .attachments-track::-webkit-scrollbar {
@@ -1057,7 +1097,7 @@ html {
 }
 
 .attachments-track::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
+  background-color: var(--primary-color);
   border-radius: 999px;
 }
 
@@ -1065,9 +1105,9 @@ html {
   position: relative;
   flex: 0 0 100px;
   min-height: 100px;
-  border: 1px solid var(--input-border);
-  border-radius: 10px;
-  background: var(--chat-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--card-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1075,7 +1115,17 @@ html {
   gap: 8px;
   padding: 12px 10px;
   text-align: center;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(calc(var(--blur-amount) / 2));
+  -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 2));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.attachment-card:hover,
+.attachment-card:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 14px 30px rgba(59, 130, 246, 0.18);
+  transform: translateY(-2px);
 }
 
 .attachment-card__icon {
@@ -1097,33 +1147,56 @@ html {
   position: absolute;
   top: 8px;
   right: 8px;
-  border: none;
-  background: none;
-  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  background: var(--icon-button-bg);
+  color: var(--primary-color);
   cursor: pointer;
   padding: 4px;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
+  border-radius: 999px;
+  opacity: 0.8;
+  transition: background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  backdrop-filter: blur(calc(var(--blur-amount) / 2));
+  -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 2));
 }
 
-.attachment-card .remove-attachment:hover {
+.attachment-card .remove-attachment:hover,
+.attachment-card .remove-attachment:focus-visible {
   opacity: 1;
+  background: var(--icon-button-hover-bg);
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.25);
+}
+
+.attachment-card .remove-attachment:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .dark-theme .attachments-preview {
-  background: var(--input-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  background: var(--glass-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 22px 48px rgba(2, 6, 23, 0.55);
 }
 
 .dark-theme .attachment-card {
-  background: var(--input-bg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.12), 0 14px 30px rgba(2, 6, 23, 0.45);
+}
+
+.dark-theme .attachment-card:hover,
+.dark-theme .attachment-card:focus-within {
+  box-shadow: 0 16px 34px rgba(59, 130, 246, 0.3);
+}
+
+.dark-theme .attachment-card .remove-attachment {
+  color: var(--primary-color);
+  box-shadow: inset 0 1px 0 rgba(147, 197, 253, 0.18);
 }
 
 /* Focus styles */
 .input-area:focus-within {
-  border-color: rgba(255, 255, 255, 0.2);  /* Subtle highlight */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 24px 50px rgba(59, 130, 246, 0.2);
 }
 
 .input-container {
@@ -1135,20 +1208,24 @@ html {
 
 #user-input {
   flex-grow: 1;
-  padding: 8px;
-  border: 1px solid var(--input-border);
-  border-radius: 4px;
-  background: var(--input-bg);
-  color: var(--text-color);
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--input-surface);
+  color: var(--input-text);
   resize: none;
   min-height: 20px;
   max-height: 150px;
   overflow-y: hidden;
+  backdrop-filter: blur(calc(var(--blur-amount) / 2));
+  -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 2));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
 }
 
 #user-input.is-scrollable {
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 149, 237, 0.6) rgba(255, 255, 255, 0.1);
+  scrollbar-color: var(--primary-color) transparent;
 }
 
 #user-input.is-scrollable::-webkit-scrollbar {
@@ -1156,11 +1233,11 @@ html {
 }
 
 #user-input.is-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: transparent;
 }
 
 #user-input.is-scrollable::-webkit-scrollbar-thumb {
-  background: rgba(100, 149, 237, 0.6);
+  background: var(--primary-color);
   border-radius: 3px;
 }
 
@@ -1172,6 +1249,8 @@ html {
 
 #user-input:focus {
     outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 #user-input::placeholder {
