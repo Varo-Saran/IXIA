@@ -699,6 +699,19 @@
     z-index: 1001; /* Ensure buttons stay above chat */
   }
 
+  .model-selector {
+    min-width: 150px;
+  }
+
+  .model-selector__toggle {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .model-selector__list-wrapper {
+    width: max(180px, 100%);
+  }
+
   .icon-button {
     width: 35px;
     height: 35px;
@@ -872,6 +885,20 @@
 
   .top-right-buttons {
     top: 10px;
+  }
+
+  .model-selector {
+    min-width: 140px;
+  }
+
+  .model-selector__toggle {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .model-selector__list-wrapper {
+    width: min(90vw, 200px);
+    right: 0;
   }
 
   .input-buttons button {

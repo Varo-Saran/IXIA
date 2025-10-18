@@ -5,6 +5,9 @@ let isWaitingForResponse = false;
 let attachments = [];
 let editingMessageId = null;
 let currentUser = null;
+let activeModel = 'chat';
+let isModelSelectorOpen = false;
+let modelOptionFocusIndex = -1;
 
 // DOM Elements
 const chatWindow = document.getElementById('chat-window');
@@ -27,9 +30,295 @@ const profileDropdown = document.getElementById('profile-dropdown');
 const profilePicture = document.getElementById('profile-picture');
 const logo = document.querySelector('.top-left-logo');
 const mainContent = document.querySelector('.main-content');
+const modelSelector = document.querySelector('.model-selector');
+const modelSelectorToggle = document.getElementById('model-selector-toggle');
+const modelSelectorList = modelSelector ? modelSelector.querySelector('[role="listbox"]') : null;
+const modelSelectorOptions = modelSelectorList ? Array.from(modelSelectorList.querySelectorAll('[role="option"]')) : [];
+
+const MODEL_STORAGE_KEY = 'ixia.activeModel';
+const MODEL_LABELS = {
+  chat: 'Chat',
+  math: 'Math',
+  creative: 'Creative/Other'
+};
 
 let textareaBaselineHeight = null;
 let textareaLineHeight = null;
+
+if (modelSelectorList) {
+  modelSelectorList.setAttribute('aria-hidden', 'true');
+}
+
+if (modelSelectorOptions.length) {
+  modelSelectorOptions.forEach((option, index) => {
+    if (!option.id) {
+      option.id = `model-selector-option-${option.dataset.model || index}`;
+    }
+    option.tabIndex = -1;
+  });
+}
+
+function loadStoredModel() {
+  try {
+    const stored = localStorage.getItem(MODEL_STORAGE_KEY);
+    if (stored && Object.prototype.hasOwnProperty.call(MODEL_LABELS, stored)) {
+      return stored;
+    }
+  } catch (error) {
+    console.warn('Unable to read stored model preference:', error);
+  }
+  return 'chat';
+}
+
+function persistModelPreference(modelKey) {
+  try {
+    localStorage.setItem(MODEL_STORAGE_KEY, modelKey);
+  } catch (error) {
+    console.warn('Unable to persist model preference:', error);
+  }
+}
+
+function getModelLabel(modelKey) {
+  return MODEL_LABELS[modelKey] || MODEL_LABELS.chat;
+}
+
+function getOptionIndexByModel(modelKey) {
+  return modelSelectorOptions.findIndex(option => option.dataset.model === modelKey);
+}
+
+function updateModelSelectorUI() {
+  if (!modelSelector || !modelSelectorToggle) return;
+
+  const labelElement = modelSelectorToggle.querySelector('.model-selector__label');
+  if (labelElement) {
+    labelElement.textContent = getModelLabel(activeModel);
+  }
+
+  modelSelector.setAttribute('data-active-model', activeModel);
+  modelSelectorToggle.setAttribute('data-active-model', activeModel);
+  modelSelectorToggle.setAttribute('aria-label', `Active model: ${getModelLabel(activeModel)}`);
+
+  let selectedOption = null;
+  modelSelectorOptions.forEach(option => {
+    const isSelected = option.dataset.model === activeModel;
+    option.classList.toggle('is-selected', isSelected);
+    option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+    option.tabIndex = isModelSelectorOpen ? 0 : -1;
+    if (isSelected) {
+      selectedOption = option;
+    }
+  });
+
+  if (modelSelectorList) {
+    if (selectedOption) {
+      modelSelectorList.setAttribute('aria-activedescendant', selectedOption.id);
+    } else {
+      modelSelectorList.removeAttribute('aria-activedescendant');
+    }
+  }
+}
+
+function setActiveModel(modelKey, { persist = true, closeDropdown = true, focusToggle = true } = {}) {
+  const normalizedModel = Object.prototype.hasOwnProperty.call(MODEL_LABELS, modelKey)
+    ? modelKey
+    : 'chat';
+
+  activeModel = normalizedModel;
+
+  if (persist) {
+    persistModelPreference(activeModel);
+  }
+
+  updateModelSelectorUI();
+
+  if (closeDropdown) {
+    closeModelSelector({ focusToggle });
+  }
+}
+
+function focusModelOptionByOffset(offset) {
+  if (!modelSelectorOptions.length) return;
+
+  const total = modelSelectorOptions.length;
+  if (modelOptionFocusIndex < 0) {
+    modelOptionFocusIndex = Math.max(0, getOptionIndexByModel(activeModel));
+  }
+
+  modelOptionFocusIndex = (modelOptionFocusIndex + offset + total) % total;
+  const optionToFocus = modelSelectorOptions[modelOptionFocusIndex];
+  if (optionToFocus) {
+    optionToFocus.focus();
+    if (modelSelectorList) {
+      modelSelectorList.setAttribute('aria-activedescendant', optionToFocus.id);
+    }
+  }
+}
+
+function openModelSelector({ focusOption = true } = {}) {
+  if (!modelSelector || !modelSelectorToggle || !modelSelectorList || isModelSelectorOpen) {
+    return;
+  }
+
+  isModelSelectorOpen = true;
+  modelSelector.classList.add('is-open');
+  modelSelectorToggle.setAttribute('aria-expanded', 'true');
+  modelSelectorList.setAttribute('aria-hidden', 'false');
+
+  modelSelectorOptions.forEach(option => {
+    option.tabIndex = 0;
+  });
+
+  updateModelSelectorUI();
+
+  const selectedIndex = Math.max(0, getOptionIndexByModel(activeModel));
+  modelOptionFocusIndex = selectedIndex;
+
+  document.addEventListener('pointerdown', handlePointerDownOutside);
+  document.addEventListener('keydown', handleModelSelectorKeydown);
+  document.addEventListener('focusin', handleModelSelectorFocusChange, true);
+
+  if (focusOption) {
+    const optionToFocus = modelSelectorOptions[selectedIndex] || modelSelectorOptions[0];
+    optionToFocus?.focus();
+  }
+}
+
+function closeModelSelector({ focusToggle = false } = {}) {
+  if (!modelSelector || !modelSelectorToggle || !isModelSelectorOpen) {
+    return;
+  }
+
+  isModelSelectorOpen = false;
+  modelSelector.classList.remove('is-open');
+  modelSelectorToggle.setAttribute('aria-expanded', 'false');
+  if (modelSelectorList) {
+    modelSelectorList.setAttribute('aria-hidden', 'true');
+  }
+
+  document.removeEventListener('pointerdown', handlePointerDownOutside);
+  document.removeEventListener('keydown', handleModelSelectorKeydown);
+  document.removeEventListener('focusin', handleModelSelectorFocusChange, true);
+
+  modelOptionFocusIndex = -1;
+
+  updateModelSelectorUI();
+
+  if (focusToggle) {
+    modelSelectorToggle?.focus();
+  }
+}
+
+function handlePointerDownOutside(event) {
+  if (!modelSelector) return;
+  if (!modelSelector.contains(event.target) && event.target !== modelSelectorToggle) {
+    closeModelSelector();
+  }
+}
+
+function handleModelSelectorKeydown(event) {
+  if (!isModelSelectorOpen) return;
+
+  const targetIsToggle = event.target === modelSelectorToggle;
+  const targetInsideList = modelSelector?.contains(event.target);
+  if (!targetIsToggle && !targetInsideList) {
+    return;
+  }
+
+  switch (event.key) {
+    case 'Escape':
+      event.preventDefault();
+      closeModelSelector({ focusToggle: true });
+      break;
+    case 'ArrowDown':
+      event.preventDefault();
+      focusModelOptionByOffset(1);
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      focusModelOptionByOffset(-1);
+      break;
+    default:
+      break;
+  }
+}
+
+function handleModelSelectorFocusChange(event) {
+  if (!isModelSelectorOpen || !modelSelector) return;
+  if (!modelSelector.contains(event.target) && event.target !== modelSelectorToggle) {
+    closeModelSelector();
+  }
+}
+
+function handleModelSelection(option) {
+  if (!option) return;
+  const modelKey = option.dataset.model;
+  setActiveModel(modelKey, { persist: true, closeDropdown: true, focusToggle: true });
+}
+
+function initializeModelSelector() {
+  if (!modelSelector || !modelSelectorToggle || !modelSelectorList) {
+    activeModel = 'chat';
+    return;
+  }
+
+  modelSelectorToggle.setAttribute('aria-expanded', 'false');
+  modelSelector.classList.remove('is-open');
+
+  activeModel = loadStoredModel();
+  updateModelSelectorUI();
+
+  modelSelectorToggle.addEventListener('click', () => {
+    if (isModelSelectorOpen) {
+      closeModelSelector();
+    } else {
+      openModelSelector({ focusOption: false });
+    }
+  });
+
+  modelSelectorToggle.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (isModelSelectorOpen) {
+        closeModelSelector({ focusToggle: false });
+      } else {
+        openModelSelector();
+      }
+    } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && !isModelSelectorOpen) {
+      event.preventDefault();
+      openModelSelector();
+    } else if (event.key === 'Escape' && isModelSelectorOpen) {
+      event.preventDefault();
+      closeModelSelector({ focusToggle: true });
+    }
+  });
+
+  modelSelectorOptions.forEach(option => {
+    option.addEventListener('click', () => handleModelSelection(option));
+    option.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleModelSelection(option);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeModelSelector({ focusToggle: true });
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        focusModelOptionByOffset(1);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        focusModelOptionByOffset(-1);
+      }
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    if (isModelSelectorOpen) {
+      closeModelSelector();
+    }
+  });
+}
+
+initializeModelSelector();
 
 function debounce(fn, wait = 150) {
   let timeoutId;
@@ -455,7 +744,7 @@ async function handleUserInput() {
   scrollToBottom(true);
 
   try {
-    const aiResponse = await window.getAIResponse(messageText);
+    const aiResponse = await window.getAIResponse(messageText, activeModel);
     const responseText = typeof aiResponse === 'object' && aiResponse.response 
       ? aiResponse.response 
       : aiResponse;
@@ -466,6 +755,7 @@ async function handleUserInput() {
     hideTypingIndicator();
     addMessage("I'm sorry, I encountered an error. Please try again.", false);
   } finally {
+    hideTypingIndicator();
     isWaitingForResponse = false;
     updateSendButtonState();
     scrollToBottom(true);
@@ -567,7 +857,7 @@ async function handleEditedMessage(editedText) {
   scrollToBottom(true);
 
   try {
-    const aiResponse = await window.getAIResponse(editedText);
+    const aiResponse = await window.getAIResponse(editedText, activeModel);
     const responseText = typeof aiResponse === 'object' && aiResponse.response 
       ? aiResponse.response 
       : aiResponse;

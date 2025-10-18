@@ -46,6 +46,10 @@
     --input-surface: rgba(255, 255, 255, 0.42);
     --icon-button-bg: rgba(59, 130, 246, 0.12);
     --icon-button-hover-bg: rgba(59, 130, 246, 0.22);
+    --model-selector-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(236, 72, 153, 0.18));
+    --model-selector-border: rgba(59, 130, 246, 0.38);
+    --model-selector-hover: color-mix(in srgb, rgba(59, 130, 246, 0.32) 55%, rgba(236, 72, 153, 0.32) 45%);
+    --model-selector-shadow: rgba(15, 23, 42, 0.18);
 }
 
 .dark-theme {
@@ -95,6 +99,10 @@
     --input-surface: rgba(15, 23, 42, 0.58);
     --icon-button-bg: rgba(59, 130, 246, 0.22);
     --icon-button-hover-bg: rgba(59, 130, 246, 0.32);
+    --model-selector-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.32), rgba(6, 182, 212, 0.24));
+    --model-selector-border: rgba(147, 197, 253, 0.55);
+    --model-selector-hover: color-mix(in srgb, rgba(59, 130, 246, 0.55) 60%, rgba(236, 72, 153, 0.45) 40%);
+    --model-selector-shadow: rgba(15, 23, 42, 0.5);
 }
 
 body, html {
@@ -687,6 +695,128 @@ body::after {
     display: flex;
     flex-direction: row-reverse; /* This will reverse the order of the buttons */
     gap: 10px; /* This adds space between the buttons */
+}
+.model-selector {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 170px;
+    flex: 0 0 auto;
+    isolation: isolate;
+}
+
+.model-selector__toggle {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--model-selector-border);
+    background: var(--model-selector-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    box-shadow: 0 8px 20px var(--model-selector-shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.model-selector__toggle:hover,
+.model-selector__toggle:focus-visible {
+    border-color: var(--model-selector-hover);
+    box-shadow: 0 10px 24px var(--model-selector-shadow);
+    background: color-mix(in srgb, var(--model-selector-bg) 70%, rgba(255, 255, 255, 0.08) 30%);
+    outline: none;
+}
+
+.model-selector__label {
+    white-space: nowrap;
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+.model-selector__icon {
+    transition: transform 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.model-selector.is-open .model-selector__icon {
+    transform: rotate(-180deg);
+}
+
+.model-selector__list-wrapper {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: max(100%, 220px);
+    transform: translateY(-6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    z-index: 1000;
+}
+
+.model-selector__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--panel-bg) 75%, rgba(59, 130, 246, 0.12) 25%);
+    border: 1px solid var(--model-selector-border);
+    box-shadow: 0 16px 40px var(--model-selector-shadow);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.model-selector.is-open .model-selector__list-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.model-selector__option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.model-selector__option small {
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--text-color) 55%, transparent 45%);
+    letter-spacing: 0.03em;
+}
+
+.model-selector__option:hover,
+.model-selector__option:focus-visible {
+    background: color-mix(in srgb, var(--model-selector-hover) 30%, transparent 70%);
+    border-color: var(--model-selector-hover);
+    outline: none;
+}
+
+.model-selector__option.is-selected {
+    border-color: var(--model-selector-hover);
+    background: color-mix(in srgb, var(--model-selector-hover) 45%, transparent 55%);
+}
+
+.model-selector__option:active {
+    transform: translateY(1px);
 }
 .icon-button {
     background: var(--bg-color);
