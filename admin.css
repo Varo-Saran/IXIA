@@ -896,9 +896,23 @@ body::after {
     }
 
     .page-grid {
-        justify-content: flex-start;
+        display: flex;
         flex-direction: column;
+        justify-content: flex-start;
         align-items: stretch;
+        gap: 24px;
+    }
+
+    .page-grid > .insights-panel {
+        order: -1;
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .page-grid > #account-list {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
     }
 }
 
