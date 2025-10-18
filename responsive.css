@@ -598,8 +598,8 @@
     left: 0;
     top: 8px;
     z-index: 1001;
-    background: var(--primary-color);
-    border: none;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
     display: flex;
@@ -607,12 +607,17 @@
     justify-content: center;
     cursor: pointer;
     padding: 0;
+    box-sizing: border-box;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
+    -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
+    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .toggle-sidebar-btn .toggle-sidebar-icon {
     width: 20px;
     height: 20px;
-    background-color: var(--sidebar-selected-text);
+    background-color: var(--sidebar-toggle-icon-color, var(--sidebar-text));
     mask: var(--sidebar-toggle-icon) center/contain no-repeat;
     -webkit-mask: var(--sidebar-toggle-icon) center/contain no-repeat;
     transition: transform 0.3s ease, background-color 0.3s ease;
@@ -620,7 +625,23 @@
 
   .toggle-sidebar-btn.is-open .toggle-sidebar-icon {
     transform: rotate(180deg);
-    background-color: var(--sidebar-text);
+    background-color: var(--primary-color);
+  }
+
+  .toggle-sidebar-btn:hover,
+  .toggle-sidebar-btn:focus-visible {
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.18);
+    border-color: var(--primary-color);
+  }
+
+  .toggle-sidebar-btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .toggle-sidebar-btn:hover .toggle-sidebar-icon,
+  .toggle-sidebar-btn:focus-visible .toggle-sidebar-icon {
+    background-color: var(--primary-color);
   }
 
   /* Prevent content scrolling when sidebar is open */
