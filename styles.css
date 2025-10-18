@@ -50,6 +50,22 @@
     --model-selector-border: rgba(59, 130, 246, 0.38);
     --model-selector-hover: color-mix(in srgb, rgba(59, 130, 246, 0.32) 55%, rgba(236, 72, 153, 0.32) 45%);
     --model-selector-shadow: rgba(15, 23, 42, 0.18);
+    --sidebar-surface-gradient: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(226, 239, 255, 0.92) 45%, rgba(244, 231, 255, 0.94) 100%);
+    --sidebar-surface-border: rgba(59, 130, 246, 0.42);
+    --sidebar-surface-shadow: rgba(15, 23, 42, 0.2);
+    --sidebar-interactive-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(6, 182, 212, 0.18));
+    --sidebar-interactive-hover-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(236, 72, 153, 0.22));
+    --sidebar-interactive-border: rgba(59, 130, 246, 0.55);
+    --sidebar-interactive-shadow: rgba(59, 130, 246, 0.22);
+    --sidebar-destructive-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.32), rgba(239, 68, 68, 0.26));
+    --sidebar-destructive-hover-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.42), rgba(239, 68, 68, 0.34));
+    --sidebar-destructive-border: rgba(239, 68, 68, 0.6);
+    --sidebar-selected-gradient: linear-gradient(135deg,
+        color-mix(in srgb, var(--sidebar-selected) 70%, rgba(255, 255, 255, 0.15) 30%),
+        color-mix(in srgb, var(--sidebar-interactive-border) 40%, rgba(236, 72, 153, 0.2) 60%));
+    --sidebar-selected-hover-gradient: linear-gradient(135deg,
+        color-mix(in srgb, var(--sidebar-selected) 65%, rgba(255, 255, 255, 0.2) 35%),
+        color-mix(in srgb, var(--sidebar-interactive-border) 50%, rgba(236, 72, 153, 0.28) 50%));
 }
 
 .dark-theme {
@@ -103,6 +119,22 @@
     --model-selector-border: rgba(147, 197, 253, 0.55);
     --model-selector-hover: color-mix(in srgb, rgba(59, 130, 246, 0.55) 60%, rgba(236, 72, 153, 0.45) 40%);
     --model-selector-shadow: rgba(15, 23, 42, 0.5);
+    --sidebar-surface-gradient: linear-gradient(160deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.88) 45%, rgba(17, 24, 39, 0.9) 100%);
+    --sidebar-surface-border: rgba(147, 197, 253, 0.55);
+    --sidebar-surface-shadow: rgba(2, 6, 23, 0.65);
+    --sidebar-interactive-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(14, 165, 233, 0.25));
+    --sidebar-interactive-hover-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(236, 72, 153, 0.35));
+    --sidebar-interactive-border: rgba(147, 197, 253, 0.7);
+    --sidebar-interactive-shadow: rgba(59, 130, 246, 0.32);
+    --sidebar-destructive-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.4), rgba(190, 18, 60, 0.32));
+    --sidebar-destructive-hover-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.52), rgba(190, 18, 60, 0.42));
+    --sidebar-destructive-border: rgba(248, 113, 113, 0.65);
+    --sidebar-selected-gradient: linear-gradient(135deg,
+        color-mix(in srgb, var(--sidebar-selected) 70%, rgba(15, 23, 42, 0.2) 30%),
+        color-mix(in srgb, var(--sidebar-interactive-border) 45%, rgba(236, 72, 153, 0.35) 55%));
+    --sidebar-selected-hover-gradient: linear-gradient(135deg,
+        color-mix(in srgb, var(--sidebar-selected) 60%, rgba(15, 23, 42, 0.1) 40%),
+        color-mix(in srgb, var(--sidebar-interactive-border) 55%, rgba(236, 72, 153, 0.45) 45%));
 }
 
 body, html {
@@ -318,18 +350,19 @@ body::after {
 
 .sidebar {
     width: 280px;
-    background: var(--panel-bg);
+    background: var(--sidebar-surface-gradient);
     color: var(--sidebar-text);
     padding: 20px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+        0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
     height: 100vh;
     box-sizing: border-box;
-    border: 1px solid var(--border-color);
+    border: 1px solid color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
     position: fixed;
     left: -280px;
     top: 0;
     bottom: 0;
-    transition: left 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -347,8 +380,8 @@ body::after {
     left: 0;
     top: 10px;
     z-index: 1001;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
+    background: var(--sidebar-interactive-gradient);
+    border: 1px solid color-mix(in srgb, var(--sidebar-interactive-border) 65%, transparent 35%);
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
     width: 40px;
@@ -357,10 +390,10 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition: left 0.3s ease-in-out, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
     padding: 0;
     box-sizing: border-box;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 20px 44px color-mix(in srgb, var(--sidebar-interactive-shadow) 75%, transparent 25%);
     backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
     -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 1.5));
 }
@@ -385,12 +418,13 @@ body::after {
 
 .toggle-sidebar-btn:hover,
 .toggle-sidebar-btn:focus-visible {
-    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.18);
-    border-color: var(--primary-color);
+    background: var(--sidebar-interactive-hover-gradient);
+    box-shadow: 0 24px 58px color-mix(in srgb, var(--sidebar-interactive-shadow) 82%, transparent 18%);
+    border-color: var(--sidebar-interactive-border);
 }
 
 .toggle-sidebar-btn:focus-visible {
-    outline: 2px solid var(--focus-ring);
+    outline: 2px solid color-mix(in srgb, var(--sidebar-interactive-border) 60%, var(--focus-ring) 40%);
     outline-offset: 2px;
 }
 
@@ -406,7 +440,10 @@ body::after {
 
 .dark-theme .sidebar {
     color: var(--sidebar-text);
-    border-color: var(--border-color);
+    background: var(--sidebar-surface-gradient);
+    border-color: color-mix(in srgb, var(--sidebar-surface-border) 70%, transparent 30%);
+    box-shadow: 0 22px 52px color-mix(in srgb, var(--sidebar-surface-shadow) 80%, transparent 20%),
+        0 0 0 1px color-mix(in srgb, var(--sidebar-surface-border) 35%, transparent 65%);
 }
 
 .sidebar h2 {
@@ -445,6 +482,43 @@ body::after {
     gap: 10px;
 }
 
+.sidebar-actions button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--sidebar-action-gradient, var(--sidebar-interactive-gradient));
+    color: var(--sidebar-action-text, var(--sidebar-selected-text));
+    border: 1px solid var(--sidebar-action-border, color-mix(in srgb, var(--sidebar-interactive-border) 65%, transparent 35%));
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: 0 14px 34px color-mix(in srgb, var(--sidebar-interactive-shadow) 78%, transparent 22%);
+    text-decoration: none;
+}
+
+.sidebar-actions button:hover,
+.sidebar-actions button:focus-visible {
+    background: var(--sidebar-action-hover-gradient, var(--sidebar-interactive-hover-gradient));
+    border-color: var(--sidebar-action-border, var(--sidebar-interactive-border));
+    box-shadow: 0 20px 46px color-mix(in srgb, var(--sidebar-interactive-shadow) 85%, transparent 15%);
+    transform: translateY(-1px);
+}
+
+.sidebar-actions button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--sidebar-action-border, var(--sidebar-interactive-border)) 60%, var(--focus-ring) 40%);
+    outline-offset: 2px;
+}
+
+.sidebar-actions button:active {
+    transform: translateY(0);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--sidebar-interactive-shadow) 75%, transparent 25%);
+}
+
 #saved-chats-list li {
     padding: 0.6rem 1rem;
     margin-bottom: 10px;
@@ -455,42 +529,37 @@ body::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--sidebar-item-bg);
+    background: var(--sidebar-interactive-gradient);
     color: var(--sidebar-item-text);
-    border: 1px solid var(--sidebar-item-border);
+    border: 1px solid color-mix(in srgb, var(--sidebar-interactive-border) 60%, transparent 40%);
     backdrop-filter: blur(calc(var(--blur-amount) / 2));
     -webkit-backdrop-filter: blur(calc(var(--blur-amount) / 2));
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--border-color) 45%, transparent 55%);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--sidebar-interactive-shadow) 70%, transparent 30%);
 }
 
 #saved-chats-list li:focus-visible {
-    outline: 3px solid var(--primary-color);
+    outline: 3px solid color-mix(in srgb, var(--sidebar-interactive-border) 65%, var(--focus-ring) 35%);
     outline-offset: 2px;
 }
 
 #saved-chats-list li:hover {
-    background-color: var(--sidebar-hover);
+    background: var(--sidebar-interactive-hover-gradient);
     color: var(--sidebar-item-text);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px color-mix(in srgb, var(--border-color) 55%, transparent 45%);
+    border-color: var(--sidebar-interactive-border);
+    box-shadow: 0 16px 38px color-mix(in srgb, var(--sidebar-interactive-shadow) 82%, transparent 18%);
 }
 
 #saved-chats-list li.selected {
-    background-color: var(--sidebar-selected);
+    background: var(--sidebar-selected-gradient);
     color: var(--sidebar-selected-text);
-    border-color: color-mix(in srgb, var(--sidebar-selected) 65%, var(--focus-ring) 35%);
+    border-color: color-mix(in srgb, var(--sidebar-interactive-border) 60%, var(--sidebar-selected) 40%);
     font-weight: bold;
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--focus-ring) 60%, transparent 40%);
+    box-shadow: 0 18px 44px color-mix(in srgb, var(--sidebar-interactive-shadow) 85%, transparent 15%);
 }
 
 #saved-chats-list li.selected:hover {
-    background-color: color-mix(in srgb, var(--sidebar-selected) 75%, var(--focus-ring) 25%);
-}
-
-.dark-theme #saved-chats-list li {
-    background-color: var(--sidebar-item-bg);
-    color: var(--sidebar-item-text);
-    border: 1px solid var(--sidebar-item-border);
+    background: var(--sidebar-selected-hover-gradient);
 }
 
 .dark-theme #saved-chats-list {
@@ -506,18 +575,18 @@ body::after {
 }
 
 .dark-theme #saved-chats-list li:focus-visible {
-    outline: 3px solid var(--sidebar-selected);
+    outline: 3px solid color-mix(in srgb, var(--sidebar-interactive-border) 65%, var(--focus-ring) 35%);
     outline-offset: 2px;
 }
 
 .dark-theme #saved-chats-list li:hover {
-    background-color: var(--sidebar-hover);
+    background: var(--sidebar-interactive-hover-gradient);
 }
 
 .dark-theme #saved-chats-list li.selected {
-    background-color: var(--sidebar-selected);
+    background: var(--sidebar-selected-gradient);
     color: var(--sidebar-selected-text);
-    border-color: var(--sidebar-selected);
+    border-color: color-mix(in srgb, var(--sidebar-interactive-border) 60%, var(--sidebar-selected) 40%);
 }
 
 #saved-chats-list li span {
@@ -625,41 +694,17 @@ body::after {
 }
 
 #new-chat-button {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background-color: var(--new-chat-btn);
-    color: white;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#new-chat-button:hover {
-    background-color: color-mix(in srgb, var(--new-chat-btn) 70%, var(--focus-ring) 30%);
+    --sidebar-action-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.38), rgba(6, 182, 212, 0.26));
+    --sidebar-action-hover-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.48), rgba(6, 182, 212, 0.34));
+    --sidebar-action-border: color-mix(in srgb, var(--sidebar-interactive-border) 70%, rgba(6, 182, 212, 0.55) 30%);
+    --sidebar-action-text: #ffffff;
 }
 
 #clear-saved-chats-button {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background-color: var(--clear-chats-btn);
-    color: white;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#clear-saved-chats-button:hover {
-    background-color: color-mix(in srgb, var(--clear-chats-btn) 60%, rgba(239, 68, 68, 0.85) 40%);
+    --sidebar-action-gradient: var(--sidebar-destructive-gradient);
+    --sidebar-action-hover-gradient: var(--sidebar-destructive-hover-gradient);
+    --sidebar-action-border: var(--sidebar-destructive-border);
+    --sidebar-action-text: #ffffff;
 }
 
 .main-content {
