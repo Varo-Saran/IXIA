@@ -506,22 +506,20 @@ body::after {
 .delta.neutral { color: var(--muted-color); }
 
 .page-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+    align-items: start;
     gap: 24px;
-    justify-content: flex-start;
-    align-items: flex-start;
     width: 100%;
 }
 
 .page-grid > .insights-panel {
-    order: -1;
-    flex: 0 0 min(320px, 100%);
-    align-self: flex-start;
+    grid-column: 2;
 }
 
 .page-grid > #account-list {
-    flex: 1 1 100%;
+    grid-column: 1;
+    min-width: 0;
 }
 
 .toolbar {
@@ -908,23 +906,14 @@ body::after {
     }
 
     .page-grid {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: stretch;
+        grid-template-columns: 1fr;
         gap: 24px;
     }
 
-    .page-grid > .insights-panel {
-        order: -1;
-        flex: 1 1 auto;
-        width: 100%;
-    }
-
+    .page-grid > .insights-panel,
     .page-grid > #account-list {
-        flex: 1 1 auto;
+        grid-column: auto;
         width: 100%;
-        min-width: 0;
     }
 }
 
