@@ -28,6 +28,85 @@ const profilePicture = document.getElementById('profile-picture');
 const logo = document.querySelector('.top-left-logo');
 const mainContent = document.querySelector('.main-content');
 
+let textareaBaselineHeight = null;
+let textareaLineHeight = null;
+
+function captureTextareaMetrics() {
+  if (!userInput) return;
+
+  const computed = window.getComputedStyle(userInput);
+  let lineHeight = parseFloat(computed.lineHeight);
+  if (Number.isNaN(lineHeight)) {
+    const fontSize = parseFloat(computed.fontSize);
+    lineHeight = Number.isNaN(fontSize) ? 16 : fontSize * 1.2;
+  }
+
+  let baseline = parseFloat(computed.height);
+  if (Number.isNaN(baseline)) {
+    baseline = userInput.scrollHeight || lineHeight;
+  }
+
+  textareaLineHeight = lineHeight;
+  textareaBaselineHeight = baseline;
+
+  userInput.style.height = `${textareaBaselineHeight}px`;
+  userInput.style.overflowY = 'hidden';
+  userInput.classList.remove('is-scrollable');
+}
+
+function ensureTextareaMetrics() {
+  if (textareaBaselineHeight === null || textareaLineHeight === null) {
+    captureTextareaMetrics();
+  }
+}
+
+function updateTextareaSize() {
+  if (!userInput) return;
+
+  ensureTextareaMetrics();
+  if (textareaBaselineHeight === null || textareaLineHeight === null) {
+    return;
+  }
+
+  const maxExpandedHeight = textareaBaselineHeight + textareaLineHeight * 2;
+
+  userInput.style.overflowY = 'hidden';
+  userInput.classList.remove('is-scrollable');
+  userInput.style.height = 'auto';
+
+  const scrollHeight = userInput.scrollHeight;
+  const heightDifferenceThreshold = 1;
+  const targetHeight =
+    scrollHeight > textareaBaselineHeight + heightDifferenceThreshold
+      ? Math.min(scrollHeight, maxExpandedHeight)
+      : textareaBaselineHeight;
+
+  userInput.style.height = `${targetHeight}px`;
+
+  if (scrollHeight > maxExpandedHeight + heightDifferenceThreshold) {
+    userInput.style.overflowY = 'auto';
+    userInput.classList.add('is-scrollable');
+  }
+}
+
+if (userInput) {
+  const initializeTextarea = () => {
+    captureTextareaMetrics();
+    updateTextareaSize();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTextarea);
+  } else {
+    initializeTextarea();
+  }
+
+  userInput.addEventListener('input', () => {
+    updateTextareaSize();
+    updateSendButtonState();
+  });
+}
+
 const DEFAULT_PROFILE_IMAGES = {
   light: 'assets/images/default-profile-icon-light.png',
   dark: 'assets/images/default-profile-icon-dark.png'
@@ -415,15 +494,7 @@ function startEditingMessage(messageId) {
   textarea.focus();
 }
 
-function adjustTextareaHeight() {
-  userInput.style.height = 'auto';
-  userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px'; // Max height of 150px
-}
 
-userInput.addEventListener('input', () => {
-  adjustTextareaHeight();
-  updateSendButtonState();
-});
 
 function saveMessageEdit(messageId, newText) {
   if (!newText) return;
@@ -650,8 +721,10 @@ function hideTypingIndicator() {
 }
 
 function clearUserInput() {
+  if (!userInput) return;
   userInput.value = '';
-  userInput.style.height = 'auto';
+  updateTextareaSize();
+  updateSendButtonState();
 }
 
 function scrollToBottom(force = false) {
