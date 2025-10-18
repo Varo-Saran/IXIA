@@ -674,7 +674,7 @@ function createMessageElement(message) {
       const attachmentElement = document.createElement('div');
       attachmentElement.classList.add('message-attachment');
       attachmentElement.innerHTML = `
-        <i class="fas ${getFileTypeIcon(attachment.type)}"></i>
+        <i class="fa-solid ${getFileTypeIcon(attachment.type)}"></i>
         <span>${attachment.name}</span>
       `;
       attachmentsContainer.appendChild(attachmentElement);
@@ -693,7 +693,7 @@ function createMessageElement(message) {
   if (message.isUser) {
     const editButton = document.createElement('button');
     editButton.classList.add('edit-message-btn');
-    editButton.innerHTML = '<i class="fas fa-edit"></i>';
+    editButton.innerHTML = '<i class="fa-solid fa-edit"></i>';
     editButton.onclick = () => startEditingMessage(message.id);
     messageContent.appendChild(editButton);
 
@@ -787,10 +787,10 @@ function startEditingMessage(messageId) {
     <textarea class="edit-textarea">${originalText}</textarea>
     <div class="edit-buttons">
       <button class="save-edit-btn" title="Save changes">
-        <i class="fas fa-check"></i>
+        <i class="fa-solid fa-check"></i>
       </button>
       <button class="cancel-edit-btn" title="Cancel editing">
-        <i class="fas fa-times"></i>
+        <i class="fa-solid fa-times"></i>
       </button>
     </div>
   `;
@@ -956,10 +956,10 @@ function updateAttachmentsPreview() {
     card.className = 'attachment-card';
     card.innerHTML = `
       <button class="remove-attachment" data-index="${index}" aria-label="Remove attachment">
-        <i class="fas fa-times"></i>
+        <i class="fa-solid fa-times"></i>
       </button>
       <div class="attachment-card__icon">
-        <i class="fas ${getFileTypeIcon(attachment.type)}"></i>
+        <i class="fa-solid ${getFileTypeIcon(attachment.type)}"></i>
       </div>
       <span class="attachment-card__name" title="${attachment.name}">${attachment.name}</span>
     `;
@@ -1524,7 +1524,7 @@ function updateSavedChatsList() {
 
       const renameButton = document.createElement('button');
       const chatTitle = chat.title || 'chat';
-      renameButton.innerHTML = '<i class="fas fa-edit"></i>';
+      renameButton.innerHTML = '<i class="fa-solid fa-edit"></i>';
       const renameLabel = `Rename ${chatTitle}`;
       renameButton.setAttribute('aria-label', renameLabel);
       renameButton.setAttribute('title', renameLabel);
@@ -1534,7 +1534,7 @@ function updateSavedChatsList() {
       };
 
       const deleteButton = document.createElement('button');
-      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
       const deleteLabel = `Delete ${chatTitle}`;
       deleteButton.setAttribute('aria-label', deleteLabel);
       deleteButton.setAttribute('title', deleteLabel);

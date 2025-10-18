@@ -1095,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emptyState.classList.add('empty-state');
 
             const icon = document.createElement('i');
-            icon.classList.add('fas', 'fa-user-slash');
+            icon.classList.add('fa-solid', 'fa-user-slash');
             icon.setAttribute('aria-hidden', 'true');
 
             const title = document.createElement('h3');
@@ -1129,20 +1129,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     ${isAdmin ? `
                         <button class="edit-admin-btn" data-action="email" title="Change Email">
-                            <i class="fas fa-envelope"></i>
+                            <i class="fa-solid fa-envelope"></i>
                         </button>
                         <button class="edit-admin-btn" data-action="password" title="Change Password">
-                            <i class="fas fa-key"></i>
+                            <i class="fa-solid fa-key"></i>
                         </button>
                     ` : `
                         <button class="edit-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Edit profile details, role, or status">
-                            <i class="fas fa-edit"></i>
+                            <i class="fa-solid fa-edit"></i>
                         </button>
                         <button class="delete-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Delete User">
-                            <i class="fas fa-trash"></i>
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                         <button class="reset-pwd-btn" data-email="${user.email}" data-normalized-email="${normalizedUserEmail}" title="Reset Password">
-                            <i class="fas fa-key"></i>
+                            <i class="fa-solid fa-key"></i>
                         </button>
                     `}
                 </td>
