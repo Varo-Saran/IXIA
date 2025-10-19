@@ -25,9 +25,18 @@
     }
 
     const potentialMath = sanitized.trim();
+    const containsOperator = /[+\-*/]/.test(potentialMath.replace(/^[-+]+/, ''));
+
+    if (
+      !containsOperator &&
+      /[^0-9+\-*/().\s]/.test(message)
+    ) {
+      return null;
+    }
+
     if (
       potentialMath === '' ||
-      (!/[+\-*/]/.test(potentialMath.replace(/^[-+]+/, '')) &&
+      (!containsOperator &&
         !potentialMath.includes('(') &&
         !potentialMath.includes(')'))
     ) {

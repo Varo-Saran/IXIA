@@ -16,6 +16,11 @@ describe('mathModel.solveMathProblem', () => {
     assert.strictEqual(result, 2);
     assert.strictEqual(formatMathValue(result), '2');
   });
+
+  it('returns null for expressions with unsupported characters', () => {
+    const result = solveMathProblem('sin(1)');
+    assert.strictEqual(result, null);
+  });
 });
 
 function describe(name, fn) {
