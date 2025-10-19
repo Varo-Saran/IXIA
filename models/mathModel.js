@@ -13,30 +13,147 @@
     return value;
   }
 
+  function sanitizeMathExpression(message) {
+    return message.replace(/[^0-9+\-*/().\s]/g, '');
+  }
+
   function solveMathProblem(message) {
-    const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)/;
-    const match = message.match(mathRegex);
+    const sanitized = sanitizeMathExpression(message);
 
-    if (match) {
-      const num1 = parseFloat(match[1]);
-      const operator = match[2];
-      const num2 = parseFloat(match[3]);
+    if (!/[0-9]/.test(sanitized)) {
+      return null;
+    }
 
-      switch (operator) {
-        case '+':
-          return num1 + num2;
-        case '-':
-          return num1 - num2;
-        case '*':
-          return num1 * num2;
-        case '/':
-          return num2 !== 0 ? num1 / num2 : 'Error: Division by zero';
-        default:
-          return null;
+    const potentialMath = sanitized.trim();
+    if (
+      potentialMath === '' ||
+      (!/[+\-*/]/.test(potentialMath.replace(/^[-+]+/, '')) &&
+        !potentialMath.includes('(') &&
+        !potentialMath.includes(')'))
+    ) {
+      return null;
+    }
+
+    let index = 0;
+
+    function skipWhitespace() {
+      while (index < sanitized.length && /\s/.test(sanitized[index])) {
+        index += 1;
       }
     }
 
-    return null;
+    function parseNumber() {
+      skipWhitespace();
+      let start = index;
+      let hasDecimal = false;
+
+      while (index < sanitized.length) {
+        const char = sanitized[index];
+        if (char >= '0' && char <= '9') {
+          index += 1;
+        } else if (char === '.') {
+          if (hasDecimal) {
+            throw new Error('INVALID');
+          }
+          hasDecimal = true;
+          index += 1;
+        } else {
+          break;
+        }
+      }
+
+      if (start === index) {
+        throw new Error('INVALID');
+      }
+
+      return Number.parseFloat(sanitized.slice(start, index));
+    }
+
+    function parseFactor() {
+      skipWhitespace();
+      const char = sanitized[index];
+
+      if (char === '+' || char === '-') {
+        index += 1;
+        const value = parseFactor();
+        return char === '-' ? -value : value;
+      }
+
+      if (char === '(') {
+        index += 1;
+        const value = parseExpression();
+        skipWhitespace();
+        if (sanitized[index] !== ')') {
+          throw new Error('INVALID');
+        }
+        index += 1;
+        return value;
+      }
+
+      return parseNumber();
+    }
+
+    function parseTerm() {
+      let value = parseFactor();
+
+      while (true) {
+        skipWhitespace();
+        const operator = sanitized[index];
+
+        if (operator === '*' || operator === '/') {
+          index += 1;
+          const nextValue = parseFactor();
+          if (operator === '*') {
+            value *= nextValue;
+          } else {
+            if (nextValue === 0) {
+              throw new Error('DIV_ZERO');
+            }
+            value /= nextValue;
+          }
+        } else {
+          break;
+        }
+      }
+
+      return value;
+    }
+
+    function parseExpression() {
+      let value = parseTerm();
+
+      while (true) {
+        skipWhitespace();
+        const operator = sanitized[index];
+
+        if (operator === '+' || operator === '-') {
+          index += 1;
+          const nextValue = parseTerm();
+          value = operator === '+' ? value + nextValue : value - nextValue;
+        } else {
+          break;
+        }
+      }
+
+      return value;
+    }
+
+    try {
+      const result = parseExpression();
+      skipWhitespace();
+      if (index !== sanitized.length) {
+        throw new Error('INVALID');
+      }
+      if (!Number.isFinite(result)) {
+        throw new Error('INVALID');
+      }
+      return result;
+    } catch (error) {
+      if (error && error.message === 'DIV_ZERO') {
+        return 'Error: Division by zero';
+      }
+      return 'Error: Invalid expression';
+    }
   }
 
   function getMathResponse(userMessage) {
