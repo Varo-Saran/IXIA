@@ -32,7 +32,7 @@ global.fetch = async (url, options) => {
 require('../Ixia.js');
 
 (async () => {
-  const result = await global.getAIResponse('Hello there!');
+  const result = await global.getAIResponse('Hello there!', 'spark1');
 
   assert.strictEqual(fetchCalls.length, 1, 'Expected Hugging Face fetch to be invoked once');
   assert(result && typeof result === 'object', 'Expected fallback result to be an object');
