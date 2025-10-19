@@ -515,7 +515,7 @@
   /* Input area adjustments */
   .input-area {
     position: fixed;
-    bottom: 27px;
+    bottom: 44px;
     left: 0;
     right: 0;
     margin: 22px 15px; /* Equal margins on both sides */
@@ -771,7 +771,7 @@
   /* Attachments preview */
   .attachments-preview {
     padding: 8px;
-    margin: 16px 15px 8px;
+    margin: 24px 15px 8px;
     width: calc(100% - 30px);
     box-sizing: border-box;
   }
@@ -894,14 +894,14 @@
   }
 
   .input-area {
-    bottom: 22px;
+    bottom: 39px;
     margin: 20px 12px;
     padding: 8px 12px;
     width: calc(100% - 24px);
   }
 
   .attachments-preview {
-    margin: 16px 12px 8px;
+    margin: 24px 12px 8px;
     width: calc(100% - 24px);
   }
 
