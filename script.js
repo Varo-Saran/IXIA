@@ -1318,30 +1318,18 @@ function updateSidebarToggleState(isOpen) {
 }
 
 function toggleSidebar() {
-  if (sidebar.classList.contains('show')) {
-    closeSidebar();
-  } else {
-    openSidebar();
-  }
+  const isOpen = sidebar.classList.toggle('show');
+  mainContent.classList.toggle('sidebar-open', isOpen);
+  logo.classList.toggle('sidebar-open', isOpen);
+
+  updateSidebarToggleState(isOpen);
 }
 
-function openSidebar({ updateToggleState = true } = {}) {
-  sidebar.classList.add('show');
-  mainContent.classList.add('sidebar-open');
-  logo.classList.add('sidebar-open');
-
-  if (updateToggleState) {
-    updateSidebarToggleState(true);
-  }
-}
-
-function closeSidebar({ updateToggleState = true } = {}) {
+function closeSidebar() {
   sidebar.classList.remove('show');
   mainContent.classList.remove('sidebar-open');
   logo.classList.remove('sidebar-open');
-  if (updateToggleState) {
-    updateSidebarToggleState(false);
-  }
+  updateSidebarToggleState(false);
 }
 
 // Chat operations
@@ -1633,17 +1621,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (window.innerWidth <= 767) {
     closeSidebar();
-    if (toggleSidebarButton) {
-      toggleSidebarButton.style.display = 'flex';
-      updateSidebarToggleState(sidebar.classList.contains('show'));
-    }
-  } else {
-    openSidebar({ updateToggleState: false });
-    if (toggleSidebarButton) {
-      toggleSidebarButton.style.display = 'none';
-    }
   }
-});
+});  
 
 // Message input handlers
 sendMessageBtn.addEventListener('click', handleUserInput);
@@ -1695,9 +1674,11 @@ window.addEventListener('resize', () => {
   calculateSidebarToggleOffset();
 
   if (window.innerWidth > 767) {
-      openSidebar({ updateToggleState: false });
+      sidebar.classList.remove('show');
+      mainContent.classList.remove('sidebar-open');
       if (toggleSidebarButton) {
           toggleSidebarButton.style.display = 'none';
+          updateSidebarToggleState(false);
       }
   } else {
       if (toggleSidebarButton) {
