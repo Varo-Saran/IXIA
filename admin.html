@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +11,23 @@
     <script src="modal.js" defer></script>
     <script src="admin.js" defer></script>
 </head>
+
 <body>
     <div class="dashboard-shell">
         <aside class="sidebar" role="navigation" aria-label="Admin navigation">
             <div class="sidebar__brand">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" aria-hidden="true">
                     <defs>
-                        <style>@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');</style>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+                        </style>
                         <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1"></stop>
                             <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1"></stop>
                         </linearGradient>
                     </defs>
-                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">iXiA Ai</text>
+                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold"
+                        fill="url(#gradient4)">iXiA Ai</text>
                 </svg>
                 <p class="sidebar__subtitle">Administrative Control</p>
             </div>
@@ -60,12 +65,14 @@
             <header class="topbar" role="banner">
                 <div class="topbar__left">
                     <h1 class="topbar__title">Admin Dashboard</h1>
-                    <p class="topbar__subtitle">Monitor platform health, manage accounts, and keep IXIA AI running smoothly.</p>
+                    <p class="topbar__subtitle">Monitor platform health, manage accounts, and keep IXIA AI running
+                        smoothly.</p>
                 </div>
                 <div class="topbar__actions">
                     <div class="topbar__search" role="search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" id="global-search" name="global-search" placeholder="Search everything..." autocomplete="off">
+                        <input type="search" id="global-search" name="global-search" placeholder="Search everything..."
+                            autocomplete="off">
                     </div>
                     <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
                         <i class="fa-solid fa-moon"></i>
@@ -79,7 +86,8 @@
                         <div>
                             <p class="eyebrow">Platform pulse</p>
                             <h2>Real-time intelligence for IXIA AI</h2>
-                            <p class="muted">Stay ahead with live insights, user analytics, and rapid response controls—all crafted to elevate the admin experience.</p>
+                            <p class="muted">Stay ahead with live insights, user analytics, and rapid response
+                                controls—all crafted to elevate the admin experience.</p>
                         </div>
                         <div class="intro-actions">
                             <button class="btn btn-primary" type="button">
@@ -145,101 +153,67 @@
                                 <i class="fa-solid fa-heart-pulse"></i>
                             </header>
                             <p class="stat-value">2.4%</p>
-                            <p class="delta warning"><i class="fa-solid fa-triangle-exclamation"></i> Monitor outreach</p>
+                            <p class="delta warning"><i class="fa-solid fa-triangle-exclamation"></i> Monitor outreach
+                            </p>
                         </article>
                     </div>
                 </section>
 
-                <section class="page-grid">
-                    <section id="account-list" class="dashboard-section stretched">
-                        <div class="section-header">
-                            <div>
-                                <h2>User Management</h2>
-                                <p class="muted">Search, filter, and orchestrate every account in seconds.</p>
-                            </div>
-                            <div class="section-actions">
-                                <button id="advanced-filters-btn" class="btn btn-tertiary" type="button">
-                                    <i class="fa-solid fa-filter"></i>
-                                    Advanced filters
-                                </button>
-                                <button id="reset-advanced-filters" class="btn btn-ghost" type="button" hidden>
-                                    <i class="fa-solid fa-eraser"></i>
-                                    Clear advanced filters
-                                </button>
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                    Invite admin
-                                </button>
-                            </div>
+                <section id="account-list" class="dashboard-section stretched">
+                    <div class="section-header">
+                        <div>
+                            <h2>User Management</h2>
+                            <p class="muted">Search, filter, and orchestrate every account in seconds.</p>
                         </div>
-                        <div class="toolbar">
-                            <div class="search-bar">
-                                <input type="text" id="user-search" placeholder="Search users by name, email, or role" aria-label="Search users">
-                                <button id="search-btn" type="button" aria-label="Submit search"><i class="fa-solid fa-search"></i></button>
-                            </div>
-                            <div class="quick-filters" role="group" aria-label="Quick filters">
-                                <button class="chip active" type="button">All</button>
-                                <button class="chip" type="button">Active</button>
-                                <button class="chip" type="button">Pending</button>
-                                <button class="chip" type="button">Suspended</button>
-                                <span id="advanced-filter-indicator" class="filter-indicator" hidden aria-live="polite"></span>
-                            </div>
+                        <div class="section-actions">
+                            <button id="advanced-filters-btn" class="btn btn-tertiary" type="button">
+                                <i class="fa-solid fa-filter"></i>
+                                Advanced filters
+                            </button>
+                            <button id="reset-advanced-filters" class="btn btn-ghost" type="button" hidden>
+                                <i class="fa-solid fa-eraser"></i>
+                                Clear advanced filters
+                            </button>
+                            <button class="btn btn-primary" type="button">
+                                <i class="fa-solid fa-user-plus"></i>
+                                Invite admin
+                            </button>
                         </div>
-                        <div class="account-table-wrapper" role="region" aria-live="polite">
-                            <table id="user-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Username</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Registration Date</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="user-list"></tbody>
-                            </table>
-                            <div class="pagination">
-                                <button id="prev-page" type="button">Previous</button>
-                                <span id="page-info" role="status" aria-live="polite">Page 1 of 1</span>
-                                <button id="next-page" type="button">Next</button>
-                            </div>
+                    </div>
+                    <div class="toolbar">
+                        <div class="search-bar">
+                            <input type="text" id="user-search" placeholder="Search users by name, email, or role"
+                                aria-label="Search users">
+                            <button id="search-btn" type="button" aria-label="Submit search"><i
+                                    class="fa-solid fa-search"></i></button>
                         </div>
-                    </section>
-
-                    <aside class="dashboard-section insights-panel" aria-labelledby="insights-title">
-                        <div class="section-header">
-                            <h2 id="insights-title">Operational Insights</h2>
-                            <button class="btn btn-tertiary" type="button"><i class="fa-solid fa-arrow-rotate-right"></i> Refresh</button>
+                        <div class="quick-filters" role="group" aria-label="Quick filters">
+                            <button class="chip active" type="button">All</button>
+                            <button class="chip" type="button">Active</button>
+                            <button class="chip" type="button">Pending</button>
+                            <button class="chip" type="button">Suspended</button>
+                            <span id="advanced-filter-indicator" class="filter-indicator" hidden
+                                aria-live="polite"></span>
                         </div>
-                        <div class="insight-card">
-                            <h3>Team workload</h3>
-                            <p class="muted">Moderators resolving 92% of tickets within 2h.</p>
-                            <div class="progress-stack">
-                                <div class="progress-row">
-                                    <span>Support</span>
-                                    <span>76%</span>
-                                </div>
-                                <div class="progress-bar"><span style="width: 76%"></span></div>
-                                <div class="progress-row">
-                                    <span>Ops</span>
-                                    <span>58%</span>
-                                </div>
-                                <div class="progress-bar alt"><span style="width: 58%"></span></div>
-                            </div>
+                    </div>
+                    <div class="account-table-wrapper" role="region" aria-live="polite">
+                        <table id="user-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Registration Date</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-list"></tbody>
+                        </table>
+                        <div class="pagination">
+                            <button id="prev-page" type="button">Previous</button>
+                            <span id="page-info" role="status" aria-live="polite">Page 1 of 1</span>
+                            <button id="next-page" type="button">Next</button>
                         </div>
-                        <div class="insight-card">
-                            <h3>Security posture</h3>
-                            <ul class="security-list">
-                                <li><i class="fa-solid fa-circle-check"></i> MFA enforced for all admins</li>
-                                <li><i class="fa-solid fa-circle-check"></i> 0 credential leaks detected</li>
-                                <li class="warning"><i class="fa-solid fa-circle-exclamation"></i> Review 2 elevated access requests</li>
-                            </ul>
-                        </div>
-                        <div class="insight-card">
-                            <h3>Upcoming maintenance</h3>
-                            <p class="muted">Scheduled downtime: <strong>June 24, 02:00 UTC</strong></p>
-                            <button class="btn btn-secondary" type="button">Notify stakeholders</button>
-                        </div>
-                    </aside>
+                    </div>
                 </section>
 
                 <section id="system-stats" class="dashboard-section elevated">
@@ -249,8 +223,10 @@
                             <p class="muted">Live operational metrics from the IXIA AI conversation engine.</p>
                         </div>
                         <div class="section-actions">
-                            <button class="btn btn-tertiary" type="button"><i class="fa-solid fa-chart-line"></i> View trends</button>
-                            <button class="btn btn-secondary" type="button"><i class="fa-solid fa-download"></i> Export report</button>
+                            <button class="btn btn-tertiary" type="button"><i class="fa-solid fa-chart-line"></i> View
+                                trends</button>
+                            <button class="btn btn-secondary" type="button"><i class="fa-solid fa-download"></i> Export
+                                report</button>
                         </div>
                     </div>
                     <div class="stat-grid wide">
@@ -320,12 +296,51 @@
                 <p>&copy; 2024 IXIA AI. All rights reserved.</p>
             </footer>
         </div>
+        <aside class="right-panel" role="complementary" aria-labelledby="insights-title">
+            <div class="section-header">
+                <h2 id="insights-title">Operational Insights</h2>
+                <button class="btn btn-tertiary" type="button"><i class="fa-solid fa-arrow-rotate-right"></i>
+                    Refresh</button>
+            </div>
+            <div class="insight-card">
+                <h3>Team workload</h3>
+                <p class="muted">Moderators resolving 92% of tickets within 2h.</p>
+                <div class="progress-stack">
+                    <div class="progress-row">
+                        <span>Support</span>
+                        <span>76%</span>
+                    </div>
+                    <div class="progress-bar"><span style="width: 76%"></span></div>
+                    <div class="progress-row">
+                        <span>Ops</span>
+                        <span>58%</span>
+                    </div>
+                    <div class="progress-bar alt"><span style="width: 58%"></span></div>
+                </div>
+            </div>
+            <div class="insight-card">
+                <h3>Security posture</h3>
+                <ul class="security-list">
+                    <li><i class="fa-solid fa-circle-check"></i> MFA enforced for all admins</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 0 credential leaks detected</li>
+                    <li class="warning"><i class="fa-solid fa-circle-exclamation"></i> Review 2 elevated access requests
+                    </li>
+                </ul>
+            </div>
+            <div class="insight-card">
+                <h3>Upcoming maintenance</h3>
+                <p class="muted">Scheduled downtime: <strong>June 24, 02:00 UTC</strong></p>
+                <button class="btn btn-secondary" type="button">Notify stakeholders</button>
+            </div>
+        </aside>
     </div>
 
-    <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" aria-describedby="admin-modal-subtitle admin-modal-description">
+    <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true"
+        aria-labelledby="modal-title" aria-describedby="admin-modal-subtitle admin-modal-description">
         <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
         <div class="modal-content" role="document" data-modal-tone="warning">
-            <button type="button" class="modal-close" id="admin-modal-close" data-close-modal aria-label="Close admin modal">
+            <button type="button" class="modal-close" id="admin-modal-close" data-close-modal
+                aria-label="Close admin modal">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-header">
@@ -347,4 +362,5 @@
         </div>
     </div>
 </body>
+
 </html>
