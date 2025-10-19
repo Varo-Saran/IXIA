@@ -1,15 +1,15 @@
 // Ixia.js - Chatbot Logic and AI Integration
 
-const globalScope = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : {});
+const scope = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : {});
 
 const DEFAULT_CHAT_FALLBACK = "Response Spark is having trouble reaching the AI service right now. Let's keep chatting locally while you try again.";
 
 function getApiConfig() {
-  if (!globalScope) {
+  if (!scope) {
     return null;
   }
 
-  const candidate = globalScope.apiConfig || getModel('apiConfig');
+  const candidate = scope.apiConfig || getModel('apiConfig');
   return candidate && typeof candidate === 'object' ? candidate : null;
 }
 
@@ -261,11 +261,11 @@ async function requestHuggingFaceCompletion(prompt, activeModelName) {
 }
 
 function getModel(modelName) {
-  if (!globalScope) {
+  if (!scope) {
     return undefined;
   }
 
-  const candidate = globalScope[modelName];
+  const candidate = scope[modelName];
   return candidate && typeof candidate === 'object' ? candidate : undefined;
 }
 
@@ -363,10 +363,10 @@ function simpleSentimentAnalysis(response) {
 }
 
 // Make functions globally accessible
-if (globalScope) {
-  globalScope.getAIResponse = getAIResponse;
-  globalScope.simpleSentimentAnalysis = simpleSentimentAnalysis;
-  globalScope.solveMathProblem = function solveMathProblemProxy(message) {
+if (scope) {
+  scope.getAIResponse = getAIResponse;
+  scope.simpleSentimentAnalysis = simpleSentimentAnalysis;
+  scope.solveMathProblem = function solveMathProblemProxy(message) {
     const mathModel = getModel('mathModel');
     if (mathModel && typeof mathModel.solveMathProblem === 'function') {
       return mathModel.solveMathProblem(message);
