@@ -45,6 +45,29 @@ const MODEL_LABELS = {
 let textareaBaselineHeight = null;
 let textareaLineHeight = null;
 
+if (window.marked) {
+  window.marked.setOptions({
+    breaks: true,
+    gfm: true
+  });
+}
+
+function renderMessageText(rawText = '') {
+  const text = typeof rawText === 'string' ? rawText : String(rawText ?? '');
+
+  if (window.marked) {
+    const parsed = window.marked.parse(text);
+    if (window.DOMPurify) {
+      return window.DOMPurify.sanitize(parsed);
+    }
+    return parsed;
+  }
+
+  const fallback = document.createElement('div');
+  fallback.textContent = text;
+  return fallback.innerHTML.replace(/\n/g, '<br>');
+}
+
 if (modelSelectorList) {
   modelSelectorList.setAttribute('aria-hidden', 'true');
 }
@@ -686,7 +709,7 @@ function createMessageElement(message) {
   // Add text content
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');
-  textElement.textContent = message.text;
+  textElement.innerHTML = renderMessageText(message.text);
   messageContent.appendChild(textElement);
 
   // Add edit button for user messages
@@ -768,9 +791,9 @@ function startEditingMessage(messageId) {
   if (editingMessageId && editingMessageId !== messageId) {
     const previousMessageElement = document.querySelector(`[data-message-id="${editingMessageId}"]`);
     if (previousMessageElement) {
-      const originalText = chatManager.chats[chatManager.currentChatId]
-        .messages.find(m => m.id === editingMessageId).text;
-      cancelMessageEdit(editingMessageId, originalText);
+      const previousChat = chatManager.chats[chatManager.currentChatId];
+      const previousMessage = previousChat?.messages.find(m => m.id === editingMessageId);
+      cancelMessageEdit(editingMessageId, previousMessage?.text || '');
     }
   }
 
@@ -779,12 +802,15 @@ function startEditingMessage(messageId) {
 
   editingMessageId = messageId;
   const textElement = messageElement.querySelector('.message-text');
-  const originalText = textElement.textContent;
+  if (!textElement) return;
+  const currentChat = chatManager.chats[chatManager.currentChatId];
+  const messageData = currentChat?.messages.find(m => m.id === messageId);
+  const originalText = messageData?.text || '';
 
   const editContainer = document.createElement('div');
   editContainer.classList.add('edit-container');
   editContainer.innerHTML = `
-    <textarea class="edit-textarea">${originalText}</textarea>
+    <textarea class="edit-textarea"></textarea>
     <div class="edit-buttons">
       <button class="save-edit-btn" title="Save changes">
         <i class="fa-solid fa-check"></i>
@@ -798,7 +824,8 @@ function startEditingMessage(messageId) {
   textElement.replaceWith(editContainer);
 
   const textarea = editContainer.querySelector('.edit-textarea');
-  editContainer.querySelector('.save-edit-btn').onclick = () => 
+  textarea.value = originalText;
+  editContainer.querySelector('.save-edit-btn').onclick = () =>
     saveMessageEdit(messageId, textarea.value.trim());
   editContainer.querySelector('.cancel-edit-btn').onclick = () => 
     cancelMessageEdit(messageId, originalText);
@@ -818,7 +845,7 @@ function saveMessageEdit(messageId, newText) {
     const editContainer = messageElement.querySelector('.edit-container');
     const textElement = document.createElement('div');
     textElement.classList.add('message-text');
-    textElement.textContent = newText;
+    textElement.innerHTML = renderMessageText(newText);
     editContainer.replaceWith(textElement);
 
     if (!messageElement.querySelector('.edited-indicator')) {
@@ -880,7 +907,7 @@ function cancelMessageEdit(messageId, originalText) {
   const editContainer = messageElement.querySelector('.edit-container');
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');
-  textElement.textContent = originalText;
+  textElement.innerHTML = renderMessageText(originalText);
   editContainer.replaceWith(textElement);
 
   editingMessageId = null;
