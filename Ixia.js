@@ -2,7 +2,7 @@
 
 const globalScope = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : {});
 
-const DEFAULT_CHAT_FALLBACK = "I'm having trouble reaching the AI service right now. Let's keep chatting locally while you try again.";
+const DEFAULT_CHAT_FALLBACK = "Response Spark is having trouble reaching the AI service right now. Let's keep chatting locally while you try again.";
 
 function getApiConfig() {
   if (!globalScope) {
@@ -195,9 +195,19 @@ async function requestHuggingFaceCompletion(prompt, activeModelName) {
     ? config.getChatModelName()
     : null;
 
-  const modelName = typeof activeModelName === 'string' && activeModelName !== 'chat'
-    ? activeModelName
-    : configuredModel || activeModelName || 'chat';
+  const normalizedActiveModel = typeof activeModelName === 'string'
+    ? activeModelName.toLowerCase()
+    : '';
+
+  const modelName = (() => {
+    if (normalizedActiveModel === 'spark1' || normalizedActiveModel === 'chat') {
+      return configuredModel || activeModelName || 'chat';
+    }
+    if (typeof activeModelName === 'string' && activeModelName) {
+      return activeModelName;
+    }
+    return configuredModel || 'chat';
+  })();
 
   const encodedModel = modelName
     .split('/')
@@ -269,23 +279,13 @@ async function getAIResponse(userMessage, model = 'chat') {
   const normalizedModel = typeof model === 'string' ? model.toLowerCase() : 'chat';
   const mathModel = getModel('mathModel');
   const chatModel = getModel('chatModel');
-  const creativeModel = getModel('creativeModel');
-
   switch (normalizedModel) {
     case 'math':
       if (mathModel && typeof mathModel.getMathResponse === 'function') {
         return mathModel.getMathResponse(safeMessage);
       }
-      return "Math model is currently unavailable.";
-    case 'creative':
-    case 'other':
-    case 'creative/other':
-      if (creativeModel && typeof creativeModel.getCreativeResponse === 'function') {
-        return creativeModel.getCreativeResponse(safeMessage);
-      }
-      return "Creative model is currently unavailable.";
-    case 'chat':
-    default:
+      return "Math Spark is currently unavailable.";
+    case 'spark1': {
       const apiResponse = await requestHuggingFaceCompletion(safeMessage, normalizedModel);
       if (apiResponse && !apiResponse.fallback && apiResponse.response) {
         return apiResponse;
@@ -308,7 +308,38 @@ async function getAIResponse(userMessage, model = 'chat') {
         return DEFAULT_CHAT_FALLBACK;
       }
 
-      return "Chat model is currently unavailable.";
+      return "Response Spark is currently unavailable.";
+    }
+    case 'chat':
+      if (chatModel && typeof chatModel.getChatResponse === 'function') {
+        return chatModel.getChatResponse(safeMessage);
+      }
+      return "Response Spark is currently unavailable.";
+    default: {
+      const apiResponse = await requestHuggingFaceCompletion(safeMessage, normalizedModel);
+      if (apiResponse && !apiResponse.fallback && apiResponse.response) {
+        return apiResponse;
+      }
+
+      if (chatModel && typeof chatModel.getChatResponse === 'function') {
+        const fallbackResponse = chatModel.getChatResponse(safeMessage);
+        if (apiResponse && apiResponse.error) {
+          return {
+            response: fallbackResponse,
+            source: 'local-fallback',
+            error: apiResponse.error,
+            message: DEFAULT_CHAT_FALLBACK
+          };
+        }
+        return fallbackResponse;
+      }
+
+      if (apiResponse && apiResponse.error) {
+        return DEFAULT_CHAT_FALLBACK;
+      }
+
+      return "Response Spark is currently unavailable.";
+    }
   }
 }
 
