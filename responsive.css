@@ -514,11 +514,8 @@
 
   /* Input area adjustments */
   .input-area {
-    position: fixed;
-    bottom: 44px;
-    left: 0;
-    right: 0;
-    margin: 22px 15px; /* Equal margins on both sides */
+    position: static;
+    margin: 18px 15px calc(26px + env(safe-area-inset-bottom));
     padding: 10px 15px; /* Equal padding on both sides */
     width: calc(100% - 30px); /* Adjusted for total margin */
     box-sizing: border-box;
@@ -771,7 +768,7 @@
   /* Attachments preview */
   .attachments-preview {
     padding: 8px;
-    margin: 24px 15px 8px;
+    margin: 18px 15px 12px;
     width: calc(100% - 30px);
     box-sizing: border-box;
   }
@@ -894,14 +891,14 @@
   }
 
   .input-area {
-    bottom: 39px;
-    margin: 20px 12px;
+    position: static;
+    margin: 18px 12px calc(22px + env(safe-area-inset-bottom));
     padding: 8px 12px;
     width: calc(100% - 24px);
   }
 
   .attachments-preview {
-    margin: 24px 12px 8px;
+    margin: 18px 12px 12px;
     width: calc(100% - 24px);
   }
 
@@ -970,9 +967,15 @@
   }
 
   .input-area {
-    position: fixed;
-    bottom: 0;
-    padding: 5px;
+    position: static;
+    margin: 12px 15px calc(18px + env(safe-area-inset-bottom));
+    padding: 5px 12px;
+    width: calc(100% - 30px);
+  }
+
+  .attachments-preview {
+    margin: 18px 15px 12px;
+    width: calc(100% - 30px);
   }
 
   .sidebar {
