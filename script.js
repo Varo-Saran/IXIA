@@ -68,6 +68,71 @@ function renderMessageText(rawText = '') {
   return fallback.innerHTML.replace(/\n/g, '<br>');
 }
 
+function normalizeAIResponsePayload(aiResponse) {
+  const result = {
+    text: '',
+    notice: null
+  };
+
+  if (Array.isArray(aiResponse)) {
+    for (const entry of aiResponse) {
+      const nested = normalizeAIResponsePayload(entry);
+      if (nested.text) {
+        return nested;
+      }
+      if (!result.notice && nested.notice) {
+        result.notice = nested.notice;
+      }
+    }
+    return result;
+  }
+
+  if (typeof aiResponse === 'string') {
+    result.text = aiResponse;
+    return result;
+  }
+
+  if (aiResponse && typeof aiResponse === 'object') {
+    if (typeof aiResponse.response === 'string' && aiResponse.response.trim()) {
+      result.text = aiResponse.response.trim();
+    } else if (typeof aiResponse.generated_text === 'string' && aiResponse.generated_text.trim()) {
+      result.text = aiResponse.generated_text.trim();
+    } else if (Array.isArray(aiResponse.choices)) {
+      for (const choice of aiResponse.choices) {
+        const choiceResult = normalizeAIResponsePayload(choice);
+        if (choiceResult.text) {
+          return {
+            text: choiceResult.text,
+            notice: choiceResult.notice || result.notice
+          };
+        }
+      }
+    } else if (Array.isArray(aiResponse.data)) {
+      for (const dataEntry of aiResponse.data) {
+        const dataResult = normalizeAIResponsePayload(dataEntry);
+        if (dataResult.text) {
+          return {
+            text: dataResult.text,
+            notice: dataResult.notice || result.notice
+          };
+        }
+      }
+    } else if (typeof aiResponse.message === 'string' && aiResponse.message.trim()) {
+      result.text = aiResponse.message.trim();
+    }
+
+    if (!result.notice && typeof aiResponse.message === 'string' && aiResponse.message.trim()) {
+      result.notice = aiResponse.message.trim();
+    }
+
+    if (!result.notice && typeof aiResponse.notice === 'string' && aiResponse.notice.trim()) {
+      result.notice = aiResponse.notice.trim();
+    }
+  }
+
+  return result;
+}
+
 if (modelSelectorList) {
   modelSelectorList.setAttribute('aria-hidden', 'true');
 }
@@ -768,11 +833,14 @@ async function handleUserInput() {
 
   try {
     const aiResponse = await window.getAIResponse(messageText, activeModel);
-    const responseText = typeof aiResponse === 'object' && aiResponse.response 
-      ? aiResponse.response 
-      : aiResponse;
-    
-    addMessage(responseText, false);
+    const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
+    const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
+
+    addMessage(finalText, false);
+
+    if (notice && notice !== finalText) {
+      addMessage(notice, false);
+    }
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
@@ -885,11 +953,14 @@ async function handleEditedMessage(editedText) {
 
   try {
     const aiResponse = await window.getAIResponse(editedText, activeModel);
-    const responseText = typeof aiResponse === 'object' && aiResponse.response 
-      ? aiResponse.response 
-      : aiResponse;
-    
-    addMessage(responseText, false);
+    const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
+    const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
+
+    addMessage(finalText, false);
+
+    if (notice && notice !== finalText) {
+      addMessage(notice, false);
+    }
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
