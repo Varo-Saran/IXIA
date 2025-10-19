@@ -37,9 +37,9 @@ const modelSelectorOptions = modelSelectorList ? Array.from(modelSelectorList.qu
 
 const MODEL_STORAGE_KEY = 'ixia.activeModel';
 const MODEL_LABELS = {
-  chat: 'Chat',
-  math: 'Math',
-  creative: 'Creative/Other'
+  chat: 'Response Spark',
+  math: 'Math Spark',
+  spark1: 'Spark 1'
 };
 
 let textareaBaselineHeight = null;

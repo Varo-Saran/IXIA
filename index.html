@@ -46,22 +46,22 @@
             <div class="top-right-buttons">
                 <div class="model-selector" data-active-model="chat">
                     <button id="model-selector-toggle" class="model-selector__toggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="model-selector-list">
-                        <span class="model-selector__label">Chat</span>
+                        <span class="model-selector__label">Response Spark</span>
                         <i class="fa-solid fa-chevron-down model-selector__icon" aria-hidden="true"></i>
                     </button>
                     <div class="model-selector__list-wrapper">
                         <div id="model-selector-list" class="model-selector__list" role="listbox" aria-label="Choose response style" aria-hidden="true">
                             <button type="button" role="option" class="model-selector__option is-selected" data-model="chat" aria-selected="true">
-                                <span>Chat</span>
+                                <span>Response Spark</span>
                                 <small>Conversational assistant</small>
                             </button>
                             <button type="button" role="option" class="model-selector__option" data-model="math" aria-selected="false">
-                                <span>Math</span>
+                                <span>Math Spark</span>
                                 <small>Focused calculations</small>
                             </button>
-                            <button type="button" role="option" class="model-selector__option" data-model="creative" aria-selected="false">
-                                <span>Creative/Other</span>
-                                <small>Ideas & inspiration</small>
+                            <button type="button" role="option" class="model-selector__option" data-model="spark1" aria-selected="false" title="Coming Soon">
+                                <span>Spark 1</span>
+                                <small>API-powered experience (coming soon)</small>
                             </button>
                         </div>
                     </div>
@@ -173,7 +173,6 @@
     <script src="modal.js"></script>
     <script src="models/mathModel.js"></script>
     <script src="models/chatModel.js"></script>
-    <script src="models/creativeModel.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js" crossorigin="anonymous"></script>
     <script src="config/apiConfig.js"></script>
