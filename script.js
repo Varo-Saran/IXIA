@@ -1656,7 +1656,22 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+  let storedCurrentUser = null;
+  try {
+    const rawUser = localStorage.getItem('currentUser');
+    storedCurrentUser = rawUser ? JSON.parse(rawUser) : null;
+  } catch (error) {
+    console.warn('Unable to parse stored user:', error);
+  }
+
+  currentUser = storedCurrentUser;
+
+  if (!currentUser || typeof currentUser !== 'object' || (!currentUser.normalizedEmail && !currentUser.email)) {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+    return;
+  }
 
   if (currentUser?.isAdmin) {
     if (currentUser.forcePasswordReset) {
