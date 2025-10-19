@@ -158,8 +158,30 @@
     }
   ];
 
-  const checkKeywords = (keywordSet, message) => {
-    return keywordSet.every(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  const normalizeMessage = (message) =>
+    message
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  const containsWholeKeyword = (normalizedMessage, keyword) => {
+    const normalizedKeyword = normalizeMessage(keyword);
+
+    if (!normalizedMessage || !normalizedKeyword) {
+      return false;
+    }
+
+    const pattern = new RegExp(`(?:^|\\s)${escapeRegExp(normalizedKeyword)}(?=\\s|$)`, 'u');
+
+    return pattern.test(normalizedMessage);
+  };
+
+  const checkKeywords = (keywordSet, message, isNormalized = false) => {
+    const normalizedMessage = isNormalized ? message : normalizeMessage(message);
+    return keywordSet.every(keyword => containsWholeKeyword(normalizedMessage, keyword));
   };
 
   function getChatResponse(userMessage) {
@@ -175,13 +197,15 @@
       }
     }
 
+    const normalizedMessage = normalizeMessage(userMessage);
+
     for (let response of responses) {
       if (Array.isArray(response.keywords[0])) {
-        if (response.keywords.some(keywordSet => checkKeywords(keywordSet, userMessage))) {
+        if (response.keywords.some(keywordSet => checkKeywords(keywordSet, normalizedMessage, true))) {
           return response.replies[Math.floor(Math.random() * response.replies.length)];
         }
       } else {
-        if (response.keywords.some(keyword => userMessage.toLowerCase().includes(keyword.toLowerCase()))) {
+        if (response.keywords.some(keyword => containsWholeKeyword(normalizedMessage, keyword))) {
           return response.replies[Math.floor(Math.random() * response.replies.length)];
         }
       }
