@@ -1231,7 +1231,7 @@ html {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 12px 18px;
-  margin: 20px;
+  margin: 32px 20px 20px;
   width: calc(100% - 40px);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
   backdrop-filter: blur(var(--blur-amount));
@@ -1418,7 +1418,7 @@ html {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 14px 16px;
-  margin: 0 20px 12px;
+  margin: 16px 20px 12px;
   width: calc(100% - 40px);
   background: var(--panel-bg);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
