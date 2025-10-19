@@ -57,7 +57,7 @@
       replies: ["I was developed by an amazing team of programmers and AI enthusiasts!", "My creators are skilled developers who love creating helpful technology!", "A talented development team built me, and I'm here to assist you because of them!", "The best developers brought me to life so I could assist you."]
     },
     {
-      keywords: ["romantic", "love", "feeling romantic", "flirt"],
+      keywords: [["love", "you"], ["feeling", "romantic"], ["flirt"]],
       replies: ["If I had a heart, it would skip a beat for you.", "I might be just a chatbot, but I think you're pretty amazing.", "Are you sure you need an AI? You seem to have all the charm in the world.", "If I could dream, I'd dream of spending time chatting with you.", "Roses are red, violets are blue, I'm just an AI, but I'd always choose you."]
     },
     {
