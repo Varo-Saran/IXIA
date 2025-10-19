@@ -90,6 +90,94 @@ function extractTextFromHuggingFacePayload(payload) {
   return '';
 }
 
+function isPendingHuggingFacePayload(payload) {
+  if (!payload) {
+    return false;
+  }
+
+  if (typeof payload === 'string') {
+    const normalized = payload.toLowerCase();
+    return normalized.includes('loading') || normalized.includes('queue');
+  }
+
+  if (Array.isArray(payload)) {
+    return payload.some(entry => isPendingHuggingFacePayload(entry));
+  }
+
+  if (typeof payload !== 'object') {
+    return false;
+  }
+
+  if (typeof payload.estimated_time === 'number') {
+    return true;
+  }
+
+  if (payload.is_generating === true) {
+    return true;
+  }
+
+  const status = typeof payload.status === 'string' ? payload.status.toLowerCase() : '';
+  if (status === 'queued' || status === 'loading') {
+    return true;
+  }
+
+  const messageCandidates = [];
+  if (typeof payload.message === 'string') {
+    messageCandidates.push(payload.message);
+  }
+  if (typeof payload.error === 'string') {
+    messageCandidates.push(payload.error);
+  }
+  if (Array.isArray(payload.messages)) {
+    for (const entry of payload.messages) {
+      if (typeof entry === 'string') {
+        messageCandidates.push(entry);
+      } else if (entry && typeof entry.message === 'string') {
+        messageCandidates.push(entry.message);
+      }
+    }
+  }
+
+  return messageCandidates.some(candidate => {
+    const normalized = candidate.toLowerCase();
+    return normalized.includes('loading') || normalized.includes('queue');
+  });
+}
+
+function describePendingPayload(payload) {
+  if (!payload) {
+    return 'model is pending';
+  }
+
+  if (typeof payload === 'string') {
+    return payload;
+  }
+
+  if (Array.isArray(payload)) {
+    for (const entry of payload) {
+      const description = describePendingPayload(entry);
+      if (description) {
+        return description;
+      }
+    }
+    return 'model is pending';
+  }
+
+  if (typeof payload === 'object') {
+    if (typeof payload.status === 'string') {
+      return payload.status;
+    }
+    if (typeof payload.message === 'string') {
+      return payload.message;
+    }
+    if (typeof payload.error === 'string') {
+      return payload.error;
+    }
+  }
+
+  return 'model is pending';
+}
+
 async function requestHuggingFaceCompletion(prompt, activeModelName) {
   const config = getApiConfig();
   if (!config || typeof config.getAccessToken !== 'function') {
@@ -133,6 +221,12 @@ async function requestHuggingFaceCompletion(prompt, activeModelName) {
     }
 
     const payload = await response.json();
+
+    if (isPendingHuggingFacePayload(payload)) {
+      const description = describePendingPayload(payload);
+      throw new Error(`Hugging Face model pending: ${description}`);
+    }
+
     if (payload && payload.error) {
       throw new Error(typeof payload.error === 'string' ? payload.error : 'Unknown Hugging Face API error');
     }
