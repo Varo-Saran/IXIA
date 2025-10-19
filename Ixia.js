@@ -2,6 +2,160 @@
 
 const globalScope = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : {});
 
+const DEFAULT_CHAT_FALLBACK = "I'm having trouble reaching the AI service right now. Let's keep chatting locally while you try again.";
+
+function getApiConfig() {
+  if (!globalScope) {
+    return null;
+  }
+
+  const candidate = globalScope.apiConfig || getModel('apiConfig');
+  return candidate && typeof candidate === 'object' ? candidate : null;
+}
+
+function resolveConfigValue(config, key, fallbackValue) {
+  if (!config) {
+    return fallbackValue;
+  }
+
+  const value = typeof config[key] === 'function' ? config[key]() : config[key];
+  return value !== undefined && value !== null ? value : fallbackValue;
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+  const controllerSupported = typeof AbortController !== 'undefined';
+  const controller = controllerSupported ? new AbortController() : null;
+  const timeoutId = controllerSupported ? setTimeout(() => controller.abort(), timeoutMs) : null;
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller ? controller.signal : undefined
+    });
+    return response;
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
+function extractTextFromHuggingFacePayload(payload) {
+  if (typeof payload === 'string') {
+    return payload;
+  }
+
+  if (!payload) {
+    return '';
+  }
+
+  if (Array.isArray(payload)) {
+    for (const entry of payload) {
+      const text = extractTextFromHuggingFacePayload(entry);
+      if (text) {
+        return text;
+      }
+    }
+    return '';
+  }
+
+  if (typeof payload === 'object') {
+    if (typeof payload.generated_text === 'string') {
+      return payload.generated_text;
+    }
+    if (typeof payload.response === 'string') {
+      return payload.response;
+    }
+    if (Array.isArray(payload.choices)) {
+      for (const choice of payload.choices) {
+        const text = extractTextFromHuggingFacePayload(choice);
+        if (text) {
+          return text;
+        }
+      }
+    }
+    if (Array.isArray(payload.data)) {
+      for (const dataEntry of payload.data) {
+        const text = extractTextFromHuggingFacePayload(dataEntry);
+        if (text) {
+          return text;
+        }
+      }
+    }
+    if (typeof payload.message === 'string') {
+      return payload.message;
+    }
+  }
+
+  return '';
+}
+
+async function requestHuggingFaceCompletion(prompt, activeModelName) {
+  const config = getApiConfig();
+  if (!config || typeof config.getAccessToken !== 'function') {
+    return null;
+  }
+
+  const token = config.getAccessToken();
+  if (!token) {
+    return null;
+  }
+
+  const baseUrl = resolveConfigValue(config, 'baseUrl', 'https://api-inference.huggingface.co/models');
+  const timeoutMs = resolveConfigValue(config, 'timeoutMs', 20000);
+  const configuredModel = typeof config.getChatModelName === 'function'
+    ? config.getChatModelName()
+    : null;
+
+  const modelName = typeof activeModelName === 'string' && activeModelName !== 'chat'
+    ? activeModelName
+    : configuredModel || activeModelName || 'chat';
+
+  const encodedModel = modelName
+    .split('/')
+    .map(segment => encodeURIComponent(segment))
+    .join('/');
+
+  const url = `${String(baseUrl).replace(/\/$/, '')}/${encodedModel}`;
+
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  };
+
+  const body = JSON.stringify({ inputs: prompt });
+
+  try {
+    const response = await fetchWithTimeout(url, { method: 'POST', headers, body }, timeoutMs);
+    if (!response.ok) {
+      throw new Error(`Hugging Face API returned status ${response.status}`);
+    }
+
+    const payload = await response.json();
+    if (payload && payload.error) {
+      throw new Error(typeof payload.error === 'string' ? payload.error : 'Unknown Hugging Face API error');
+    }
+
+    const text = extractTextFromHuggingFacePayload(payload);
+    if (text) {
+      return {
+        response: text,
+        raw: payload,
+        source: 'huggingface'
+      };
+    }
+
+    throw new Error('Unable to extract text from Hugging Face response');
+  } catch (error) {
+    console.warn('Falling back to local chat model:', error);
+    return {
+      error,
+      fallback: true
+    };
+  }
+}
+
 function getModel(modelName) {
   if (!globalScope) {
     return undefined;
@@ -38,9 +192,28 @@ async function getAIResponse(userMessage, model = 'chat') {
       return "Creative model is currently unavailable.";
     case 'chat':
     default:
-      if (chatModel && typeof chatModel.getChatResponse === 'function') {
-        return chatModel.getChatResponse(safeMessage);
+      const apiResponse = await requestHuggingFaceCompletion(safeMessage, normalizedModel);
+      if (apiResponse && !apiResponse.fallback && apiResponse.response) {
+        return apiResponse;
       }
+
+      if (chatModel && typeof chatModel.getChatResponse === 'function') {
+        const fallbackResponse = chatModel.getChatResponse(safeMessage);
+        if (apiResponse && apiResponse.error) {
+          return {
+            response: fallbackResponse,
+            source: 'local-fallback',
+            error: apiResponse.error,
+            message: DEFAULT_CHAT_FALLBACK
+          };
+        }
+        return fallbackResponse;
+      }
+
+      if (apiResponse && apiResponse.error) {
+        return DEFAULT_CHAT_FALLBACK;
+      }
+
       return "Chat model is currently unavailable.";
   }
 }
