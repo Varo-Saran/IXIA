@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "node tests/mathModel.test.js"
+    "test": "node tests/mathModel.test.js && node tests/chatModel.test.js && node tests/Ixia.test.js"
   }
 }
