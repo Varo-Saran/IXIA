@@ -904,7 +904,7 @@ body::after {
   position: relative;
 }
 
-.messages-container {
+.chat-stream {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -914,21 +914,21 @@ body::after {
   scroll-behavior: smooth;
 }
 
-.messages-container::-webkit-scrollbar {
+.chat-stream::-webkit-scrollbar {
   width: 8px;
 }
 
-.messages-container::-webkit-scrollbar-track {
+.chat-stream::-webkit-scrollbar-track {
   background: var(--scrollbar-track);
 }
 
-.messages-container::-webkit-scrollbar-thumb {
+.chat-stream::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
   border-radius: var(--radius-full);
   transition: background var(--transition-fast);
 }
 
-.messages-container::-webkit-scrollbar-thumb:hover {
+.chat-stream::-webkit-scrollbar-thumb:hover {
   background: var(--brand-primary);
 }
 
@@ -1202,7 +1202,7 @@ body::after {
   box-shadow: var(--shadow-glass-xl), var(--focus-ring);
 }
 
-#user-input {
+#input {
   flex: 1;
   min-height: 24px;
   max-height: 200px;
@@ -1219,7 +1219,7 @@ body::after {
   transition: all var(--transition-fast);
 }
 
-#user-input::placeholder {
+#input::placeholder {
   color: var(--input-placeholder);
 }
 
@@ -1255,25 +1255,25 @@ body::after {
   transform: scale(0.95);
 }
 
-#send-message-btn {
+#send {
   background: var(--button-primary-bg);
   color: var(--button-primary-text);
   box-shadow: var(--shadow-sm);
 }
 
-#send-message-btn:hover {
+#send:hover {
   background: var(--button-primary-hover);
   box-shadow: var(--shadow-md), 0 0 20px rgba(99, 102, 241, 0.3);
   transform: scale(1.05);
 }
 
-#send-message-btn:disabled {
+#send:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: scale(1);
 }
 
-#send-message-btn i {
+#send i {
   font-size: 1rem;
 }
 
@@ -1564,7 +1564,7 @@ a:focus-visible {
 }
 
 /* Empty State Styling */
-.messages-container:empty::before,
+.chat-stream:empty::before,
 #saved-chats-list:empty::before {
   content: attr(data-empty-message);
   display: block;
@@ -1579,13 +1579,13 @@ a:focus-visible {
   padding: var(--space-xl) var(--space-md);
 }
 
-.messages-container .welcome-message {
+.chat-stream .welcome-message {
   text-align: center;
   padding: var(--space-2xl);
   color: var(--text-secondary);
 }
 
-.messages-container .welcome-message h2 {
+.chat-stream .welcome-message h2 {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--text-primary);

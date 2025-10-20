@@ -62,12 +62,12 @@ html {
 }
 
 /* Messages */
-.messages-container {
+.chat-stream {
   padding: var(--space-sm);
   height: calc(100vh - 180px);
 }
 
-.messages-container::-webkit-scrollbar {
+.chat-stream::-webkit-scrollbar {
   width: 4px;
 }
 
@@ -101,7 +101,7 @@ html {
   padding: var(--space-xs);
 }
 
-#user-input {
+#input {
   font-size: 16px;
   /* Prevent iOS zoom */
   padding: var(--space-sm);
@@ -115,7 +115,7 @@ html {
   font-size: 0.875rem;
 }
 
-#send-message-btn {
+#send {
   width: 36px;
   height: 36px;
 }
@@ -312,7 +312,7 @@ html {
     padding: var(--space-sm);
   }
 
-  #user-input {
+  #input {
     padding: var(--space-sm) var(--space-md);
   }
 
@@ -395,11 +395,11 @@ html {
     margin: 0 auto;
   }
 
-  .messages-container {
+  .chat-stream {
     padding: var(--space-lg) 0;
   }
 
-  .messages-container::-webkit-scrollbar {
+  .chat-stream::-webkit-scrollbar {
     width: 8px;
   }
 
@@ -426,7 +426,7 @@ html {
     padding: var(--space-sm);
   }
 
-  #user-input {
+  #input {
     max-height: 200px;
   }
 
@@ -435,7 +435,7 @@ html {
     height: 36px;
   }
 
-  #send-message-btn {
+  #send {
     width: 36px;
     height: 36px;
   }
@@ -640,7 +640,7 @@ html {
     padding-bottom: 70px;
   }
 
-  .messages-container {
+  .chat-stream {
     height: calc(100vh - 150px);
   }
 
@@ -648,7 +648,7 @@ html {
     padding: var(--space-sm) 0;
   }
 
-  #user-input {
+  #input {
     max-height: 80px;
   }
 
@@ -697,7 +697,7 @@ html {
     padding-bottom: 60px;
   }
 
-  .messages-container {
+  .chat-stream {
     height: calc(100vh - 140px);
   }
 
@@ -711,7 +711,7 @@ html {
     padding: var(--space-xs);
   }
 
-  #user-input {
+  #input {
     min-height: 32px;
     max-height: 80px;
     padding: var(--space-xs) var(--space-sm);
@@ -722,7 +722,7 @@ html {
     height: 28px;
   }
 
-  #send-message-btn {
+  #send {
     width: 32px;
     height: 32px;
   }
@@ -782,7 +782,7 @@ html {
   }
 
   /* Improve scrolling on touch */
-  .messages-container,
+  .chat-stream,
   #saved-chats-list,
   .attachments-track {
     -webkit-overflow-scrolling: touch;
@@ -799,7 +799,7 @@ html {
     height: -webkit-fill-available;
   }
 
-  .messages-container {
+  .chat-stream {
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
@@ -871,7 +871,7 @@ html {
     break-inside: avoid;
   }
 
-  .messages-container {
+  .chat-stream {
     overflow: visible;
     height: auto;
   }

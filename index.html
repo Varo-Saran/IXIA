@@ -148,7 +148,7 @@
             <!-- Chat Container -->
             <div class="chat-container">
                 <!-- Messages -->
-                <div id="chat-window" class="messages-container" role="log" aria-live="polite" aria-atomic="false">
+                <div id="chat-stream" class="chat-stream" aria-live="polite">
                     <!-- Messages will be dynamically added here -->
                 </div>
 
@@ -160,9 +160,9 @@
                 </div>
 
                 <!-- Input Area -->
-                <div class="input-area">
+                <form id="composer" class="input-area">
                     <div class="input-container">
-                        <textarea id="user-input" placeholder="Talk to iXiA..." rows="1" aria-label="Message input"
+                        <textarea id="input" placeholder="Talk to iXiA..." rows="1" aria-label="Message input"
                             aria-describedby="input-hint"></textarea>
                         <div class="input-buttons">
                             <button id="upload-file-btn" class="icon-button" type="button" aria-label="Upload file">
@@ -170,14 +170,14 @@
                             </button>
                             <input type="file" id="file-input" multiple accept="image/*,.txt,.pdf,.doc,.docx"
                                 aria-label="File upload input" style="display: none;">
-                            <button id="send-message-btn" class="icon-button" type="button" aria-label="Send message"
+                            <button id="send" class="icon-button" type="submit" aria-label="Send message"
                                 disabled>
                                 <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
                     <span id="input-hint" class="sr-only">Type your message and press Enter to send</span>
-                </div>
+                </form>
             </div>
         </main>
 
