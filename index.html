@@ -1,168 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ixia AI Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="description" content="iXiA AI - Your Premium AI Assistant">
+    <title>iXiA AI Chat</title>
+
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="responsive.css">
+
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
+
 <body>
     <div class="app-container">
-        <button id="toggle-sidebar-btn" class="toggle-sidebar-btn" aria-label="Toggle sidebar">
+        <!-- Sidebar Toggle Button -->
+        <button id="toggle-sidebar-btn" class="toggle-sidebar-btn" aria-label="Toggle sidebar" aria-expanded="false">
             <span class="toggle-sidebar-icon" aria-hidden="true"></span>
         </button>
-      
+
+        <!-- Logo -->
         <div class="top-left-logo">
             <div class="logo-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+                <svg width="783" height="411" viewBox="0 0 783 411" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M782.312 191.391C547.259 379.433 329.067 468.563 74.8184 369.466L75.1553 368.524C245.999 424.473 411.076 388.971 539.243 334.977C667.408 280.983 758.615 208.519 781.693 190.605L782.312 191.391ZM138.907 175.709L166.407 214.209L166.608 214.491L166.415 214.779L134.415 262.279L134.408 262.289L106.408 301.789L106.4 301.799L106.394 301.809C95.3806 315.825 84.5613 327.165 68.6816 333.341C52.8045 339.515 31.9443 340.499 0.897461 333.989L1.0332 333.001C5.89549 333.325 13.0458 331.25 20.8945 327.181C28.7244 323.121 37.1831 317.11 44.6465 309.646C52.1189 302.174 59.7256 292.448 65.4707 284.58C68.3417 280.648 70.7447 277.184 72.4297 274.703C73.2721 273.463 73.9356 272.469 74.3877 271.785C74.6136 271.443 74.7866 271.179 74.9033 271L75.0693 270.746C75.073 270.74 75.0753 270.735 75.0771 270.732C75.078 270.731 75.0787 270.73 75.0791 270.729L75.0801 270.729L75.083 270.724L138.083 175.724L138.484 175.118L138.907 175.709ZM76.9854 45C91.0877 44.5971 101.691 48.2513 110.028 53.8477C118.356 59.4371 124.398 66.9475 129.411 74.2158C139.418 88.7259 245.9 239.197 274.876 272.17C289.353 288.644 300.676 297.84 312.404 303.487C324.139 309.137 336.317 311.255 352.568 313.505L352.582 314.493H352.581L352.579 314.494C352.577 314.494 352.575 314.495 352.572 314.495C352.566 314.496 352.556 314.497 352.544 314.499C352.519 314.503 352.483 314.51 352.435 314.518C352.337 314.533 352.193 314.556 352.004 314.586C351.626 314.646 351.068 314.732 350.35 314.839C348.912 315.052 346.828 315.348 344.242 315.676C339.071 316.332 331.888 317.12 323.845 317.646C307.778 318.694 288.199 318.702 274.354 314.479C246.753 306.058 228.662 290.884 219.097 277.795L219.092 277.789L219.088 277.783L219.5 277.5L219.086 277.781C219.085 277.78 219.084 277.777 219.082 277.774C219.078 277.769 219.073 277.761 219.065 277.75C219.051 277.728 219.028 277.696 218.999 277.653C218.94 277.568 218.852 277.439 218.736 277.271C218.504 276.932 218.16 276.43 217.71 275.775C216.811 274.465 215.491 272.543 213.808 270.092C210.441 265.19 205.623 258.174 199.814 249.721C188.197 232.815 172.619 210.158 156.775 187.158C125.08 141.147 92.3435 93.7915 88.1045 88.3057C83.8493 82.799 80.875 79.0841 77.9121 76.3682C74.9675 73.669 72.0277 71.9518 67.834 70.4717L67.1201 70.2197L67.6318 69.6621C73.0479 63.7536 76.5 56.3738 76.5 45.5V45.0137L76.9854 45ZM279.126 105.129C283.463 104.732 288.659 105.273 293.662 106.982C303.68 110.407 313 118.56 313 133.33V260.76L312.575 260.824C306.994 261.67 298.168 261.29 289.766 257.409C281.344 253.52 273.364 246.119 269.521 232.971L269.5 232.901V109.163L269.6 109.03C270.424 107.931 271.742 107.057 273.363 106.41C274.99 105.761 276.957 105.328 279.126 105.129ZM417 82.5C433.524 82.5 442.814 93.6155 445.7 99.7275L445.96 100.303L445.963 100.311L511.463 260.311L511.745 261H487.978L487.955 260.998C482.397 260.493 476.605 258.901 471.737 256.265C466.873 253.63 462.891 249.928 461.034 245.183V245.182L453.172 227H393.756L394.037 226.311L408.537 190.811L408.664 190.5H437.781L416.986 134.401L373.466 245.183L373.454 245.213L373.438 245.24C370.518 250.567 359.783 261 340 261H320.76L321.036 260.313L385.536 100.313L385.549 100.281L385.565 100.252C388.954 94.322 399.961 82.5 417 82.5ZM31.1992 81.2217C35.5814 80.7771 40.8389 81.2532 45.9043 82.8994C56.0471 86.1958 65.5 94.2236 65.5 109V109.002L65 260.002L64.999 260.43L64.5752 260.494C58.994 261.34 50.1676 260.959 41.7656 257.079C33.344 253.19 25.3639 245.789 21.5205 232.641L21.5 232.571V85.333L21.5996 85.2002C22.4238 84.1012 23.7489 83.2196 25.3828 82.5596C27.0222 81.8973 29.008 81.444 31.1992 81.2217ZM595.459 148.303L628.959 226.303L629.259 227H610.17L610.04 226.697L604.17 213H574.762L575.036 212.314L581.036 197.314L581.161 197H597.247L586.001 170.292L562.461 226.692L562.333 227H543.245L543.539 226.306L576.539 148.306L576.669 148H595.329L595.459 148.303ZM653 169.991L654 226.491L654.009 227H636V169.5H652.991L653 169.991ZM653 164.5H636V148H653V164.5ZM339.627 1.4834C307.252 9.95078 285.854 26.3735 268.919 52.2734L202.424 158.266L202.02 158.909L201.589 158.284L174.32 118.784L174.132 118.511L174.311 118.23L229.069 32.7441C235.342 22.2057 242.146 14.1291 251.308 8.69531C260.47 3.26093 271.941 0.499999 287.5 0.5H339.5L339.627 1.4834ZM289.5 57.3301C300.546 57.3301 309.5 66.2844 309.5 77.3301C309.5 88.3758 300.546 97.3301 289.5 97.3301C278.454 97.3301 269.5 88.3758 269.5 77.3301C269.5 66.2844 278.454 57.3301 289.5 57.3301ZM43 25C55.7025 25 66 35.2975 66 48C66 60.7025 55.7025 71 43 71C30.2975 71 20 60.7025 20 48C20 35.2975 30.2975 25 43 25Z"
+                        fill="url(#paint0_linear_2_17)" />
                     <defs>
-                        <style>
-                            @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
-                        </style>
-                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00bfff;stop-opacity:1" />
+                        <linearGradient id="paint0_linear_2_17" x1="-25.83" y1="101.55" x2="755.607" y2="278.289"
+                            gradientUnits="userSpaceOnUse">
+                            <stop offset="0.216346" stop-color="#AB54C0" />
+                            <stop offset="0.769231" stop-color="#426CB9" />
                         </linearGradient>
                     </defs>
-                    <text x="10" y="45" font-family="Exo 2, sans-serif" font-size="40" font-weight="bold" fill="url(#gradient4)">
-                        iXiA Ai
-                    </text>
                 </svg>
             </div>
         </div>
-      
-        <div id="sidebar" class="sidebar">
-            <h2>Saved Chats</h2>
-            <ul id="saved-chats-list"></ul>
-            <div class="sidebar-actions">
-                <button id="new-chat-button">New Chat</button>
-                <button id="clear-saved-chats-button">Clear Saved Chats</button>
-            </div>
-        </div>
 
-        <div class="main-content">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar" role="navigation" aria-label="Chat history">
+            <h2>Saved Chats</h2>
+            <ul id="saved-chats-list" role="list"></ul>
+            <div class="sidebar-actions">
+                <button id="new-chat-button" type="button">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    <span>New Chat</span>
+                </button>
+                <button id="clear-saved-chats-button" type="button">
+                    <i class="fa-solid fa-trash-alt" aria-hidden="true"></i>
+                    <span>Clear History</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Right Controls -->
             <div class="top-right-buttons">
+                <!-- Model Selector -->
                 <div class="model-selector" data-active-model="chat">
-                    <button id="model-selector-toggle" class="model-selector__toggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="model-selector-list">
+                    <button id="model-selector-toggle" class="model-selector__toggle" type="button"
+                        aria-haspopup="listbox" aria-expanded="false" aria-controls="model-selector-list">
                         <span class="model-selector__label">Response Spark</span>
                         <i class="fa-solid fa-chevron-down model-selector__icon" aria-hidden="true"></i>
                     </button>
                     <div class="model-selector__list-wrapper">
-                        <div id="model-selector-list" class="model-selector__list" role="listbox" aria-label="Choose response style" aria-hidden="true">
-                            <button type="button" role="option" class="model-selector__option is-selected" data-model="chat" aria-selected="true">
+                        <div id="model-selector-list" class="model-selector__list" role="listbox"
+                            aria-label="Choose response style" aria-hidden="true">
+                            <button type="button" role="option" class="model-selector__option is-selected"
+                                data-model="chat" aria-selected="true">
                                 <span>Response Spark</span>
                                 <small>Conversational assistant</small>
                             </button>
-                            <button type="button" role="option" class="model-selector__option" data-model="math" aria-selected="false">
+                            <button type="button" role="option" class="model-selector__option" data-model="math"
+                                aria-selected="false">
                                 <span>Math Spark</span>
                                 <small>Focused calculations</small>
                             </button>
-                            <button type="button" role="option" class="model-selector__option" data-model="spark1" aria-selected="false" title="Coming Soon">
+                            <button type="button" role="option" class="model-selector__option" data-model="spark1"
+                                aria-selected="false" disabled title="Coming Soon">
                                 <span>Spark 1</span>
                                 <small>API-powered experience (coming soon)</small>
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Profile Menu -->
                 <div class="profile-menu">
-                    <button id="profile-button" class="icon-button profile-icon" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open profile menu">
-                        <img id="profile-picture" src="assets/images/default-profile-icon-light.png" alt="Open profile menu">
+                    <button id="profile-button" class="icon-button profile-icon" type="button" aria-haspopup="true"
+                        aria-expanded="false" aria-label="Open profile menu">
+                        <img id="profile-picture" src="assets/images/default-profile-icon-light.png"
+                            alt="Profile picture" loading="lazy">
                     </button>
-                    <div id="profile-dropdown" class="profile-dropdown">
-                        <a href="account.html" id="my-account"><i class="fa-solid fa-user"></i> My Account</a>
-                        <a href="#" id="chat-history"><i class="fa-solid fa-history"></i> Chat History</a>
-                        <a href="#" id="settings"><i class="fa-solid fa-cog"></i> Settings</a>
-                        <a href="#" id="help"><i class="fa-solid fa-question-circle"></i> Help & FAQ</a>
-                        <a href="#" id="about-ixia"><i class="fa-solid fa-info-circle"></i> About Ixia AI</a>
-                        <a href="#" id="logout"><i class="fa-solid fa-sign-out-alt"></i> Log out</a>
-                    </div>
+                    <nav id="profile-dropdown" class="profile-dropdown" aria-label="Profile menu">
+                        <a href="account.html" id="my-account">
+                            <i class="fa-solid fa-user" aria-hidden="true"></i>
+                            <span>My Account</span>
+                        </a>
+                        <a href="#" id="chat-history">
+                            <i class="fa-solid fa-history" aria-hidden="true"></i>
+                            <span>Chat History</span>
+                        </a>
+                        <a href="#" id="settings">
+                            <i class="fa-solid fa-cog" aria-hidden="true"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a href="#" id="help">
+                            <i class="fa-solid fa-question-circle" aria-hidden="true"></i>
+                            <span>Help & FAQ</span>
+                        </a>
+                        <a href="#" id="about-ixia">
+                            <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+                            <span>About iXiA AI</span>
+                        </a>
+                        <a href="#" id="logout">
+                            <i class="fa-solid fa-sign-out-alt" aria-hidden="true"></i>
+                            <span>Log out</span>
+                        </a>
+                    </nav>
                 </div>
-                <button class="icon-button" id="theme-toggle">
-                    <i class="fa-solid fa-moon"></i>
+
+                <!-- Theme Toggle -->
+                <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <button class="icon-button" id="clear-chat-button">
-                    <i class="fa-solid fa-trash"></i>
+
+                <!-- Clear Chat -->
+                <button class="icon-button" id="clear-chat-button" type="button" aria-label="Clear current chat">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
                 </button>
-                <button class="icon-button" id="export-chat-button">
-                    <i class="fa-solid fa-download"></i>
+
+                <!-- Export Chat -->
+                <button class="icon-button" id="export-chat-button" type="button" aria-label="Export chat">
+                    <i class="fa-solid fa-download" aria-hidden="true"></i>
                 </button>
             </div>
 
+            <!-- Chat Container -->
             <div class="chat-container">
-                <div id="chat-window" class="messages-container">
+                <!-- Messages -->
+                <div id="chat-window" class="messages-container" role="log" aria-live="polite" aria-atomic="false">
                     <!-- Messages will be dynamically added here -->
                 </div>
-                
-                <!-- Attachments preview area -->
-                <div class="attachments-preview">
-                    <div class="attachments-track"><!-- Attachment previews will be added here --></div>
+
+                <!-- Attachments Preview -->
+                <div class="attachments-preview" role="region" aria-label="Attached files">
+                    <div class="attachments-track">
+                        <!-- Attachment previews will be added here -->
+                    </div>
                 </div>
 
+                <!-- Input Area -->
                 <div class="input-area">
                     <div class="input-container">
-                        <textarea id="user-input" placeholder="Talk to iXiA..." rows="1"></textarea>
+                        <textarea id="user-input" placeholder="Talk to iXiA..." rows="1" aria-label="Message input"
+                            aria-describedby="input-hint"></textarea>
                         <div class="input-buttons">
-                            <button id="upload-file-btn" class="icon-button" title="Upload file">
-                                <i class="fa-solid fa-paperclip"></i>
+                            <button id="upload-file-btn" class="icon-button" type="button" aria-label="Upload file">
+                                <i class="fa-solid fa-paperclip" aria-hidden="true"></i>
                             </button>
-                            <input type="file" id="file-input" multiple 
-                                   accept="image/*,.txt,.pdf,.doc,.docx" 
-                                   style="display: none;">
-                            <button id="send-message-btn" class="icon-button" title="Send message" aria-label="Send message" disabled>
-                                <span class="sr-only">Send message</span>
+                            <input type="file" id="file-input" multiple accept="image/*,.txt,.pdf,.doc,.docx"
+                                aria-label="File upload input" style="display: none;">
+                            <button id="send-message-btn" class="icon-button" type="button" aria-label="Send message"
+                                disabled>
+                                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
+                    <span id="input-hint" class="sr-only">Type your message and press Enter to send</span>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- Message template for editing (hidden by default) -->
-        <div class="edit-message-template" style="display: none;">
-            <div class="edit-container">
-                <textarea class="edit-textarea"></textarea>
-                <div class="edit-buttons">
-                    <button class="save-edit-btn" title="Save changes">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
-                    <button class="cancel-edit-btn" title="Cancel editing">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </div>
-            </div>
+        <!-- Typing Indicator -->
+        <div id="typing-indicator" class="typing-indicator" role="status" aria-live="polite" aria-label="AI is typing">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
 
         <!-- Modal -->
-        <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle modal-message">
+        <div id="custom-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true"
+            aria-labelledby="modal-title" aria-describedby="modal-message">
             <div class="modal-overlay" data-close-modal aria-hidden="true"></div>
-            <div class="modal-content" role="document" data-modal-tone="warning">
+            <div class="modal-content" role="document">
                 <button type="button" class="modal-close" id="modal-close" data-close-modal aria-label="Close dialog">
-                    <span aria-hidden="true">&times;</span>
+                    <i class="fa-solid fa-times" aria-hidden="true"></i>
                 </button>
                 <div class="modal-header">
                     <span class="modal-eyebrow">Action Required</span>
                     <div class="modal-header-text">
                         <h2 id="modal-title"></h2>
-                        <p id="modal-subtitle" class="modal-subtitle">Confirm this action to continue the conversation.</p>
+                        <p id="modal-subtitle" class="modal-subtitle"></p>
                     </div>
                 </div>
                 <div class="modal-body">
                     <div id="modal-message"></div>
                 </div>
                 <footer class="modal-footer modal-buttons">
-                    <button id="modal-cancel" class="btn btn-secondary" type="button" data-close-modal>Cancel</button>
-                    <button id="modal-confirm" class="btn btn-primary" type="button">Confirm</button>
+                    <button id="modal-cancel" class="btn btn-secondary" type="button" data-close-modal>
+                        Cancel
+                    </button>
+                    <button id="modal-confirm" class="btn btn-primary" type="button">
+                        Confirm
+                    </button>
                 </footer>
             </div>
-        </div>
-
-        <!-- Typing indicator -->
-        <div id="typing-indicator" class="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
         </div>
     </div>
 
@@ -170,13 +222,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <script src="https://unpkg.com/compromise"></script>
     <script src="https://unpkg.com/sentiment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js" crossorigin="anonymous"></script>
+
+    <!-- App Scripts -->
     <script src="modal.js"></script>
     <script src="models/mathModel.js"></script>
     <script src="models/chatModel.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js" crossorigin="anonymous"></script>
     <script src="config/apiConfig.js"></script>
     <script src="Ixia.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
