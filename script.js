@@ -751,7 +751,7 @@ function persistMessage(message, isUser = false) {
 function createMessageToolButton({ label, icon, onClick, className = '' }) {
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = `msg-tool ${className}`.trim();
+  button.className = ['msg-tool', 'icon', className].filter(Boolean).join(' ');
   button.setAttribute('aria-label', label);
   button.title = label;
   button.innerHTML = `<i class="fa-solid ${icon}"></i>`;
