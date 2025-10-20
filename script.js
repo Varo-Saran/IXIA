@@ -10,9 +10,10 @@ let isModelSelectorOpen = false;
 let modelOptionFocusIndex = -1;
 
 // DOM Elements
-const chatWindow = document.getElementById('chat-window');
-const userInput = document.getElementById('user-input');
-const sendMessageBtn = document.getElementById('send-message-btn');
+const chatWindow = document.getElementById('chat-stream');
+const userInput = document.getElementById('input');
+const sendMessageBtn = document.getElementById('send');
+const composerForm = document.getElementById('composer');
 const uploadFileBtn = document.getElementById('upload-file-btn');
 const fileInput = document.getElementById('file-input');
 const typingIndicator = document.getElementById('typing-indicator');
@@ -1138,7 +1139,7 @@ function clearUserInput() {
 }
 
 function scrollToBottom(force = false) {
-  const chatContainer = document.querySelector('.messages-container');
+  const chatContainer = document.querySelector('.chat-stream');
   const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
   
   if (force || isScrolledToBottom) {
@@ -1711,14 +1712,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });  
 
 // Message input handlers
-sendMessageBtn.addEventListener('click', handleUserInput);
+if (composerForm) {
+  composerForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    handleUserInput();
+  });
+} else if (sendMessageBtn) {
+  sendMessageBtn.addEventListener('click', handleUserInput);
+}
 
-userInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey && !isWaitingForResponse) {
-      e.preventDefault();
-      handleUserInput();
-  }
-});
+if (userInput) {
+  userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !isWaitingForResponse) {
+        e.preventDefault();
+        handleUserInput();
+    }
+  });
+}
 
 // File handling
 uploadFileBtn.addEventListener('click', () => {
