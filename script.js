@@ -709,94 +709,239 @@ class ChatHistoryManager {
 }
 
 // Message handling functions
-function addMessage(message, isUser = false) {
-  try {
-    let newMessage;
-    if (typeof message === 'string') {
-      newMessage = chatManager.addMessage(message, isUser);
-    } else if (message.id) {
-      // If it's an existing message with an ID, use it directly
-      newMessage = message;
-    } else {
-      // If it's a new message object without an ID
-      newMessage = chatManager.addMessage({
-        text: message.text,
-        attachments: message.attachments || []
-      }, isUser);
-    }
-    
-    const messageElement = createMessageElement({
-      ...newMessage,
-      isUser: isUser || newMessage.isUser // Ensure isUser is properly set
-    });
-    chatWindow.appendChild(messageElement);
+function persistMessage(message, isUser = false) {
+  if (!chatManager) return null;
 
-    if (!isUser) {
-      hideTypingIndicator();
-    }
-
-    scrollToBottom(!isUser);
-    lastMessageId = newMessage.id;
-  } catch (error) {
-    console.error('Error adding message:', error);
-    showModal(
-      "Error",
-      "Failed to add message. Please try again."
-    );
+  if (typeof message === 'string') {
+    return chatManager.addMessage(message, isUser);
   }
+
+  if (message && typeof message === 'object') {
+    const isUserMessage = typeof message.isUser === 'boolean'
+      ? message.isUser
+      : Boolean(isUser);
+
+    if (message.id) {
+      return {
+        ...message,
+        isUser: isUserMessage,
+        attachments: Array.isArray(message.attachments)
+          ? message.attachments
+          : []
+      };
+    }
+
+    const storedMessage = chatManager.addMessage({
+      text: message.text ?? '',
+      attachments: Array.isArray(message.attachments)
+        ? message.attachments
+        : []
+    }, isUserMessage);
+
+    if (message.edited) {
+      storedMessage.edited = message.edited;
+    }
+
+    return storedMessage;
+  }
+
+  return null;
 }
 
-function createMessageElement(message) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message', message.isUser ? 'user-message' : 'ai-message');
-  messageElement.dataset.messageId = message.id;
+function createMessageToolButton({ label, icon, onClick, className = '' }) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = `msg-tool ${className}`.trim();
+  button.setAttribute('aria-label', label);
+  button.title = label;
+  button.innerHTML = `<i class="fa-solid ${icon}"></i>`;
 
-  const messageContent = document.createElement('div');
-  messageContent.classList.add('message-content');
-  
-  // Add attachments if present
-  if (message.attachments && message.attachments.length > 0) {
+  if (typeof onClick === 'function') {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      onClick();
+    });
+  }
+
+  return button;
+}
+
+function renderMessage(message) {
+  if (!message) return null;
+
+  const isUserMessage = Boolean(message.isUser);
+  const normalizedText = typeof message.text === 'string' ? message.text : '';
+  const attachments = Array.isArray(message.attachments) ? message.attachments : [];
+
+  const article = document.createElement('article');
+  article.classList.add('msg', 'message', isUserMessage ? 'user' : 'assistant');
+  if (isUserMessage) {
+    article.classList.add('user-message');
+  } else {
+    article.classList.add('ai-message');
+  }
+  if (message.id) {
+    article.dataset.id = message.id;
+    article.dataset.messageId = message.id;
+  }
+  article.setAttribute('data-role', isUserMessage ? 'user' : 'assistant');
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.setAttribute('aria-hidden', 'true');
+  avatar.innerHTML = `<i class="fa-solid ${isUserMessage ? 'fa-user' : 'fa-robot'}"></i>`;
+
+  const bubble = document.createElement('div');
+  bubble.classList.add('bubble', 'message-content');
+
+  const content = document.createElement('div');
+  content.className = 'content';
+
+  if (attachments.length > 0) {
     const attachmentsContainer = document.createElement('div');
     attachmentsContainer.classList.add('message-attachments');
-    
-    message.attachments.forEach(attachment => {
+
+    attachments.forEach((attachment) => {
       const attachmentElement = document.createElement('div');
       attachmentElement.classList.add('message-attachment');
+      const attachmentName = attachment?.name || 'Attachment';
       attachmentElement.innerHTML = `
         <i class="fa-solid ${getFileTypeIcon(attachment.type)}"></i>
-        <span>${attachment.name}</span>
+        <span>${attachmentName}</span>
       `;
       attachmentsContainer.appendChild(attachmentElement);
     });
-    
-    messageContent.appendChild(attachmentsContainer);
+
+    content.appendChild(attachmentsContainer);
   }
 
-  // Add text content
   const textElement = document.createElement('div');
   textElement.classList.add('message-text');
-  textElement.innerHTML = renderMessageText(message.text);
-  messageContent.appendChild(textElement);
+  textElement.innerHTML = renderMessageText(normalizedText);
+  content.appendChild(textElement);
 
-  // Add edit button for user messages
-  if (message.isUser) {
-    const editButton = document.createElement('button');
-    editButton.classList.add('edit-message-btn');
-    editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-    editButton.onclick = () => startEditingMessage(message.id);
-    messageContent.appendChild(editButton);
+  if (message.edited) {
+    const editedIndicator = document.createElement('span');
+    editedIndicator.classList.add('edited-indicator');
+    editedIndicator.textContent = '(edited)';
+    content.appendChild(editedIndicator);
+  }
 
-    // Add edited indicator if message was edited
-    if (message.edited) {
-      const editedIndicator = document.createElement('span');
-      editedIndicator.classList.add('edited-indicator');
-      editedIndicator.textContent = '(edited)';
-      messageContent.appendChild(editedIndicator);
+  bubble.appendChild(content);
+
+  if (isUserMessage) {
+    const hoverTools = document.createElement('div');
+    hoverTools.classList.add('hover-tools', 'message-actions');
+    hoverTools.appendChild(createMessageToolButton({
+      label: 'Edit message',
+      icon: 'fa-pen-to-square',
+      className: 'msg-tool-edit',
+      onClick: () => startEditingMessage(message.id)
+    }));
+    hoverTools.appendChild(createMessageToolButton({
+      label: 'Copy message',
+      icon: 'fa-copy',
+      className: 'msg-tool-copy',
+      onClick: () => copyMessageToClipboard(message.id)
+    }));
+    bubble.appendChild(hoverTools);
+  } else {
+    const footerTools = document.createElement('div');
+    footerTools.classList.add('footer-tools', 'message-actions');
+    footerTools.appendChild(createMessageToolButton({
+      label: 'Copy message',
+      icon: 'fa-copy',
+      className: 'msg-tool-copy',
+      onClick: () => copyMessageToClipboard(message.id)
+    }));
+    footerTools.appendChild(createMessageToolButton({
+      label: 'Mark helpful',
+      icon: 'fa-thumbs-up',
+      className: 'msg-tool-like',
+      onClick: () => handleAssistantFeedback(message.id, 'positive')
+    }));
+    footerTools.appendChild(createMessageToolButton({
+      label: 'Mark not helpful',
+      icon: 'fa-thumbs-down',
+      className: 'msg-tool-dislike',
+      onClick: () => handleAssistantFeedback(message.id, 'negative')
+    }));
+    bubble.appendChild(footerTools);
+  }
+
+  article.appendChild(avatar);
+  article.appendChild(bubble);
+  return article;
+}
+
+function appendStream(containerEl, messageEl) {
+  if (!messageEl) return null;
+
+  const container = containerEl || chatWindow;
+  if (!container) return messageEl;
+
+  const scrollContainer = container.classList.contains('chat-stream')
+    ? container
+    : container.closest('.chat-stream') || container;
+
+  const distanceFromBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
+  const shouldAutoScroll = distanceFromBottom <= 120;
+
+  let replaced = false;
+  const messageId = messageEl.dataset.id;
+  if (messageId) {
+    const existing = container.querySelector(`article.msg[data-id="${messageId}"]`);
+    if (existing && existing !== messageEl) {
+      existing.replaceWith(messageEl);
+      replaced = true;
     }
   }
 
-  messageElement.appendChild(messageContent);
-  return messageElement;
+  if (!replaced) {
+    container.appendChild(messageEl);
+  }
+
+  if (shouldAutoScroll) {
+    scrollContainer.scrollTop = scrollContainer.scrollHeight;
+  }
+
+  return messageEl;
+}
+
+async function copyMessageToClipboard(messageId) {
+  const messageElement = document.querySelector(`article.msg[data-id="${messageId}"] .message-text`);
+  if (!messageElement) return;
+
+  const textContent = messageElement.textContent.trim();
+  if (!textContent) return;
+
+  try {
+    const canUseClipboard = typeof navigator !== 'undefined'
+      && navigator.clipboard
+      && typeof navigator.clipboard.writeText === 'function';
+
+    if (canUseClipboard) {
+      await navigator.clipboard.writeText(textContent);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = textContent;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+  } catch (error) {
+    console.error('Failed to copy message:', error);
+    showModal('Copy Failed', 'Unable to copy the message text. Please try again.');
+  }
+}
+
+function handleAssistantFeedback(messageId, feedback) {
+  console.info('Assistant feedback captured:', { messageId, feedback });
 }
 
 async function handleUserInput() {
@@ -822,8 +967,12 @@ async function handleUserInput() {
     attachments: [...attachments]
   };
 
-  // Add user message
-  addMessage(messageObj, true);
+  const storedUserMessage = persistMessage(messageObj, true);
+  if (storedUserMessage) {
+    const messageElement = renderMessage(storedUserMessage);
+    appendStream(chatWindow, messageElement);
+    lastMessageId = storedUserMessage.id;
+  }
   
   // Clear input and attachments
   clearUserInput();
@@ -837,15 +986,30 @@ async function handleUserInput() {
     const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
     const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
 
-    addMessage(finalText, false);
+    const storedResponse = persistMessage(finalText, false);
+    if (storedResponse) {
+      const responseElement = renderMessage(storedResponse);
+      appendStream(chatWindow, responseElement);
+      lastMessageId = storedResponse.id;
+    }
 
     if (notice && notice !== finalText) {
-      addMessage(notice, false);
+      const noticeMessage = persistMessage(notice, false);
+      if (noticeMessage) {
+        const noticeElement = renderMessage(noticeMessage);
+        appendStream(chatWindow, noticeElement);
+        lastMessageId = noticeMessage.id;
+      }
     }
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
-    addMessage("I'm sorry, I encountered an error. Please try again.", false);
+    const errorMessage = persistMessage("I'm sorry, I encountered an error. Please try again.", false);
+    if (errorMessage) {
+      const errorElement = renderMessage(errorMessage);
+      appendStream(chatWindow, errorElement);
+      lastMessageId = errorMessage.id;
+    }
   } finally {
     hideTypingIndicator();
     isWaitingForResponse = false;
@@ -858,7 +1022,7 @@ async function handleUserInput() {
 function startEditingMessage(messageId) {
   // If already editing a different message, cancel the previous edit
   if (editingMessageId && editingMessageId !== messageId) {
-    const previousMessageElement = document.querySelector(`[data-message-id="${editingMessageId}"]`);
+    const previousMessageElement = document.querySelector(`article.msg[data-id="${editingMessageId}"]`);
     if (previousMessageElement) {
       const previousChat = chatManager.chats[chatManager.currentChatId];
       const previousMessage = previousChat?.messages.find(m => m.id === editingMessageId);
@@ -866,7 +1030,7 @@ function startEditingMessage(messageId) {
     }
   }
 
-  const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+  const messageElement = document.querySelector(`article.msg[data-id="${messageId}"]`);
   if (!messageElement || editingMessageId === messageId) return;
 
   editingMessageId = messageId;
@@ -907,39 +1071,27 @@ function startEditingMessage(messageId) {
 function saveMessageEdit(messageId, newText) {
   if (!newText) return;
 
-  const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+  const messageElement = document.querySelector(`article.msg[data-id="${messageId}"]`);
   if (!messageElement) return;
 
   if (chatManager.editMessage(messageId, newText)) {
-    const editContainer = messageElement.querySelector('.edit-container');
-    const textElement = document.createElement('div');
-    textElement.classList.add('message-text');
-    textElement.innerHTML = renderMessageText(newText);
-    editContainer.replaceWith(textElement);
-
-    if (!messageElement.querySelector('.edited-indicator')) {
-      const editedIndicator = document.createElement('span');
-      editedIndicator.classList.add('edited-indicator');
-      editedIndicator.textContent = '(edited)';
-      messageElement.querySelector('.message-content').appendChild(editedIndicator);
-    }
-
-    // Remove all messages after the edited message
     const chat = chatManager.getCurrentChat();
-    const messageIndex = chat.messages.findIndex(m => m.id === messageId);
-    if (messageIndex !== -1) {
-      // Remove messages from storage
-      chat.messages = chat.messages.slice(0, messageIndex + 1);
-      chatManager.saveChats();
+    const messageIndex = chat?.messages.findIndex(m => m.id === messageId);
 
-      // Remove messages from UI
-      const allMessages = Array.from(chatWindow.children);
-      const currentMessageIndex = allMessages.findIndex(m => m.dataset.messageId === messageId);
+    if (messageIndex !== undefined && messageIndex !== -1) {
+      const updatedMessage = chat.messages[messageIndex];
+      const updatedElement = renderMessage(updatedMessage);
+      appendStream(chatWindow, updatedElement);
+
+      const allMessages = Array.from(chatWindow.querySelectorAll('article.msg'));
+      const currentMessageIndex = allMessages.findIndex(m => m.dataset.id === messageId);
       if (currentMessageIndex !== -1) {
         allMessages.slice(currentMessageIndex + 1).forEach(msg => msg.remove());
       }
 
-      // Get AI response for the edited message
+      chat.messages = chat.messages.slice(0, messageIndex + 1);
+      chatManager.saveChats();
+
       handleEditedMessage(newText);
     }
   }
@@ -957,15 +1109,30 @@ async function handleEditedMessage(editedText) {
     const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
     const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
 
-    addMessage(finalText, false);
+    const storedResponse = persistMessage(finalText, false);
+    if (storedResponse) {
+      const responseElement = renderMessage(storedResponse);
+      appendStream(chatWindow, responseElement);
+      lastMessageId = storedResponse.id;
+    }
 
     if (notice && notice !== finalText) {
-      addMessage(notice, false);
+      const noticeMessage = persistMessage(notice, false);
+      if (noticeMessage) {
+        const noticeElement = renderMessage(noticeMessage);
+        appendStream(chatWindow, noticeElement);
+        lastMessageId = noticeMessage.id;
+      }
     }
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
-    addMessage("I'm sorry, I encountered an error. Please try again.", false);
+    const errorMessage = persistMessage("I'm sorry, I encountered an error. Please try again.", false);
+    if (errorMessage) {
+      const errorElement = renderMessage(errorMessage);
+      appendStream(chatWindow, errorElement);
+      lastMessageId = errorMessage.id;
+    }
   } finally {
     hideTypingIndicator();
     scrollToBottom(true);
@@ -973,14 +1140,20 @@ async function handleEditedMessage(editedText) {
 }
 
 function cancelMessageEdit(messageId, originalText) {
-  const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-  if (!messageElement) return;
+  const chat = chatManager.getCurrentChat();
+  const messageData = chat?.messages.find(m => m.id === messageId);
+  if (!messageData) {
+    editingMessageId = null;
+    return;
+  }
 
-  const editContainer = messageElement.querySelector('.edit-container');
-  const textElement = document.createElement('div');
-  textElement.classList.add('message-text');
-  textElement.innerHTML = renderMessageText(originalText);
-  editContainer.replaceWith(textElement);
+  const restoredMessage = {
+    ...messageData,
+    text: originalText ?? messageData.text
+  };
+
+  const messageElement = renderMessage(restoredMessage);
+  appendStream(chatWindow, messageElement);
 
   editingMessageId = null;
 }
@@ -1428,7 +1601,12 @@ function addWelcomeMessageWithTyping() {
   // Short delay before starting to type
   setTimeout(() => {
     hideTypingIndicator();
-    addMessage("Hello, I'm Ixia. How can I assist you today?", false);
+    const welcomeMessage = persistMessage("Hello, I'm Ixia. How can I assist you today?", false);
+    if (welcomeMessage) {
+      const messageElement = renderMessage(welcomeMessage);
+      appendStream(chatWindow, messageElement);
+      lastMessageId = welcomeMessage.id;
+    }
   }, 1500); // 1.5 second delay
 }
 
@@ -1456,7 +1634,8 @@ function clearChat() {
       chatWindow.innerHTML = '';
       chatManager.chats[chatManager.currentChatId].messages = [];
       chatManager.saveChats();
-      
+      lastMessageId = null;
+
       // Add welcome message with typing animation
       addWelcomeMessageWithTyping();
     }
@@ -1492,8 +1671,13 @@ function loadChat(chatId, isInitialLoad = false) {
         edited: msg.edited,
         timestamp: msg.timestamp
       };
-      
-      addMessage(messageObj, messageObj.isUser);
+
+      const messageElement = renderMessage({
+        ...messageObj,
+        isUser: Boolean(messageObj.isUser)
+      });
+      appendStream(chatWindow, messageElement);
+      lastMessageId = messageObj.id;
     });
   } else {
     // Add welcome message with typing animation for empty chats
@@ -1789,7 +1973,7 @@ window.addEventListener('resize', () => {
 // Message editing
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && editingMessageId) {
-      const messageElement = document.querySelector(`[data-message-id="${editingMessageId}"]`);
+      const messageElement = document.querySelector(`article.msg[data-id="${editingMessageId}"]`);
       if (messageElement) {
           const originalText = chatManager.chats[chatManager.currentChatId]
               .messages.find(m => m.id === editingMessageId).text;
