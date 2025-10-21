@@ -33,6 +33,7 @@ const logo = document.querySelector('.top-left-logo');
 const mainContent = document.querySelector('.main-content');
 const modelSelector = document.querySelector('.model-selector');
 const modelSelectorToggle = document.getElementById('model-selector-toggle');
+const modelSelectorListWrapper = modelSelector ? modelSelector.querySelector('.model-selector__list-wrapper') : null;
 const modelSelectorList = modelSelector ? modelSelector.querySelector('[role="listbox"]') : null;
 const modelSelectorOptions = modelSelectorList ? Array.from(modelSelectorList.querySelectorAll('[role="option"]')) : [];
 
@@ -56,12 +57,25 @@ if (window.marked) {
 function renderMessageText(rawText = '') {
   const text = typeof rawText === 'string' ? rawText : String(rawText ?? '');
 
+  // Handle empty text
+  if (!text || text.trim() === '') {
+    return '<span class="empty-message">No content</span>';
+  }
+
   if (window.marked) {
-    const parsed = window.marked.parse(text);
-    if (window.DOMPurify) {
-      return window.DOMPurify.sanitize(parsed);
+    try {
+      const parsed = window.marked.parse(text);
+      if (window.DOMPurify) {
+        return window.DOMPurify.sanitize(parsed, {
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+          ALLOWED_ATTR: ['href', 'target', 'rel']
+        });
+      }
+      return parsed;
+    } catch (error) {
+      console.error('Error parsing markdown:', error);
+      // Fall through to fallback
     }
-    return parsed;
   }
 
   const fallback = document.createElement('div');
@@ -244,12 +258,13 @@ function focusModelOptionByOffset(offset) {
 }
 
 function openModelSelector({ focusOption = true } = {}) {
-  if (!modelSelector || !modelSelectorToggle || !modelSelectorList || isModelSelectorOpen) {
+  if (!modelSelector || !modelSelectorToggle || !modelSelectorList || !modelSelectorListWrapper || isModelSelectorOpen) {
     return;
   }
 
   isModelSelectorOpen = true;
   modelSelector.classList.add('is-open');
+  modelSelectorListWrapper.classList.add('show'); // Add show class to wrapper
   modelSelectorToggle.setAttribute('aria-expanded', 'true');
   modelSelectorList.setAttribute('aria-hidden', 'false');
 
@@ -279,6 +294,9 @@ function closeModelSelector({ focusToggle = false } = {}) {
 
   isModelSelectorOpen = false;
   modelSelector.classList.remove('is-open');
+  if (modelSelectorListWrapper) {
+    modelSelectorListWrapper.classList.remove('show'); // Remove show class from wrapper
+  }
   modelSelectorToggle.setAttribute('aria-expanded', 'false');
   if (modelSelectorList) {
     modelSelectorList.setAttribute('aria-hidden', 'true');
@@ -407,7 +425,8 @@ function initializeModelSelector() {
   });
 }
 
-initializeModelSelector();
+// Don't initialize here - will be called in DOMContentLoaded
+// initializeModelSelector();
 
 function debounce(fn, wait = 150) {
   let timeoutId;
@@ -753,7 +772,8 @@ function createMessageToolButton({ label, icon, onClick, className = '' }) {
   button.type = 'button';
   button.className = `msg-tool ${className}`.trim();
   button.setAttribute('aria-label', label);
-  button.title = label;
+  button.setAttribute('data-tooltip', label);
+  button.setAttribute('data-tooltip-pos', 'bottom');
   button.innerHTML = `<i class="fa-solid ${icon}"></i>`;
 
   if (typeof onClick === 'function') {
@@ -790,7 +810,20 @@ function renderMessage(message) {
   const avatar = document.createElement('div');
   avatar.className = 'avatar';
   avatar.setAttribute('aria-hidden', 'true');
-  avatar.innerHTML = `<i class="fa-solid ${isUserMessage ? 'fa-user' : 'fa-robot'}"></i>`;
+
+  if (isUserMessage) {
+    // Use profile image if available, otherwise use user icon
+    const profileImageSrc = getProfileImageSource();
+    if (currentUser?.profilePicture || profileImageSrc) {
+      avatar.innerHTML = `<img src="${profileImageSrc}" alt="User avatar" class="avatar-image">`;
+    } else {
+      avatar.innerHTML = `<i class="fa-solid fa-user"></i>`;
+    }
+  } else {
+    // No icon for AI messages
+    avatar.innerHTML = '';
+    avatar.classList.add('ai-avatar-empty');
+  }
 
   const bubble = document.createElement('div');
   bubble.classList.add('bubble', 'message-content');
@@ -830,6 +863,15 @@ function renderMessage(message) {
 
   bubble.appendChild(content);
 
+  // Create a wrapper for avatar and bubble to keep them together
+  const messageRow = document.createElement('div');
+  messageRow.classList.add('message-row');
+  messageRow.appendChild(avatar);
+  messageRow.appendChild(bubble);
+
+  article.appendChild(messageRow);
+
+  // Add action buttons BELOW the bubble
   if (isUserMessage) {
     const hoverTools = document.createElement('div');
     hoverTools.classList.add('hover-tools', 'message-actions');
@@ -845,7 +887,7 @@ function renderMessage(message) {
       className: 'msg-tool-copy',
       onClick: () => copyMessageToClipboard(message.id)
     }));
-    bubble.appendChild(hoverTools);
+    article.appendChild(hoverTools);
   } else {
     const footerTools = document.createElement('div');
     footerTools.classList.add('footer-tools', 'message-actions');
@@ -867,11 +909,9 @@ function renderMessage(message) {
       className: 'msg-tool-dislike',
       onClick: () => handleAssistantFeedback(message.id, 'negative')
     }));
-    bubble.appendChild(footerTools);
+    article.appendChild(footerTools);
   }
 
-  article.appendChild(avatar);
-  article.appendChild(bubble);
   return article;
 }
 
@@ -945,6 +985,12 @@ function handleAssistantFeedback(messageId, feedback) {
 }
 
 async function handleUserInput() {
+  // Defensive check for required elements
+  if (!userInput) {
+    console.error('User input element not found');
+    return;
+  }
+
   const messageText = userInput.value.trim();
   if ((!messageText && !attachments.length) || isWaitingForResponse) {
     return;
@@ -982,9 +1028,22 @@ async function handleUserInput() {
   scrollToBottom(true);
 
   try {
+    // Ensure getAIResponse is available
+    if (typeof window.getAIResponse !== 'function') {
+      throw new Error('AI response function is not available');
+    }
+
     const aiResponse = await window.getAIResponse(messageText, activeModel);
+
+    // Check if aiResponse is valid
+    if (!aiResponse) {
+      throw new Error('No response received from AI');
+    }
+
     const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
-    const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
+    const finalText = responseText && responseText.trim()
+      ? responseText
+      : "I'm sorry, I encountered an error. Please try again.";
 
     const storedResponse = persistMessage(finalText, false);
     if (storedResponse) {
@@ -993,7 +1052,7 @@ async function handleUserInput() {
       lastMessageId = storedResponse.id;
     }
 
-    if (notice && notice !== finalText) {
+    if (notice && notice !== finalText && notice.trim()) {
       const noticeMessage = persistMessage(notice, false);
       if (noticeMessage) {
         const noticeElement = renderMessage(noticeMessage);
@@ -1004,7 +1063,10 @@ async function handleUserInput() {
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
-    const errorMessage = persistMessage("I'm sorry, I encountered an error. Please try again.", false);
+    const errorMessage = persistMessage(
+      "I'm sorry, I encountered an error. Please try again.",
+      false
+    );
     if (errorMessage) {
       const errorElement = renderMessage(errorMessage);
       appendStream(chatWindow, errorElement);
@@ -1105,9 +1167,22 @@ async function handleEditedMessage(editedText) {
   scrollToBottom(true);
 
   try {
+    // Ensure getAIResponse is available
+    if (typeof window.getAIResponse !== 'function') {
+      throw new Error('AI response function is not available');
+    }
+
     const aiResponse = await window.getAIResponse(editedText, activeModel);
+
+    // Check if aiResponse is valid
+    if (!aiResponse) {
+      throw new Error('No response received from AI');
+    }
+
     const { text: responseText, notice } = normalizeAIResponsePayload(aiResponse);
-    const finalText = responseText || "I'm sorry, I encountered an error. Please try again.";
+    const finalText = responseText && responseText.trim()
+      ? responseText
+      : "I'm sorry, I encountered an error. Please try again.";
 
     const storedResponse = persistMessage(finalText, false);
     if (storedResponse) {
@@ -1116,7 +1191,7 @@ async function handleEditedMessage(editedText) {
       lastMessageId = storedResponse.id;
     }
 
-    if (notice && notice !== finalText) {
+    if (notice && notice !== finalText && notice.trim()) {
       const noticeMessage = persistMessage(notice, false);
       if (noticeMessage) {
         const noticeElement = renderMessage(noticeMessage);
@@ -1127,7 +1202,10 @@ async function handleEditedMessage(editedText) {
   } catch (error) {
     console.error('Error getting AI response:', error);
     hideTypingIndicator();
-    const errorMessage = persistMessage("I'm sorry, I encountered an error. Please try again.", false);
+    const errorMessage = persistMessage(
+      "I'm sorry, I encountered an error. Please try again.",
+      false
+    );
     if (errorMessage) {
       const errorElement = renderMessage(errorMessage);
       appendStream(chatWindow, errorElement);
@@ -1279,10 +1357,15 @@ window.addEventListener('beforeunload', () => {
 });
 
 function updateSendButtonState() {
+  if (!userInput || !sendMessageBtn) {
+    console.warn('Send button or user input element not found');
+    return;
+  }
+
   const messageText = userInput.value.trim();
   const hasAttachments = attachments.length > 0;
   const isDisabled = (!messageText && !hasAttachments) || isWaitingForResponse;
-  
+
   sendMessageBtn.disabled = isDisabled;
   sendMessageBtn.style.opacity = isDisabled ? '0.5' : '1';
   sendMessageBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
@@ -1290,6 +1373,11 @@ function updateSendButtonState() {
 
 // UI utility functions
 function showTypingIndicator() {
+  if (!typingIndicator || !chatWindow) {
+    console.warn('Typing indicator or chat window not found');
+    return;
+  }
+
   if (!typingIndicator.classList.contains('visible')) {
       chatWindow.appendChild(typingIndicator);
       typingIndicator.classList.add('visible');
@@ -1298,6 +1386,10 @@ function showTypingIndicator() {
 }
 
 function hideTypingIndicator() {
+  if (!typingIndicator) {
+    return;
+  }
+
   typingIndicator.classList.remove('visible');
   if (typingIndicator.parentNode === chatWindow) {
       chatWindow.removeChild(typingIndicator);
@@ -1313,11 +1405,57 @@ function clearUserInput() {
 
 function scrollToBottom(force = false) {
   const chatContainer = document.querySelector('.chat-stream');
+  if (!chatContainer) {
+    return;
+  }
+
   const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
-  
+
   if (force || isScrolledToBottom) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
   }
+}
+
+// Auto-hide scrollbar functionality
+let scrollTimeout;
+const chatStream = document.querySelector('.chat-stream');
+if (chatStream) {
+  chatStream.addEventListener('scroll', () => {
+    chatStream.classList.add('scrolling');
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      chatStream.classList.remove('scrolling');
+    }, 1000); // Hide after 1 second of no scrolling
+  });
+}
+
+// Convert title attributes to custom tooltips
+function initializeTooltips() {
+  const elementsWithTitle = document.querySelectorAll('[title]:not([data-tooltip])');
+  elementsWithTitle.forEach(element => {
+    const title = element.getAttribute('title');
+    if (title) {
+      element.setAttribute('data-tooltip', title);
+      element.removeAttribute('title'); // Remove native tooltip
+      // All tooltips appear at bottom by default to prevent cutoff
+      element.setAttribute('data-tooltip-pos', 'bottom');
+    }
+  });
+}
+
+// Initialize tooltips on load and when DOM changes
+document.addEventListener('DOMContentLoaded', initializeTooltips);
+
+// Re-initialize tooltips when new content is added
+const tooltipObserver = new MutationObserver(() => {
+  initializeTooltips();
+});
+
+if (document.body) {
+  tooltipObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 }
 
 // Modal handling
@@ -1810,7 +1948,8 @@ function updateSavedChatsList() {
       renameButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       const renameLabel = `Rename ${chatTitle}`;
       renameButton.setAttribute('aria-label', renameLabel);
-      renameButton.setAttribute('title', renameLabel);
+      renameButton.setAttribute('data-tooltip', renameLabel);
+      renameButton.setAttribute('data-tooltip-pos', 'bottom');
       renameButton.onclick = (e) => {
           e.stopPropagation();
           renameChat(chat.id);
@@ -1820,7 +1959,8 @@ function updateSavedChatsList() {
       deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
       const deleteLabel = `Delete ${chatTitle}`;
       deleteButton.setAttribute('aria-label', deleteLabel);
-      deleteButton.setAttribute('title', deleteLabel);
+      deleteButton.setAttribute('data-tooltip', deleteLabel);
+      deleteButton.setAttribute('data-tooltip-pos', 'bottom');
       deleteButton.onclick = (e) => {
           e.stopPropagation();
           deleteChat(chat.id);
@@ -1835,6 +1975,9 @@ function updateSavedChatsList() {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize model selector first (needs DOM to be loaded)
+  initializeModelSelector();
+
   loadSavedTheme();
   if (!isUserAuthenticated()) {
     window.location.href = 'login.html';
@@ -1893,6 +2036,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth <= 767) {
     closeSidebar();
   }
+
+  // Initialize send button state
+  updateSendButtonState();
 });  
 
 // Message input handlers
@@ -1901,8 +2047,13 @@ if (composerForm) {
     event.preventDefault();
     handleUserInput();
   });
-} else if (sendMessageBtn) {
-  sendMessageBtn.addEventListener('click', handleUserInput);
+}
+
+if (sendMessageBtn) {
+  sendMessageBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    handleUserInput();
+  });
 }
 
 if (userInput) {
@@ -1915,14 +2066,19 @@ if (userInput) {
 }
 
 // File handling
-uploadFileBtn.addEventListener('click', () => {
-  fileInput.click();
-});
+if (uploadFileBtn && fileInput) {
+  uploadFileBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
 
-fileInput.addEventListener('change', (e) => {
-  handleFileUpload(e.target.files);
-  fileInput.value = '';
-});
+  fileInput.addEventListener('change', (e) => {
+    handleFileUpload(e.target.files);
+    fileInput.value = '';
+  });
+} else {
+  if (!uploadFileBtn) console.warn('Upload file button not found');
+  if (!fileInput) console.warn('File input element not found');
+}
 
 // Theme toggle
 if (themeToggle) {
@@ -1983,42 +2139,59 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Chat operation buttons
-newChatButton.addEventListener('click', createNewChat);
-clearChatButton.addEventListener('click', clearChat);
-exportChatButton.addEventListener('click', exportChat);
-clearSavedChatsButton.addEventListener('click', clearSavedChats);
+if (newChatButton) newChatButton.addEventListener('click', createNewChat);
+if (clearChatButton) clearChatButton.addEventListener('click', clearChat);
+if (exportChatButton) exportChatButton.addEventListener('click', exportChat);
+if (clearSavedChatsButton) clearSavedChatsButton.addEventListener('click', clearSavedChats);
 
 // Profile menu
-profileButton.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isExpanded = profileDropdown.classList.toggle('show');
-  profileButton.setAttribute('aria-expanded', String(isExpanded));
-});
+if (profileButton && profileDropdown) {
+  profileButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isExpanded = profileDropdown.classList.toggle('show');
+    profileButton.setAttribute('aria-expanded', String(isExpanded));
+  });
+} else {
+  if (!profileButton) console.warn('Profile button not found');
+  if (!profileDropdown) console.warn('Profile dropdown not found');
+}
 
 document.addEventListener('click', (event) => {
-  if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
-      profileDropdown.classList.remove('show');
-      profileButton.setAttribute('aria-expanded', 'false');
+  if (profileButton && profileDropdown) {
+    if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+        profileDropdown.classList.remove('show');
+        profileButton.setAttribute('aria-expanded', 'false');
+    }
   }
 });
 
 // Profile menu items
-document.getElementById('logout').addEventListener('click', (e) => {
-  e.preventDefault();
-  localStorage.removeItem('userToken');
-  window.location.href = 'login.html';
-});
+const logoutBtn = document.getElementById('logout');
+const myAccountBtn = document.getElementById('my-account');
 
-document.getElementById('my-account').addEventListener('click', (e) => {
-  e.preventDefault();
-  window.location.href = 'account.html';
-});
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('userToken');
+    window.location.href = 'login.html';
+  });
+}
+
+if (myAccountBtn) {
+  myAccountBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'account.html';
+  });
+}
 
 ['chat-history', 'settings', 'help', 'about-ixia'].forEach(id => {
-  document.getElementById(id).addEventListener('click', (e) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.addEventListener('click', (e) => {
       e.preventDefault();
       console.log(`${id} clicked`);
-  });
+    });
+  }
 });
 
 // Utility function
