@@ -411,13 +411,20 @@ body::after {
   transition: all var(--transition-fast);
   font-size: 0.875rem;
   color: var(--text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible; /* Allow buttons to overflow */
   font-weight: 500;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Space between title and actions */
   min-height: 40px;
+  gap: var(--space-sm);
+}
+
+#saved-chats-list li span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #saved-chats-list li::before {
@@ -448,36 +455,42 @@ body::after {
 }
 
 /* Saved Chat Action Buttons */
-#saved-chats-list li button,
-#saved-chats-list li .chat-actions {
-  position: relative;
-  z-index: 2;
-  padding: var(--space-xs);
-  background: var(--glass-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-tertiary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+.chat-actions {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
   opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 2;
 }
 
-#saved-chats-list li:hover button,
 #saved-chats-list li:hover .chat-actions {
   opacity: 1;
 }
 
-#saved-chats-list li button:hover,
-#saved-chats-list li .chat-actions button:hover {
-  background: var(--glass-bg);
-  color: var(--brand-primary);
-  border-color: var(--border-accent);
-  transform: scale(1.05);
+.chat-actions button {
+  padding: var(--space-xs);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#saved-chats-list li button i,
-#saved-chats-list li .chat-actions i {
-  font-size: 0.75rem;
+.chat-actions button:hover {
+  background: var(--glass-subtle);
+  color: var(--brand-primary);
+  transform: scale(1.1);
+}
+
+.chat-actions button i {
+  font-size: 0.875rem;
   pointer-events: none;
 }
 
@@ -589,6 +602,8 @@ body::after {
   position: relative;
   transition: margin-left var(--transition-base);
   padding-top: 70px;
+  min-height: 0; /* Critical for flex children to scroll */
+  overflow: hidden; /* Prevent content from overflowing */
 }
 
 .main-content.sidebar-open {
@@ -902,16 +917,28 @@ body::after {
   width: 100%;
   margin: 0 auto;
   position: relative;
+  min-height: 0; /* Critical for nested flex scrolling */
+  overflow: hidden; /* Ensure children respect boundaries */
 }
 
 .chat-stream {
-  flex: 1;
+  flex: 1 1 auto; /* Allow shrinking */
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--space-lg) 0;
+  padding: var(--space-lg) 0; /* No left/right padding */
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-color: transparent transparent; /* Hidden by default */
   scroll-behavior: smooth;
+  min-height: 0; /* Critical for flex scrolling */
+  max-height: 100%; /* Prevent overflow beyond container */
+  transition: scrollbar-color 0.3s ease;
+}
+
+/* Show scrollbar when scrolling */
+.chat-stream:hover,
+.chat-stream:focus,
+.chat-stream.scrolling {
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 .chat-stream::-webkit-scrollbar {
@@ -919,13 +946,21 @@ body::after {
 }
 
 .chat-stream::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
+  background: transparent;
+  margin-right: 8px; /* Gap from container edge */
 }
 
 .chat-stream::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
+  background: transparent;
   border-radius: var(--radius-full);
-  transition: background var(--transition-fast);
+  transition: background var(--transition-base);
+}
+
+/* Show scrollbar on hover or scroll */
+.chat-stream:hover::-webkit-scrollbar-thumb,
+.chat-stream:focus::-webkit-scrollbar-thumb,
+.chat-stream.scrolling::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
 }
 
 .chat-stream::-webkit-scrollbar-thumb:hover {
@@ -933,29 +968,44 @@ body::after {
 }
 
 /* Messages */
-.message {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-lg);
-  animation: messageSlideIn var(--transition-base) ease-out;
-}
-
+.message,
 .msg {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;  /* Stack row and actions vertically */
   gap: var(--space-sm);
   margin-bottom: var(--space-lg);
+  padding: 0 24px 0 0; /* Right padding for scrollbar gap */
   animation: messageSlideIn var(--transition-base) ease-out;
-  align-items: flex-start;
+  width: 100%; /* Take full width for proper alignment */
 }
 
+.message.user,
 .msg.user {
-  justify-content: flex-end;
+  align-items: flex-end;   /* Align to right */
 }
 
+.message.assistant,
 .msg.assistant {
-  justify-content: flex-start;
+  align-items: flex-start; /* Align to left */
+}
+
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  min-width: 0; /* Allow flexbox to shrink properly */
+}
+
+/* User messages: max 70% width */
+.msg.user .message-row {
+  flex-direction: row-reverse; /* Avatar on right for user */
+  max-width: 70%;
+}
+
+/* Assistant messages: max 90% width */
+.msg.assistant .message-row {
+  flex-direction: row;         /* Avatar on left for assistant */
+  max-width: 90%;
 }
 
 @keyframes messageSlideIn {
@@ -970,25 +1020,18 @@ body::after {
   }
 }
 
-.message.user {
-  align-items: flex-end;
-}
-
-.message.ai,
-.msg.assistant {
-  align-items: flex-start;
-}
-
-.msg.user {
-  align-items: flex-start;
-}
+/* User and assistant alignment handled by .message.user and .msg.user rules above */
 
 .message-content {
-  max-width: 75%;
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-lg);
   position: relative;
   animation: messageFadeIn 0.3s ease-out;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 @keyframes messageFadeIn {
@@ -1024,24 +1067,23 @@ body::after {
   position: relative;
 }
 
-.message.ai .message-content::before,
-.msg.assistant .message-content::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  opacity: 0.6;
+/* Ensure text content flows properly without unwanted breaks */
+.message-content p,
+.message-content div,
+.message-content span {
+  margin: 0;
+  max-width: 100%;
 }
+
+/* Removed decorative side line from AI messages */
 
 .message-text {
   font-size: 0.9375rem;
   line-height: 1.65;
   word-wrap: break-word;
-  color: inherit;
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 100%;
 }
 
 .msg .avatar {
@@ -1055,6 +1097,7 @@ body::after {
   color: var(--brand-primary);
   flex-shrink: 0;
   box-shadow: var(--shadow-xs);
+  overflow: hidden;
 }
 
 .dark-theme .msg .avatar {
@@ -1066,10 +1109,25 @@ body::after {
   font-size: 1rem;
 }
 
+.msg .avatar .avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Hide empty AI avatar */
+.msg .avatar.ai-avatar-empty {
+  display: none;
+}
+
 .msg .bubble {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  flex: 1 1 100%; /* Take full available width */
+  max-width: 100%; /* Don't exceed container */
+  min-width: 0; /* Prevent overflow issues */
 }
 
 .msg.user .bubble {
@@ -1080,26 +1138,12 @@ body::after {
   align-items: flex-start;
 }
 
-.msg.user .avatar {
-  order: 1;
-  margin-left: var(--space-sm);
-}
-
-.msg.user .bubble {
-  order: 0;
-}
-
-.msg.assistant .avatar {
-  order: 0;
-  margin-right: var(--space-sm);
-}
-
-.msg.assistant .bubble {
-  order: 1;
-}
+/* Avatar spacing handled by .message-row gap */
 
 .msg .content {
   width: 100%;
+  max-width: 100%;
+  min-width: 0; /* Prevent text overflow */
 }
 
 .msg .hover-tools,
@@ -1238,33 +1282,200 @@ body::after {
 /* Message Actions */
 .message-actions {
   display: flex;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   opacity: 0;
   transition: opacity var(--transition-fast);
+  margin-top: var(--space-xs);
+  padding: 0 var(--space-sm);
 }
 
+.msg:hover .message-actions,
 .message:hover .message-actions {
   opacity: 1;
 }
 
-.message-actions button {
-  padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  background: var(--glass-subtle);
+.message-actions button,
+.msg-tool {
+  padding: var(--space-xs);
+  border: none;
+  background: transparent;
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all var(--transition-fast);
-  backdrop-filter: blur(var(--blur-subtle));
-  -webkit-backdrop-filter: blur(var(--blur-subtle));
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.message-actions button:hover {
-  background: var(--glass-bg);
-  border-color: var(--border-default);
-  color: var(--text-secondary);
+.message-actions button:hover,
+.msg-tool:hover {
+  background: var(--glass-subtle);
+  color: var(--text-primary);
   box-shadow: var(--shadow-xs);
+}
+
+/* ============================================
+   CUSTOM TOOLTIPS
+   ============================================ */
+
+/* Hide default tooltips */
+[title] {
+  position: relative;
+}
+
+/* Custom tooltip */
+[data-tooltip] {
+  position: relative;
+  cursor: pointer;
+}
+
+[data-tooltip]::before,
+[data-tooltip]::after {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all var(--transition-base);
+  z-index: 9999;
+}
+
+/* Tooltip content */
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  background: var(--glass-elevated);
+  backdrop-filter: blur(var(--blur-strong));
+  -webkit-backdrop-filter: blur(var(--blur-strong));
+  color: var(--text-primary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-default);
+  line-height: 1.4;
+}
+
+/* Tooltip arrow */
+[data-tooltip]::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+/* Default position: bottom */
+[data-tooltip]::before {
+  top: calc(100% + 8px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+[data-tooltip]::after {
+  top: calc(100% + 3px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: var(--border-default);
+  border-top-color: transparent;
+}
+
+/* Show tooltip on hover/focus */
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::before,
+[data-tooltip]:focus::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Default (bottom) hover state */
+[data-tooltip]:hover::before,
+[data-tooltip]:focus::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Tooltip position variants */
+[data-tooltip][data-tooltip-pos="top"]::before {
+  bottom: calc(100% + 8px);
+  top: auto;
+  transform: translateX(-50%) translateY(4px);
+}
+
+[data-tooltip][data-tooltip-pos="top"]::after {
+  bottom: calc(100% + 3px);
+  top: auto;
+  border-top-color: var(--border-default);
+  border-bottom-color: transparent;
+}
+
+[data-tooltip][data-tooltip-pos="bottom"]::before {
+  top: calc(100% + 8px);
+  bottom: auto;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+[data-tooltip][data-tooltip-pos="bottom"]::after {
+  top: calc(100% + 3px);
+  bottom: auto;
+  border-bottom-color: var(--border-default);
+  border-top-color: transparent;
+}
+
+[data-tooltip][data-tooltip-pos="bottom"]:hover::before,
+[data-tooltip][data-tooltip-pos="bottom"]:focus::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+[data-tooltip][data-tooltip-pos="left"]::before {
+  right: calc(100% + 8px);
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) translateX(4px);
+}
+
+[data-tooltip][data-tooltip-pos="left"]::after {
+  right: calc(100% + 3px);
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  border-left-color: var(--border-default);
+  border-right-color: transparent;
+}
+
+[data-tooltip][data-tooltip-pos="left"]:hover::before,
+[data-tooltip][data-tooltip-pos="left"]:focus::before {
+  transform: translateY(-50%) translateX(0);
+}
+
+[data-tooltip][data-tooltip-pos="right"]::before {
+  left: calc(100% + 8px);
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) translateX(-4px);
+}
+
+[data-tooltip][data-tooltip-pos="right"]::after {
+  left: calc(100% + 3px);
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  border-right-color: var(--border-default);
+  border-left-color: transparent;
+}
+
+[data-tooltip][data-tooltip-pos="right"]:hover::before,
+[data-tooltip][data-tooltip-pos="right"]:focus::before {
+  transform: translateY(-50%) translateX(0);
 }
 
 /* ============================================
