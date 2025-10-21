@@ -18,6 +18,10 @@
   }
 
   function solveMathProblem(message) {
+    if (/[A-Za-z=]/.test(message)) {
+      return 'Math Spark currently handles only numeric arithmetic. Please enter numbers and operators only.';
+    }
+
     const sanitized = sanitizeMathExpression(message);
 
     if (!/[0-9]/.test(sanitized)) {
@@ -169,6 +173,10 @@
     const mathResult = solveMathProblem(userMessage);
     if (mathResult === null) {
       return "I'm tuned for calculations right now—drop in an equation like \"42 / 6\" and I'll crunch it instantly.";
+    }
+
+    if (typeof mathResult === 'string') {
+      return mathResult;
     }
 
     const formatted = formatMathValue(mathResult);

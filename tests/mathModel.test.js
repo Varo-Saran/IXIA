@@ -17,9 +17,20 @@ describe('mathModel.solveMathProblem', () => {
     assert.strictEqual(formatMathValue(result), '2');
   });
 
-  it('returns null for expressions with unsupported characters', () => {
+  it('returns friendly message for expressions with unsupported characters', () => {
     const result = solveMathProblem('sin(1)');
-    assert.strictEqual(result, null);
+    assert.strictEqual(
+      result,
+      'Math Spark currently handles only numeric arithmetic. Please enter numbers and operators only.'
+    );
+  });
+
+  it('returns friendly message for expressions containing variables', () => {
+    const result = solveMathProblem('3x + 2 = 11');
+    assert.strictEqual(
+      result,
+      'Math Spark currently handles only numeric arithmetic. Please enter numbers and operators only.'
+    );
   });
 });
 
