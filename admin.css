@@ -162,26 +162,44 @@ body::after {
     gap: 16px;
 }
 
+.sidebar-toggle,
 .sidebar-close {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    background: rgba(15, 23, 42, 0.7);
-    color: var(--text-color);
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.125rem;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(148, 163, 184, 0.08);
+    color: var(--text-color);
+    font-size: 1.05rem;
     cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
+.sidebar-toggle:hover,
+.sidebar-toggle:focus-visible,
 .sidebar-close:hover,
 .sidebar-close:focus-visible {
-    background: rgba(148, 163, 184, 0.2);
+    background: rgba(148, 163, 184, 0.18);
     border-color: rgba(148, 163, 184, 0.45);
     color: var(--text-color);
+}
+
+.sidebar-toggle:hover,
+.sidebar-toggle:focus-visible {
+    transform: translateY(-1px);
+}
+
+.sidebar-close {
+    font-size: 1.15rem;
+}
+
+.sidebar-toggle:focus-visible,
+.sidebar-close:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
 }
 
 .sidebar__nav {
@@ -341,24 +359,11 @@ body.sidebar-open {
 }
 
 .sidebar-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    background: rgba(148, 163, 184, 0.08);
-    color: var(--text-color);
     font-size: 1.05rem;
-    cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
 }
 
 .sidebar-toggle:hover,
 .sidebar-toggle:focus-visible {
-    background: rgba(148, 163, 184, 0.18);
-    border-color: rgba(148, 163, 184, 0.45);
     transform: translateY(-1px);
 }
 
