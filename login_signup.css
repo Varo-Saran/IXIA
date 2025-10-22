@@ -2,6 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
 @import url('styles/modal.css');
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 :root {
     --bg-gradient: radial-gradient(circle at 0% 0%, #3b82f6 0%, rgba(59, 130, 246, 0) 45%),
         radial-gradient(circle at 100% 0%, #a855f7 0%, rgba(168, 85, 247, 0) 40%),
