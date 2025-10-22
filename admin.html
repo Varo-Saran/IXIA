@@ -14,8 +14,12 @@
 
 <body>
     <div class="dashboard-shell">
-        <aside class="sidebar" role="navigation" aria-label="Admin navigation">
+        <aside id="admin-navigation" class="sidebar" role="navigation" aria-label="Admin navigation"
+            aria-hidden="true">
             <div class="sidebar__brand">
+                <button type="button" class="sidebar-close" id="mobile-nav-close" aria-label="Close navigation">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" aria-hidden="true">
                     <defs>
                         <style>
@@ -60,10 +64,15 @@
                 </button>
             </div>
         </aside>
+        <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
 
         <div class="main-panel">
             <header class="topbar" role="banner">
                 <div class="topbar__left">
+                    <button class="sidebar-toggle" type="button" id="mobile-nav-toggle" aria-label="Open navigation"
+                        aria-controls="admin-navigation" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                     <h1 class="topbar__title">Admin Dashboard</h1>
                     <p class="topbar__subtitle">Monitor platform health, manage accounts, and keep IXIA AI running
                         smoothly.</p>

@@ -551,10 +551,122 @@ document.addEventListener('DOMContentLoaded', () => {
     const advancedFilterIndicator = document.getElementById('advanced-filter-indicator');
     const inviteAdminButton = document.querySelector('#account-list .section-actions .btn.btn-primary');
     const body = document.body;
+    const navigation = document.getElementById('admin-navigation');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+    const mobileNavClose = document.getElementById('mobile-nav-close');
+    const sidebarMediaQuery = window.matchMedia('(min-width: 768px)');
     adminModalElement = document.getElementById('custom-modal');
     adminModalConfirmButton = document.getElementById('modal-confirm');
     adminModalCancelButton = document.getElementById('modal-cancel');
     const adminModalCloseButton = document.getElementById('admin-modal-close');
+
+    const applyNavigationAria = (isOpen) => {
+        if (!navigation) {
+            return;
+        }
+        const shouldHide = sidebarMediaQuery.matches ? false : !isOpen;
+        navigation.setAttribute('aria-hidden', shouldHide ? 'true' : 'false');
+    };
+
+    const syncSidebarToggleState = (isOpen, { skipFocus = false } = {}) => {
+        if (!sidebar) {
+            applyNavigationAria(isOpen);
+            return;
+        }
+
+        const wasOpen = sidebar.classList.contains('is-open');
+        if (isOpen !== wasOpen) {
+            sidebar.classList.toggle('is-open', isOpen);
+        }
+
+        const isMobileViewport = !sidebarMediaQuery.matches;
+        const shouldLockScroll = isOpen && isMobileViewport;
+        body.classList.toggle('sidebar-open', shouldLockScroll);
+
+        if (sidebarBackdrop) {
+            const shouldShowBackdrop = isOpen && isMobileViewport;
+            sidebarBackdrop.classList.toggle('is-active', shouldShowBackdrop);
+            sidebarBackdrop.setAttribute('aria-hidden', shouldShowBackdrop ? 'false' : 'true');
+        }
+
+        if (mobileNavToggle) {
+            mobileNavToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            mobileNavToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+        }
+
+        applyNavigationAria(isOpen);
+
+        if (skipFocus || !isMobileViewport || isOpen === wasOpen) {
+            return;
+        }
+
+        if (isOpen) {
+            const focusTarget = mobileNavClose || sidebar.querySelector('.sidebar__link');
+            if (focusTarget) {
+                focusTarget.focus({ preventScroll: true });
+            }
+        } else if (mobileNavToggle) {
+            mobileNavToggle.focus({ preventScroll: true });
+        }
+    };
+
+    const closeSidebar = (options) => syncSidebarToggleState(false, options);
+
+    if (mobileNavToggle && sidebar) {
+        mobileNavToggle.addEventListener('click', () => {
+            const shouldOpen = !sidebar.classList.contains('is-open');
+            syncSidebarToggleState(shouldOpen);
+        });
+    }
+
+    if (mobileNavClose) {
+        mobileNavClose.addEventListener('click', () => closeSidebar());
+    }
+
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', () => closeSidebar({ skipFocus: true }));
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && sidebar && sidebar.classList.contains('is-open') && !sidebarMediaQuery.matches) {
+            closeSidebar();
+        }
+    });
+
+    const handleSidebarViewportChange = (event) => {
+        if (event.matches) {
+            if (sidebar) {
+                sidebar.classList.remove('is-open');
+            }
+            body.classList.remove('sidebar-open');
+            if (sidebarBackdrop) {
+                sidebarBackdrop.classList.remove('is-active');
+                sidebarBackdrop.setAttribute('aria-hidden', 'true');
+            }
+            if (mobileNavToggle) {
+                mobileNavToggle.setAttribute('aria-expanded', 'false');
+                mobileNavToggle.setAttribute('aria-label', 'Open navigation');
+            }
+            applyNavigationAria(true);
+        } else {
+            const isOpen = sidebar ? sidebar.classList.contains('is-open') : false;
+            applyNavigationAria(isOpen);
+            if (!isOpen) {
+                body.classList.remove('sidebar-open');
+            }
+        }
+    };
+
+    if (typeof sidebarMediaQuery.addEventListener === 'function') {
+        sidebarMediaQuery.addEventListener('change', handleSidebarViewportChange);
+    } else if (typeof sidebarMediaQuery.addListener === 'function') {
+        sidebarMediaQuery.addListener(handleSidebarViewportChange);
+    }
+
+    syncSidebarToggleState(false, { skipFocus: true });
+    handleSidebarViewportChange(sidebarMediaQuery);
 
     if (adminModalElement) {
         adminModalController = ModalController.create(adminModalElement, {
