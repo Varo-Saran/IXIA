@@ -121,7 +121,7 @@ html {
 }
 
 /* Sidebar */
-.sidebar {
+.app-container .sidebar {
   width: 85%;
   max-width: 300px;
   height: 100vh;
@@ -130,12 +130,12 @@ html {
   box-shadow: var(--shadow-2xl);
 }
 
-.sidebar.show {
+.app-container .sidebar.show {
   left: 0;
   box-shadow: var(--shadow-2xl), 20px 0 40px rgba(0, 0, 0, 0.3);
 }
 
-.sidebar h2 {
+.app-container .sidebar h2 {
   font-size: 1rem;
   margin-bottom: var(--space-md);
 }
@@ -145,11 +145,11 @@ html {
   font-size: 0.8125rem;
 }
 
-.sidebar-actions {
+.app-container .sidebar-actions {
   gap: var(--space-sm);
 }
 
-.sidebar-actions button {
+.app-container .sidebar-actions button {
   padding: var(--space-sm);
   font-size: 0.8125rem;
 }
@@ -316,7 +316,7 @@ html {
     padding: var(--space-sm) var(--space-md);
   }
 
-  .sidebar {
+  .app-container .sidebar {
     width: 320px;
     max-width: 320px;
     left: -320px;
@@ -440,14 +440,14 @@ html {
     height: 36px;
   }
 
-  .sidebar {
+  .app-container .sidebar {
     width: 280px;
     max-width: 280px;
     left: -280px;
     padding: var(--space-xl);
   }
 
-  .sidebar.show {
+  .app-container .sidebar.show {
     left: 0;
   }
 
@@ -565,7 +565,7 @@ html {
     max-width: 70%;
   }
 
-  .sidebar h2 {
+  .app-container .sidebar h2 {
     font-size: 1.125rem;
   }
 
@@ -573,7 +573,7 @@ html {
     font-size: 0.875rem;
   }
 
-  .sidebar-actions button {
+  .app-container .sidebar-actions button {
     font-size: 0.875rem;
   }
 }
@@ -660,11 +660,11 @@ html {
     padding: var(--space-sm) var(--space-md);
   }
 
-  .sidebar {
+  .app-container .sidebar {
     padding: var(--space-lg);
   }
 
-  .sidebar h2 {
+  .app-container .sidebar h2 {
     font-size: 1rem;
     margin-bottom: var(--space-sm);
   }
@@ -675,12 +675,12 @@ html {
     font-size: 0.8125rem;
   }
 
-  .sidebar-actions {
+  .app-container .sidebar-actions {
     padding-top: var(--space-md);
     margin-top: var(--space-md);
   }
 
-  .sidebar-actions button {
+  .app-container .sidebar-actions button {
     padding: var(--space-sm);
     font-size: 0.8125rem;
   }
@@ -738,7 +738,7 @@ html {
     padding: var(--space-xs);
   }
 
-  .sidebar {
+  .app-container .sidebar {
     height: 100vh;
     padding: var(--space-md);
   }
@@ -847,7 +847,7 @@ html {
 /* Print Styles */
 @media print {
 
-  .sidebar,
+  .app-container .sidebar,
   .toggle-sidebar-btn,
   .top-right-buttons,
   .input-area,
